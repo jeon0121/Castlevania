@@ -25,7 +25,7 @@ void App::Start() {
             m_Scene = std::make_unique<Stage3>();
             break;
     }
-    m_Scene->Start();
+    m_Scene->Start(this);
     m_AppState = AppState::UPDATE;
 }
 

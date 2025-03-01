@@ -1,6 +1,7 @@
 #ifndef SCENE_HPP
 #define SCENE_HPP
 
+#include "App.hpp"
 #include "Util/GameObject.hpp"
 #include "Util/Image.hpp"
 
@@ -16,9 +17,9 @@ public:
         UPDATE,
         END,
     };
-    virtual void Start() = 0;
+    virtual void Start(App* app) = 0;
     virtual void Update() = 0;
-    virtual void End() = 0;
+    virtual void End(App* app) = 0;
 
 protected:
     std::shared_ptr<BackgroundImage> m_Background;

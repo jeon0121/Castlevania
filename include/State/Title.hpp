@@ -6,9 +6,9 @@
 
 class Title : public Scene{
 public:
-    void Start() override;
+    void Start(App* app) override;
     void Update() override;
-    void End();
+    void End(App* app);
 
 private:
     std::shared_ptr<AnimatedItems> m_Bat;

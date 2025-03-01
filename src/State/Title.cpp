@@ -1,14 +1,14 @@
 #include "State/Title.hpp"
 #include "Util/Input.hpp"
 #include "Util/Keycode.hpp"
-#include "App.hpp"
 #include "Object/AnimatedItems.hpp"
+#include "App.hpp"
 
-void Title::Start(){
+void Title::Start(App* app){
     m_Background = std::make_shared<BackgroundImage>(GA_RESOURCE_DIR"/Resources/title/title-screen/title-screen.png");
     m_Background->SetZIndex(0);
     
-    m_Root.AddChild(m_Background);
+    app->m_Root.AddChild(m_Background);
 
     std::vector<std::string> batImages;
     for (int i = 0; i < 40; ++i) {
@@ -17,14 +17,17 @@ void Title::Start(){
 
     m_Bat = std::make_shared<AnimatedItems>(batImages);
     m_Bat->SetZIndex(5);
-    m_Root.AddChild(m_Bat);
+    app->m_Root.AddChild(m_Bat);
     m_stateState = StateState::UPDATE;
 }
 
 void Title::Update(){
     if (Util::Input::IsKeyPressed(Util::Keycode::RETURN)) {
-        m_AppState = AppState::START;
         m_stateState = StateState::END;
-        m_GameState = GameState::STAGE0;
     }
+}
+
+void Title::End(App* app){
+    app->m_AppState = AppState::START;
+    app->m_GameState = GameState::STAGE0;
 }
