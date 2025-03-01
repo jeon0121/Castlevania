@@ -32,6 +32,9 @@ void App::Start() {
 void App::Update() {
 
     m_Scene->Update();
+    if(m_Scene->m_stateState == Scene::StateState::END) {
+        m_Scene->End(this);
+    }
     /*
      * Do not touch the code below as they serve the purpose for
      * closing the window.

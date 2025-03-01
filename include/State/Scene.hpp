@@ -21,10 +21,10 @@ public:
     virtual void Start(App* app) = 0;
     virtual void Update() = 0;
     virtual void End(App* app) = 0;
+    StateState m_stateState = StateState::START;
 
 protected:
     std::shared_ptr<BackgroundImage> m_Background;
-    StateState m_stateState = StateState::START;
 };
 
 #endif

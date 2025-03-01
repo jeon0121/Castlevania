@@ -12,6 +12,7 @@ public:
 
 private:
     std::shared_ptr<AnimatedItems> m_Bat;
+    std::shared_ptr<AnimatedItems> m_Key;
 };
 #endif
 
