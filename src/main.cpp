@@ -7,16 +7,16 @@ int main(int, char**) {
     App app;
 
     while (!context->GetExit()) {
-        switch (app.GetCurrentState()) {
-            case App::State::START:
+        switch (app.GetAppState()) {
+            case App::AppState::START:
                 app.Start();
                 break;
 
-            case App::State::UPDATE:
+            case App::AppState::UPDATE:
                 app.Update();
                 break;
 
-            case App::State::END:
+            case App::AppState::END:
                 app.End();
                 context->SetExit(true);
                 break;

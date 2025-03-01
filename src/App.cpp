@@ -4,23 +4,36 @@
 #include "Util/Input.hpp"
 #include "Util/Keycode.hpp"
 #include "Util/Logger.hpp"
+#include "State/Title.hpp"
 
 void App::Start() {
     LOG_TRACE("Start");
-    m_CurrentState = State::UPDATE;
+    switch(m_GameState){
+        case GameState::TITLE:
+            m_Scene = std::make_unique<Title>();
+        case GameState::STAGE0:
+            m_Scene = std::make_unique<STAGE0>();
+        case GameState::STAGE1:
+            m_Scene = std::make_unique<STAGE1>();
+        case GameState::STAGE2:
+            m_Scene = std::make_unique<STAGE2>();
+        case GameState::STAGE3:
+            m_Scene = std::make_unique<STAGE3>();
+    }
+    m_AppState = AppState::UPDATE;
+    m_Scene->Start();
 }
 
 void App::Update() {
-    
-    //TODO: do your things here and delete this line <3
-    
+
+    m_Scene->Update();
     /*
      * Do not touch the code below as they serve the purpose for
      * closing the window.
      */
     if (Util::Input::IsKeyUp(Util::Keycode::ESCAPE) ||
         Util::Input::IfExit()) {
-        m_CurrentState = State::END;
+        m_AppState = AppState::END;
     }
 }
 
