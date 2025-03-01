@@ -5,9 +5,8 @@
 #include "App.hpp"
 
 void Title::Start(App* app){
-    m_Background = std::make_shared<BackgroundImage>(GA_RESOURCE_DIR"/Resources/title/title-screen/title-screen.png");
+    m_Background = std::make_shared<BackgroundImage>(GA_RESOURCE_DIR"/title/title-screen/title-screen.png");
     m_Background->SetZIndex(0);
-    
     app->m_Root.AddChild(m_Background);
 
     std::vector<std::string> batImages;
@@ -28,6 +27,6 @@ void Title::Update(){
 }
 
 void Title::End(App* app){
-    app->m_AppState = AppState::START;
-    app->m_GameState = GameState::STAGE0;
+    app->m_AppState = App::AppState::START;
+    app->m_GameState = App::GameState::STAGE0;
 }

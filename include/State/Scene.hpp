@@ -1,13 +1,14 @@
 #ifndef SCENE_HPP
 #define SCENE_HPP
 
-#include "App.hpp"
 #include "Util/GameObject.hpp"
 #include "Util/Image.hpp"
 
+class App;
+
 class BackgroundImage : public Util::GameObject {
 public:
-    BackgroundImage(const std::string& path) : GameObject(std::make_unique<Util::Image>(path), -10) {}
+    BackgroundImage(const std::string& path) : GameObject(std::make_unique<Util::Image>(path), 0) {}
 };
 
 class Scene {

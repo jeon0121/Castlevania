@@ -8,7 +8,7 @@ class Title : public Scene{
 public:
     void Start(App* app) override;
     void Update() override;
-    void End(App* app);
+    void End(App* app) override;
 
 private:
     std::shared_ptr<AnimatedItems> m_Bat;

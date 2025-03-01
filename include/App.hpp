@@ -4,22 +4,22 @@
 #include "State/Scene.hpp"
 #include "pch.hpp" // IWYU pragma: export
 
-enum class AppState {
-    START,
-    UPDATE,
-    END,
-};
-
-enum class GameState {
-    TITLE,
-    STAGE0,
-    STAGE1,
-    STAGE2,
-    STAGE3,
-};
 
 class App {
 public:
+    enum class AppState {
+        START,
+        UPDATE,
+        END,
+    };
+
+    enum class GameState {
+        TITLE,
+        STAGE0,
+        STAGE1,
+        STAGE2,
+        STAGE3,
+    };
 
     AppState GetAppState() const { return m_AppState; }
     
