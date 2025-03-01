@@ -6,12 +6,12 @@
 
 class BackgroundImage : public Util::GameObject {
 public:
-    BackgroundImage(const std::string& path) : GameObject(std::make_unique<Util::Image>(path)) {}
+    BackgroundImage(const std::string& path) : GameObject(std::make_unique<Util::Image>(path), -10) {}
 };
 
 class Scene {
 public:
-    enum class State {
+    enum class StateState {
         START,
         UPDATE,
         END,
@@ -22,7 +22,7 @@ public:
 
 protected:
     std::shared_ptr<BackgroundImage> m_Background;
-    State m_currentState = State::START;
+    StateState m_stateState = StateState::START;
 };
 
 #endif

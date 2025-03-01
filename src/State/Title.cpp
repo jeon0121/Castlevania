@@ -5,8 +5,9 @@
 #include "Object/AnimatedItems.hpp"
 
 void Title::Start(){
-    m_Giraffe = std::make_shared<BackgroundImage>(GA_RESOURCE_DIR"/Resources/title/title-screen/title-screen.png");
+    m_Background = std::make_shared<BackgroundImage>(GA_RESOURCE_DIR"/Resources/title/title-screen/title-screen.png");
     m_Background->SetZIndex(0);
+    
     m_Root.AddChild(m_Background);
 
     std::vector<std::string> batImages;
@@ -17,13 +18,13 @@ void Title::Start(){
     m_Bat = std::make_shared<AnimatedItems>(batImages);
     m_Bat->SetZIndex(5);
     m_Root.AddChild(m_Bat);
-    m_currentState = State::UPDATE;
+    m_stateState = StateState::UPDATE;
 }
 
 void Title::Update(){
     if (Util::Input::IsKeyPressed(Util::Keycode::RETURN)) {
         m_AppState = AppState::START;
-        m_CurrentState = State::END;
+        m_stateState = StateState::END;
         m_GameState = GameState::STAGE0;
     }
 }

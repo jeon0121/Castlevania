@@ -1,17 +1,17 @@
-#ifndef TITLE_HPP
-#define TITLE_HPP
+#ifndef STAGE1_HPP
+#define STAGE1_HPP
 #include "Scene.hpp"
 
 #include "Object/AnimatedItems.hpp"
 
-class Title : public Scene{
+class Stage1 : public Scene{
 public:
     void Start() override;
     void Update() override;
-    void End();
+    void End() override;
 
 private:
-    std::shared_ptr<AnimatedItems> m_Bat;
+
 };
 #endif
 

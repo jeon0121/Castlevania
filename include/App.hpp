@@ -1,8 +1,8 @@
 #ifndef APP_HPP
 #define APP_HPP
+#include "Util/Renderer.hpp"
 #include "State/Scene.hpp"
 #include "pch.hpp" // IWYU pragma: export
-
 
 class App {
 public:
@@ -30,6 +30,7 @@ public:
 
     void End(); // NOLINT(readability-convert-member-functions-to-static)
 
+    Util::Renderer m_Root;
     AppState m_AppState = AppState::START;
     GameState m_GameState = GameState::TITLE;
     std::shared_ptr<Scene> m_Scene;
