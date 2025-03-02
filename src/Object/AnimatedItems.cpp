@@ -1,4 +1,5 @@
 #include "Object/AnimatedItems.hpp"
+#include "Util/Time.hpp"
 
 AnimatedItems::AnimatedItems(const std::vector<std::string> &AnimationPaths, int interval){
    m_Drawable = std::make_shared<Util::Animation>(AnimationPaths, false, interval, false, 0);
@@ -20,6 +21,7 @@ void AnimatedItems::SetLooping(bool looping) {
 void AnimatedItems::SetPlaying() {
    auto animation = std::dynamic_pointer_cast<Util::Animation>(m_Drawable);
    animation->Play();
+   startTime = Util::Time::GetElapsedTimeMs();
 }
 
 void AnimatedItems::SetPaused() {
@@ -40,6 +42,17 @@ void AnimatedItems::SetCurrentFrame(std::size_t index) {
 void AnimatedItems::SetPosition(const glm::vec2& Position) { m_Transform.translation = Position; }
 
 const glm::vec2& AnimatedItems::GetPosition() const { return m_Transform.translation; }
+
+bool AnimatedItems::IfPlayingTime(float duration) {
+   auto animation = std::dynamic_pointer_cast<Util::Animation>(m_Drawable);
+   unsigned long nowTime = Util::Time::GetElapsedTimeMs();
+   unsigned long elapsedTime = (nowTime - startTime) / 1000;
+   if (elapsedTime >= duration) {
+      animation->Pause();
+      return true;
+   }
+   return false;
+}
 
 bool AnimatedItems::IfAnimationEnds() const {
    auto animation = std::dynamic_pointer_cast<Util::Animation>(m_Drawable);

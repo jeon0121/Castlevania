@@ -45,11 +45,17 @@ void Title::Update(){
         m_Key->SetVisible(true);
         m_Key->SetPlaying();
         m_Key->SetLooping(true);
+    }
+    if (m_Key->IsPlaying() && m_Key->IfPlayingTime(2)) {
+        m_Key->SetVisible(false);
+        m_Bat->SetVisible(false);
         m_stateState = StateState::END;
     }
 }
 
 void Title::End(App* app){
+    m_Background->SetDrawable(std::make_unique<Util::Image>(GA_RESOURCE_DIR"/cutscene/intro/intro.png"));
+    m_Background->m_Transform.scale = glm::vec2(0.65, 0.77);
     app->m_AppState = App::AppState::START;
     app->m_GameState = App::GameState::STAGE0;
 }
