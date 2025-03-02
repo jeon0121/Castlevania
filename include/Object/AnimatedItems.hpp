@@ -7,34 +7,27 @@
 
 class AnimatedItems : public Util::GameObject {
 public:
-    explicit AnimatedItems(const std::vector<std::string>& AnimationPaths);
+    explicit AnimatedItems(const std::vector<std::string>& AnimationPaths, int interval);
 
-    [[nodiscard]] bool IsLooping() const {
-        return std::dynamic_pointer_cast<Util::Animation>(m_Drawable)->GetLooping();
-    }
+    [[nodiscard]] bool IsLooping() const;
 
-    [[nodiscard]] bool IsPlaying() const {
-        return std::dynamic_pointer_cast<Util::Animation>(m_Drawable)->GetState() == Util::Animation::State::PLAY;
-    }
+    [[nodiscard]] bool IsPlaying() const;
 
-    void SetLooping(bool looping) {
-        auto temp = std::dynamic_pointer_cast<Util::Animation>(m_Drawable);
-        temp->SetLooping(looping);
-    }
-    void SetPlaying() {
-        auto temp = std::dynamic_pointer_cast<Util::Animation>(m_Drawable);
-        temp->Play();
-    }
-    void SetPaused() {
-        auto temp = std::dynamic_pointer_cast<Util::Animation>(m_Drawable);
-        temp->Pause();
-    }
-    void SetPosition(const glm::vec2& Position) { m_Transform.translation = Position; }
-    const glm::vec2& GetPosition() const { return m_Transform.translation; }
+    void SetLooping(bool looping);
+
+    void SetPlaying();
+
+    void SetPaused();
+
+    int GetCurrentFrameIndex();
+
+    void SetCurrentFrame(std::size_t index);
+
+    void SetPosition(const glm::vec2& Position);
+
+    const glm::vec2& GetPosition() const;
+
     [[nodiscard]] bool IfAnimationEnds() const;
-
 };
-
-
 
 #endif
