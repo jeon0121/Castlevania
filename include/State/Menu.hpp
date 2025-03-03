@@ -13,12 +13,21 @@ public:
             playerAmmo(playerAmmo), playerLife(playerLife), currentStage(currentStage)
     {
         background = std::make_shared<ImageItems>(GA_RESOURCE_DIR "/title/key/title-key-1.png");
+        background->SetZIndex(50);
         background->SetPosition({0, 0});
-        addText(formatTime(time), {0, 0});
-        // addText(formatScore(score), {0, 30});
-        // addText(formatTwoDigits(playerAmmo), {0, 60});
-        // addText(formatTwoDigits(playerLife), {0, 90});
-        // addText(formatTwoDigits(currentStage), {0, 120});
+
+        addText("time", {0, 420});
+        addNumber(formatTime(time), {100, 420});
+
+        addText("score", {-400, 420});
+        addNumber(formatScore(score), {-280, 420});
+
+        addText("stage", {350, 420});
+        addNumber(formatTwoDigits(currentStage), {450, 420});
+
+        addText("heart-n-life", {210, 380});
+        addNumber(formatTwoDigits(playerAmmo), {250, 392});
+        addNumber(formatTwoDigits(playerLife), {250, 368});
     }
     
     int time;         // mm:dd
@@ -30,13 +39,14 @@ public:
     int currentStage; // 00
 
     std::shared_ptr<ImageItems> background;
-    std::vector<std::vector<std::shared_ptr<ImageItems>>> textImage;
+    std::vector<std::vector<std::shared_ptr<ImageItems>>> numberImage;
+    std::vector<std::shared_ptr<ImageItems>> textImage;
     std::vector<std::shared_ptr<ImageItems>> health;
 
     std::string formatTime(int time) {
         int minutes = time / 60;
         int seconds = time % 60;
-        return formatTwoDigits(minutes) + ":" + formatTwoDigits(seconds);
+        return formatTwoDigits(minutes) + formatTwoDigits(seconds);
     }
 
     std::string formatTwoDigits(int num) {
@@ -50,6 +60,17 @@ public:
     }
 
     void addText(std::string text, const glm::vec2& position){
+        float x = position.x, y = position.y;
+
+        std::string imagePath = GA_RESOURCE_DIR "/fonts/menu/" + text + ".png";
+        auto characterImage = std::make_shared<ImageItems>(imagePath);
+        characterImage->SetPosition({x, y});
+        characterImage->SetZIndex(50);
+        characterImage->m_Transform.scale = glm::vec2(0.95, 0.8);
+        textImage.push_back(characterImage);
+    }
+
+    void addNumber(std::string text, const glm::vec2& position){
         std::vector<std::shared_ptr<ImageItems>> textRow;
         float x = position.x, y = position.y;
 
@@ -57,12 +78,22 @@ public:
             std::string imagePath = GA_RESOURCE_DIR "/fonts/number/" + std::string(1, c) + ".png";
             auto characterImage = std::make_shared<ImageItems>(imagePath);
             characterImage->SetPosition({x, y});
-
+            characterImage->SetZIndex(50);
+            characterImage->m_Transform.scale = glm::vec2(0.95, 0.8);
             textRow.push_back(characterImage);
-            x += characterImage->GetScaledSize().x + 10;
+            x += characterImage->GetScaledSize().x + 5;
         }
 
-        textImage.push_back(textRow);
+        numberImage.push_back(textRow);
+    }
+
+    void SetMenuVisibility(const bool visible) {
+        for (auto &&num : numberImage){
+            for (auto &&letter : num) letter->SetVisible(visible);
+        }
+        for (auto &&txt : textImage){
+            txt->SetVisible(visible);
+        }
     }
 };
 

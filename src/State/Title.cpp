@@ -6,11 +6,13 @@
 void Title::Start(App* app){
     // menu
     m_Menu = std::make_shared<Menu>(180, 0, 16, 16, 5, 3, 1);
-    m_Menu->SetVisible(false);
-    m_Menu->SetZIndex(100);
+    m_Menu->SetMenuVisibility(false);
     app->m_Root.AddChild(m_Menu);
+    for (auto &&num : m_Menu->numberImage){
+        for (auto &&letter : num) app->m_Root.AddChild(letter);
+    }
     for (auto &&txt : m_Menu->textImage){
-        for (auto &&letter : txt) app->m_Root.AddChild(letter);
+        app->m_Root.AddChild(txt);
     }
 
     // background
@@ -65,6 +67,7 @@ void Title::End(App* app){
     m_Background->SetDrawable(std::make_unique<Util::Image>(GA_RESOURCE_DIR"/cutscene/intro/intro.png"));
     m_Background->m_Transform.scale = glm::vec2(0.65, 0.65);
     m_Background->SetPosition({0, -100});
+    m_Menu->SetMenuVisibility(true);
     // app->m_AppState = App::AppState::START;
     // app->m_GameState = App::GameState::STAGE0;
 }
