@@ -14,7 +14,9 @@ void Title::Start(App* app){
     for (auto &&txt : m_Menu->textImage){
         app->m_Root.AddChild(txt);
     }
-
+    for (auto &&healthbar : m_Menu->health){
+        for (auto &&h : healthbar) app->m_Root.AddChild(h);
+    }
     // background
     m_Background = std::make_shared<ImageItems>(GA_RESOURCE_DIR"/title/title-screen/title-screen.png");
     m_Background->SetZIndex(0);
