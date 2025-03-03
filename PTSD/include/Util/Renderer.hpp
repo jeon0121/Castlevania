@@ -52,6 +52,8 @@ public:
      */
     void Update();
 
+    void RemoveAllChildren();
+
 private:
     std::vector<std::shared_ptr<GameObject>> m_Children;
 };

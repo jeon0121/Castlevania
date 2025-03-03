@@ -61,4 +61,7 @@ void Renderer::Update() {
         curr.m_GameObject->Draw();
     }
 }
+void Renderer::RemoveAllChildren() {
+    m_Children.clear();
+}
 } // namespace Util

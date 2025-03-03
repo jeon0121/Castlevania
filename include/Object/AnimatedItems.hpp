@@ -30,8 +30,6 @@ public:
     bool IfPlayingTime(float time);
 
     [[nodiscard]] bool IfAnimationEnds() const;
-private:
-    unsigned long startTime = 0;
 };
 
 #endif

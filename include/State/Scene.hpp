@@ -4,6 +4,7 @@
 #include "Util/GameObject.hpp"
 #include "Util/Image.hpp"
 #include "Object/ImageItems.hpp"
+#include "Object/Character.hpp"
 
 class App;
 
@@ -21,6 +22,7 @@ public:
 
 protected:
     std::shared_ptr<ImageItems> m_Background;
+    std::shared_ptr<Character> m_Character;
 };
 
 #endif
