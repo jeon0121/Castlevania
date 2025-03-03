@@ -1,7 +1,6 @@
 #include "State/Title.hpp"
 #include "Util/Input.hpp"
 #include "Util/Keycode.hpp"
-#include "Object/AnimatedItems.hpp"
 #include "App.hpp"
 
 void Title::Start(App* app){
@@ -10,6 +9,10 @@ void Title::Start(App* app){
     m_Menu->SetVisible(false);
     m_Menu->SetZIndex(100);
     app->m_Root.AddChild(m_Menu);
+    for (auto &&txt : m_Menu->textImage){
+        for (auto &&letter : txt) app->m_Root.AddChild(letter);
+    }
+
     // background
     m_Background = std::make_shared<ImageItems>(GA_RESOURCE_DIR"/title/title-screen/title-screen.png");
     m_Background->SetZIndex(0);
@@ -35,9 +38,8 @@ void Title::Start(App* app){
     m_Key -> m_Transform.scale = glm::vec2(0.1652, 0.1652);
     m_Key->SetVisible(false);
     m_Key->SetZIndex(6);
-
-    // app
     app->m_Root.AddChild(m_Key);
+
     m_stateState = StateState::UPDATE;
 }
 
@@ -63,6 +65,6 @@ void Title::End(App* app){
     m_Background->SetDrawable(std::make_unique<Util::Image>(GA_RESOURCE_DIR"/cutscene/intro/intro.png"));
     m_Background->m_Transform.scale = glm::vec2(0.65, 0.65);
     m_Background->SetPosition({0, -100});
-    app->m_AppState = App::AppState::START;
-    app->m_GameState = App::GameState::STAGE0;
+    // app->m_AppState = App::AppState::START;
+    // app->m_GameState = App::GameState::STAGE0;
 }

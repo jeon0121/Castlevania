@@ -8,7 +8,9 @@ set(INCLUDE_FILES
     App.hpp
     State.hpp
     Object/AnimatedItems.hpp
+    Object/ImageItems.hpp
     State/Scene.hpp
+    State/Menu.hpp
     State/Title.hpp
 )
 

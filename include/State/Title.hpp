@@ -1,7 +1,8 @@
 #ifndef TITLE_HPP
 #define TITLE_HPP
-#include "Scene.hpp"
 
+#include "Scene.hpp"
+#include "State/Menu.hpp"
 #include "Object/AnimatedItems.hpp"
 
 class Title : public Scene{
