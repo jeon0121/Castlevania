@@ -28,7 +28,7 @@ void Title::Start(App* app){
     for (int i = 0; i < 41; ++i) {
         batImages.emplace_back(GA_RESOURCE_DIR"/title/bat/bat-" + std::to_string(i + 1) + ".png");
     }
-    m_Bat = std::make_shared<AnimatedItems>(batImages, 70);
+    m_Bat = std::make_shared<AnimatedItems>(batImages, 65);
     m_Bat->SetPosition({368, -48});
     m_Bat->SetZIndex(5);
     m_Bat->SetPlaying();
@@ -39,7 +39,7 @@ void Title::Start(App* app){
     for (int i = 0; i < 2; ++i) {
         keyImages.emplace_back(GA_RESOURCE_DIR"/title/key/title-key-" + std::to_string(i + 1) + ".png");
     }
-    m_Key = std::make_shared<AnimatedItems>(keyImages, 150);
+    m_Key = std::make_shared<AnimatedItems>(keyImages, 120);
     m_Key->SetPosition({0, -80});
     m_Key -> m_Transform.scale = glm::vec2(0.1652, 0.1652);
     m_Key->SetVisible(false);
@@ -61,6 +61,24 @@ void Title::Start(App* app){
     m_Boat->SetZIndex(6);
     app->m_Root.AddChild(m_Boat);
 
+    //bat in cutscene
+    std::vector<std::string> batScene;
+    for (int i = 0; i < 2; ++i) {
+        batScene.emplace_back(GA_RESOURCE_DIR"/cutscene/bat/bat-" + std::to_string(i + 1) + ".png");
+    }
+    m_BatScene_1 = std::make_shared<AnimatedItems>(batScene, 65);
+    m_BatScene_1->SetPosition({50, 180});
+    m_BatScene_2 = std::make_shared<AnimatedItems>(batScene, 65);
+    m_BatScene_2->SetPosition({-400, -50});
+    std::vector<std::shared_ptr<AnimatedItems>> m_BatScene = {m_BatScene_1, m_BatScene_2};
+    for (auto &&anim : m_BatScene) {
+        anim-> m_Transform.scale = glm::vec2(0.1, 0.1);
+        anim->SetVisible(false);
+        anim->SetZIndex(6);
+        anim->SetPlaying();
+        app->m_Root.AddChild(anim);
+    }
+
     m_stateState = StateState::UPDATE;
 }
 
@@ -74,12 +92,14 @@ void Title::Update(){
         m_Key->SetLooping(true);
         m_Bat->SetPaused();
     }
-    if (m_Key->IsPlaying() && m_Key->IfPlayingTime(4)) {
+    if (m_Key->IsPlaying() && m_Key->IfPlayingTime(5)) {
         m_Key->SetVisible(false);
         m_Bat->SetVisible(false);
         m_Menu->SetVisible(true);
         m_Character->m_Behavior->SetVisible(true);
         m_Boat->SetVisible(true);
+        m_BatScene_1->SetVisible(true);
+        m_BatScene_2->SetVisible(true);
         m_stateState = StateState::END;
     }
 }
@@ -91,9 +111,9 @@ void Title::End(App* app){
     m_Menu->SetMenuVisibility(true);
 
     //Cutscene animation
-    m_Character->m_Behavior->Move(m_Character->m_Behavior, -1, 0, 2.08, 8);
+    m_Character->m_Behavior->Move(m_Character->m_Behavior, -1, 0, 2.08, 9);
     m_Character-> SetPosition(m_Character->m_Behavior->GetPosition());
-    if (m_Character->m_Behavior->IfPlayingTime(8)) { //end animation and idle
+    if (m_Character->m_Behavior->IfPlayingTime(9)) { //end animation and idle
         m_Character->m_Behavior->SetVisible(false);
         m_Character->UpdatePosition();
         m_Character->m_Image->SetVisible(true);
@@ -101,9 +121,11 @@ void Title::End(App* app){
 
     glm::vec2 pos = m_Boat->GetPosition();
     m_Boat->SetPosition({pos.x-0.7, pos.y});
+    m_BatScene_1->Move(m_BatScene_1, -1, 0, 0.2, 12);
+    m_BatScene_2->Move(m_BatScene_2, 1, 1, 0.5, 12);
 
     //End Title
-    if (m_Character->m_Behavior->IfPlayingTime(11)) {
+    if (m_Character->m_Behavior->IfPlayingTime(12)) {
         app->m_Root.RemoveAllChildren();
         app->m_AppState = App::AppState::START;
         app->m_GameState = App::GameState::STAGE0;
