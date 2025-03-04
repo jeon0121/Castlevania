@@ -14,6 +14,7 @@ public:
 private:
     std::shared_ptr<AnimatedItems> m_Bat;
     std::shared_ptr<AnimatedItems> m_Key;
+    std::shared_ptr<ImageItems> m_Boat;
     std::shared_ptr<Menu> m_Menu;
 };
 #endif

@@ -42,6 +42,17 @@ void AnimatedItems::SetPosition(const glm::vec2& Position) { m_Transform.transla
 
 const glm::vec2& AnimatedItems::GetPosition() const { return m_Transform.translation; }
 
+void AnimatedItems::Move(const std::shared_ptr<AnimatedItems> &object, int ifRight, int ifUp, float distance, float duration) {
+   object->SetPlaying();
+   object->SetLooping(true);
+   if (object->IsPlaying() && !object->IfPlayingTime(duration)) {
+      glm::vec2 pos = object->GetPosition();
+      (ifRight == 0) ? pos.x+=0 : ((ifRight > 0) ? pos.x += distance : pos.x -= distance);
+      (ifUp == 0) ? pos.y+=0 : ((ifUp > 0) ? pos.y += distance : pos.y -= distance);
+      object->SetPosition(pos);
+   }
+}
+
 bool AnimatedItems::IfPlayingTime(float duration) {
    auto animation = std::dynamic_pointer_cast<Util::Animation>(m_Drawable);
    unsigned long nowTime = Util::Time::GetElapsedTimeMs();

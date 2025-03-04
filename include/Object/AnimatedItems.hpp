@@ -27,6 +27,9 @@ public:
 
     const glm::vec2& GetPosition() const;
 
+    void Move(const std::shared_ptr<AnimatedItems> &object, int ifRight, int ifUp, float distance, float duration);
+    //stay = 0, right = 1, left = -1
+
     bool IfPlayingTime(float time);
 
     [[nodiscard]] bool IfAnimationEnds() const;
