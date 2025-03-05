@@ -69,7 +69,7 @@ void Title::Start(App* app){
     m_BatScene_1 = std::make_shared<AnimatedItems>(batScene, 65);
     m_BatScene_1->SetPosition({50, 180});
     m_BatScene_2 = std::make_shared<AnimatedItems>(batScene, 65);
-    m_BatScene_2->SetPosition({-400, -50});
+    m_BatScene_2->SetPosition({-400, -100});
     std::vector<std::shared_ptr<AnimatedItems>> m_BatScene = {m_BatScene_1, m_BatScene_2};
     for (auto &&anim : m_BatScene) {
         anim-> m_Transform.scale = glm::vec2(0.1, 0.1);
@@ -92,7 +92,7 @@ void Title::Update(){
         m_Key->SetLooping(true);
         m_Bat->SetPaused();
     }
-    if (m_Key->IsPlaying() && m_Key->IfPlayingTime(5)) {
+    if (m_Key->IsPlaying() && m_Key->IfPlayingTime(1.5)) {
         m_Key->SetVisible(false);
         m_Bat->SetVisible(false);
         m_Menu->SetVisible(true);
@@ -111,9 +111,9 @@ void Title::End(App* app){
     m_Menu->SetMenuVisibility(true);
 
     //Cutscene animation
-    m_Character->m_Behavior->Move(m_Character->m_Behavior, -1, 0, 2.08, 9);
+    m_Character->m_Behavior->Move(m_Character->m_Behavior, -1, 0, 2.08, 3.9);
     m_Character-> SetPosition(m_Character->m_Behavior->GetPosition());
-    if (m_Character->m_Behavior->IfPlayingTime(9)) { //end animation and idle
+    if (m_Character->m_Behavior->IfPlayingTime(3.9)) { //end animation and idle
         m_Character->m_Behavior->SetVisible(false);
         m_Character->UpdatePosition();
         m_Character->m_Image->SetVisible(true);
@@ -121,11 +121,11 @@ void Title::End(App* app){
 
     glm::vec2 pos = m_Boat->GetPosition();
     m_Boat->SetPosition({pos.x-0.7, pos.y});
-    m_BatScene_1->Move(m_BatScene_1, -1, 0, 0.2, 12);
-    m_BatScene_2->Move(m_BatScene_2, 1, 1, 0.5, 12);
+    m_BatScene_1->Move(m_BatScene_1, -1, 0, 0.2, 17);
+    m_BatScene_2->Move(m_BatScene_2, 1, 1, 0.6, 17);
 
     //End Title
-    if (m_Character->m_Behavior->IfPlayingTime(12)) {
+    if (m_Character->m_Behavior->IfPlayingTime(8)) {
         app->m_Root.RemoveAllChildren();
         app->m_AppState = App::AppState::START;
         app->m_GameState = App::GameState::STAGE0;

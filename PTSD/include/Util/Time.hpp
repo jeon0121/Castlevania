@@ -64,6 +64,19 @@ public:
      */
     static void Update();
 
+    /**
+     * @brief Get the run time from the start of the animation in
+     * milliseconds.
+     *
+     * This function records the duration of the animation playing.
+     * When one calls Util::Animation::Play(), the timer starts, and
+     * when one calls Util::Animation::Pause(), the timer stops.
+     *
+     * @param s_Initial The performance counter value when the animation started.
+     * @return The run time from the start of the animation in milliseconds.
+     */
+    static ms_t GetRunTimeMs(sdl_count_t s_Initial);
+
 private:
     static sdl_count_t s_Start;
 

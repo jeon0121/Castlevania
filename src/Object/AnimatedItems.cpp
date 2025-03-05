@@ -21,11 +21,16 @@ void AnimatedItems::SetLooping(bool looping) {
 void AnimatedItems::SetPlaying() {
    auto animation = std::dynamic_pointer_cast<Util::Animation>(m_Drawable);
    animation->Play();
+   if (ifStart) {
+      s_Initial = SDL_GetPerformanceCounter();
+   }
+   ifStart = false;
 }
 
 void AnimatedItems::SetPaused() {
    auto animation = std::dynamic_pointer_cast<Util::Animation>(m_Drawable);
    animation->Pause();
+   ifStart = true;
 }
 
 int AnimatedItems::GetCurrentFrameIndex(){
@@ -55,8 +60,8 @@ void AnimatedItems::Move(const std::shared_ptr<AnimatedItems> &object, int ifRig
 
 bool AnimatedItems::IfPlayingTime(float duration) {
    auto animation = std::dynamic_pointer_cast<Util::Animation>(m_Drawable);
-   unsigned long nowTime = Util::Time::GetElapsedTimeMs();
-   if (nowTime/1000 >= duration) {
+   float nowTime = Util::Time::GetRunTimeMs(s_Initial) / 1000;
+   if (nowTime >= duration) {
       animation->Pause();
       return true;
    }

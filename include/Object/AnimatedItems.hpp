@@ -33,6 +33,10 @@ public:
     bool IfPlayingTime(float time);
 
     [[nodiscard]] bool IfAnimationEnds() const;
+
+private:
+    bool ifStart = true;
+    Uint64 s_Initial;
 };
 
 #endif
