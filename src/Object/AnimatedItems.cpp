@@ -1,8 +1,9 @@
 #include "Object/AnimatedItems.hpp"
 #include "Util/Time.hpp"
 
-AnimatedItems::AnimatedItems(const std::vector<std::string> &AnimationPaths, int interval){
+AnimatedItems::AnimatedItems(const std::vector<std::string> &AnimationPaths, int interval, glm::vec2 scale){
    m_Drawable = std::make_shared<Util::Animation>(AnimationPaths, false, interval, false, 0);
+   m_Transform.scale = scale;
 }
 
 bool AnimatedItems::IsLooping() const {

@@ -2,7 +2,6 @@
 #define TITLE_HPP
 
 #include "Scene.hpp"
-#include "State/Menu.hpp"
 #include "Object/AnimatedItems.hpp"
 
 class Title : public Scene{
@@ -17,7 +16,6 @@ private:
     std::shared_ptr<AnimatedItems> m_BatScene_1;
     std::shared_ptr<AnimatedItems> m_BatScene_2;
     std::shared_ptr<ImageItems> m_Boat;
-    std::shared_ptr<Menu> m_Menu;
 };
 #endif
 

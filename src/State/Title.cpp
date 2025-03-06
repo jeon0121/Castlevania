@@ -6,7 +6,8 @@
 
 void Title::Start(App* app){
     // menu
-    m_Menu = std::make_shared<Menu>(300, 0, 16, 16, 5, 3, 1);
+    MenuValue menuvalue;
+    m_Menu = std::make_shared<Menu>(menuvalue);
     m_Menu->SetMenuVisibility(false);
     app->m_Root.AddChild(m_Menu);
     for (auto &&num : m_Menu->numberImage){
@@ -19,7 +20,7 @@ void Title::Start(App* app){
         for (auto &&h : healthbar) app->m_Root.AddChild(h);
     }
     // background
-    m_Background = std::make_shared<ImageItems>(GA_RESOURCE_DIR"/title/title-screen/title-screen.png");
+    m_Background = std::make_shared<ImageItems>(GA_RESOURCE_DIR"/title/title-screen/title-screen.png", glm::vec2(1, 0.9));
     m_Background->SetZIndex(0);
     app->m_Root.AddChild(m_Background);
 
@@ -28,8 +29,8 @@ void Title::Start(App* app){
     for (int i = 0; i < 41; ++i) {
         batImages.emplace_back(GA_RESOURCE_DIR"/title/bat/bat-" + std::to_string(i + 1) + ".png");
     }
-    m_Bat = std::make_shared<AnimatedItems>(batImages, 65);
-    m_Bat->SetPosition({368, -48});
+    m_Bat = std::make_shared<AnimatedItems>(batImages, 65, glm::vec2(1, 0.9));
+    m_Bat->SetPosition({368, -43});
     m_Bat->SetZIndex(5);
     m_Bat->SetPlaying();
     app->m_Root.AddChild(m_Bat);
@@ -39,24 +40,22 @@ void Title::Start(App* app){
     for (int i = 0; i < 2; ++i) {
         keyImages.emplace_back(GA_RESOURCE_DIR"/title/key/title-key-" + std::to_string(i + 1) + ".png");
     }
-    m_Key = std::make_shared<AnimatedItems>(keyImages, 120);
-    m_Key->SetPosition({0, -80});
-    m_Key -> m_Transform.scale = glm::vec2(0.1652, 0.1652);
+    m_Key = std::make_shared<AnimatedItems>(keyImages, 120, glm::vec2(0.1662, 0.1652));
+    m_Key->SetPosition({0, -70});
     m_Key->SetVisible(false);
     m_Key->SetZIndex(6);
     app->m_Root.AddChild(m_Key);
 
     //character
-    m_Character = std::make_shared<Character>(glm::vec2(480, -310));
+    m_Character = std::make_shared<Character>(glm::vec2(480, -280));
     m_Character->LoadBehavior();
     app->m_Root.AddChild(m_Character->m_Behavior);
     app->m_Root.AddChild(m_Character->m_Image);
 
     //boat
     std::string boatImage = GA_RESOURCE_DIR"/cutscene/boat/boat.png";
-    m_Boat = std::make_shared<ImageItems>(boatImage);
-    m_Boat->SetPosition({480, 160});
-    m_Boat -> m_Transform.scale = glm::vec2(0.1, 0.1);
+    m_Boat = std::make_shared<ImageItems>(boatImage, glm::vec2(0.1, 0.1));
+    m_Boat->SetPosition({480, 125});
     m_Boat->SetVisible(false);
     m_Boat->SetZIndex(6);
     app->m_Root.AddChild(m_Boat);
@@ -66,16 +65,14 @@ void Title::Start(App* app){
     for (int i = 0; i < 2; ++i) {
         batScene.emplace_back(GA_RESOURCE_DIR"/cutscene/bat/bat-" + std::to_string(i + 1) + ".png");
     }
-    m_BatScene_1 = std::make_shared<AnimatedItems>(batScene, 65);
-    m_BatScene_1->SetPosition({50, 180});
-    m_BatScene_2 = std::make_shared<AnimatedItems>(batScene, 65);
-    m_BatScene_2->SetPosition({-400, -100});
+    m_BatScene_1 = std::make_shared<AnimatedItems>(batScene, 65, glm::vec2(0.08, 0.08));
+    m_BatScene_1->SetPosition({75, 150});
+    m_BatScene_2 = std::make_shared<AnimatedItems>(batScene, 65, glm::vec2(0.08, 0.08));
+    m_BatScene_2->SetPosition({-450, -135});
     std::vector<std::shared_ptr<AnimatedItems>> m_BatScene = {m_BatScene_1, m_BatScene_2};
     for (auto &&anim : m_BatScene) {
-        anim-> m_Transform.scale = glm::vec2(0.1, 0.1);
         anim->SetVisible(false);
         anim->SetZIndex(6);
-        anim->SetPlaying();
         app->m_Root.AddChild(anim);
     }
 
@@ -95,7 +92,6 @@ void Title::Update(){
     if (m_Key->IsPlaying() && m_Key->IfPlayingTime(1.5)) {
         m_Key->SetVisible(false);
         m_Bat->SetVisible(false);
-        m_Menu->SetVisible(true);
         m_Character->m_Behavior->SetVisible(true);
         m_Boat->SetVisible(true);
         m_BatScene_1->SetVisible(true);
@@ -106,7 +102,7 @@ void Title::Update(){
 
 void Title::End(App* app){
     m_Background->SetDrawable(std::make_unique<Util::Image>(GA_RESOURCE_DIR"/cutscene/intro/intro.png"));
-    m_Background->m_Transform.scale = glm::vec2(0.65, 0.65);
+    m_Background->m_Transform.scale = glm::vec2(0.65, 0.55);
     m_Background->SetPosition({0, -100});
     m_Menu->SetMenuVisibility(true);
 
@@ -120,9 +116,9 @@ void Title::End(App* app){
     }
 
     glm::vec2 pos = m_Boat->GetPosition();
-    m_Boat->SetPosition({pos.x-0.7, pos.y});
-    m_BatScene_1->Move(m_BatScene_1, -1, 0, 0.2, 17);
-    m_BatScene_2->Move(m_BatScene_2, 1, 1, 0.6, 17);
+    m_Boat->SetPosition({pos.x-0.4, pos.y});
+    m_BatScene_1->Move(m_BatScene_1, -1, 0, 0.25, 8);
+    m_BatScene_2->Move(m_BatScene_2, 1, 1, 0.6, 8);
 
     //End Title
     if (m_Character->m_Behavior->IfPlayingTime(8)) {

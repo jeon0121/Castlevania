@@ -4,19 +4,20 @@
 #include "Util/GameObject.hpp"
 #include "Util/Image.hpp"
 #include "Object/ImageItems.hpp"
-
+struct MenuValue {
+    int time = 300;         // mm:dd
+    int score = 0;        // 000000
+    int playerHeart = 16;  // [][][][][][][][][][][][][][][][][]
+    int enemyHeart = 16;   // [][][][][][][][][][][][][][][][][]
+    int playerAmmo = 5;   // 00
+    int playerLife = 3;   // 00
+    int currentStage = 1; // 00
+};
 class Menu : public Util::GameObject {
 public:
-    Menu(int time, int score, int playerHeart, int enemyHeart, int playerAmmo, int playerLife, int currentStage);
-    
-    int time;         // mm:dd
-    int score;        // 000000
-    int playerHeart;  // [][][][][][][][][][][][][][][][][]
-    int enemyHeart;   // [][][][][][][][][][][][][][][][][]
-    int playerAmmo;   // 00
-    int playerLife;   // 00
-    int currentStage; // 00
+    Menu(const MenuValue& value);
 
+    MenuValue m_value;
     std::shared_ptr<ImageItems> background;
     std::vector<std::vector<std::shared_ptr<ImageItems>>> numberImage;
     std::vector<std::shared_ptr<ImageItems>> textImage;

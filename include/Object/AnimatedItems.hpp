@@ -7,7 +7,8 @@
 
 class AnimatedItems : public Util::GameObject {
 public:
-    explicit AnimatedItems(const std::vector<std::string>& AnimationPaths, int interval);
+    explicit AnimatedItems(const std::vector<std::string>& AnimationPaths,
+    int interval, glm::vec2 scale=glm::vec2(1.0f, 1.0f));
 
     [[nodiscard]] bool IsLooping() const;
 

@@ -2,8 +2,9 @@ set(SRC_FILES
     App.cpp
     Object/AnimatedItems.cpp
     Object/Character.cpp
-    State/Title.cpp
     State/Menu.cpp
+    State/Title.cpp
+    State/Stage0.cpp
 )
 
 set(INCLUDE_FILES
@@ -12,9 +13,10 @@ set(INCLUDE_FILES
     Object/AnimatedItems.hpp
     Object/Character.hpp
     Object/ImageItems.hpp
-    State/Scene.hpp
     State/Menu.hpp
+    State/Scene.hpp
     State/Title.hpp
+    State/Stage0.hpp
 )
 
 set(TEST_FILES

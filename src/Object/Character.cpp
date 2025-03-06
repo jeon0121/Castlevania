@@ -17,7 +17,7 @@ void Character::LoadBehavior() {
     jump = GA_RESOURCE_DIR"/main character/jump/jump.png";
     intro = GA_RESOURCE_DIR"/main character/intro/intro.png";
 
-    m_Image = std::make_shared<ImageItems>(intro);
+    m_Image = std::make_shared<ImageItems>(intro, glm::vec2(0.8, 0.8));
     m_Image->SetVisible(false);
     m_Image->SetZIndex(7);
 
@@ -25,7 +25,7 @@ void Character::LoadBehavior() {
     for (int i = 0; i < 4; ++i) {
         walkImages.emplace_back(GA_RESOURCE_DIR"/main character/walk/walk-" + std::to_string(i + 1) + ".png");
     }
-    m_Behavior = std::make_shared<AnimatedItems>(walkImages, 100);
+    m_Behavior = std::make_shared<AnimatedItems>(walkImages, 100, glm::vec2(0.8, 0.8));
     m_Behavior->SetVisible(false);
     m_Behavior->SetPosition(pos);
     m_Behavior->SetZIndex(7);

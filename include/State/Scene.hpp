@@ -5,6 +5,7 @@
 #include "Util/Image.hpp"
 #include "Object/ImageItems.hpp"
 #include "Object/Character.hpp"
+#include "State/Menu.hpp"
 
 class App;
 
@@ -23,6 +24,7 @@ public:
 protected:
     std::shared_ptr<ImageItems> m_Background;
     std::shared_ptr<Character> m_Character;
+    std::shared_ptr<Menu> m_Menu;
 };
 
 #endif

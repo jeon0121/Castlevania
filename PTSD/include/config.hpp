@@ -10,8 +10,8 @@ constexpr const char *TITLE = "Castlevania";
 constexpr int WINDOW_POS_X = SDL_WINDOWPOS_UNDEFINED;
 constexpr int WINDOW_POS_Y = SDL_WINDOWPOS_UNDEFINED;
 
-constexpr unsigned int WINDOW_WIDTH = 1024;
-constexpr unsigned int WINDOW_HEIGHT = 900;
+constexpr unsigned int WINDOW_WIDTH = 1050;
+constexpr unsigned int WINDOW_HEIGHT = 784;
 
 constexpr Util::Logger::Level DEFAULT_LOG_LEVEL = Util::Logger::Level::DEBUG;
 
