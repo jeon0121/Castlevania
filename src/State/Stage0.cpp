@@ -20,9 +20,9 @@ void Stage0::Start(App* app){
         for (auto &&h : healthbar) app->m_Root.AddChild(h);
     }
     // background
-    m_Background = std::make_shared<ImageItems>(GA_RESOURCE_DIR"/background/stage-0/castle-entrance.png", glm::vec2(4.1, 3.5));
+    m_Background = std::make_shared<ImageItems>(GA_RESOURCE_DIR"/background/stage-0/castle-entrance.png");
+    m_Background->m_Transform.scale = glm::vec2(1.1, 1);
     m_Background->SetPosition({1048, -50});
-    m_Background->SetZIndex(0);
     app->m_Root.AddChild(m_Background);
 }
 
