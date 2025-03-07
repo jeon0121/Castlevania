@@ -1,5 +1,5 @@
 #include "Object/AnimatedItems.hpp"
-#include "Util/Time.hpp"
+#include "Util/Time2.hpp"
 
 AnimatedItems::AnimatedItems(const std::vector<std::string> &AnimationPaths, int interval, glm::vec2 scale){
    m_Drawable = std::make_shared<Util::Animation>(AnimationPaths, false, interval, false, 0);
@@ -61,7 +61,7 @@ void AnimatedItems::Move(const std::shared_ptr<AnimatedItems> &object, int ifRig
 
 bool AnimatedItems::IfPlayingTime(float duration) {
    auto animation = std::dynamic_pointer_cast<Util::Animation>(m_Drawable);
-   float nowTime = Util::Time::GetRunTimeMs(s_Initial) / 1000;
+   float nowTime = Time2::GetRunTimeMs(s_Initial) / 1000;
    if (nowTime >= duration) {
       animation->Pause();
       return true;

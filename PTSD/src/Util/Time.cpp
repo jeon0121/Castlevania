@@ -17,11 +17,6 @@ void Time::Update() {
                   static_cast<float>(SDL_GetPerformanceFrequency()) * 1000.0F;
 }
 
-ms_t Time::GetRunTimeMs(sdl_count_t s_Initial) {
-    return static_cast<float>(SDL_GetPerformanceCounter() - s_Initial)/
-           static_cast<float>(SDL_GetPerformanceFrequency()) * 1000.0F;
-}
-
 sdl_count_t Time::s_Start = SDL_GetPerformanceCounter();
 sdl_count_t Time::s_Now = Time::s_Start;
 sdl_count_t Time::s_Last = 0;

@@ -120,7 +120,7 @@ void Title::End(App* app){
     m_BatScene_1->Move(m_BatScene_1, -1, 0, 0.25, 8);
     m_BatScene_2->Move(m_BatScene_2, 1, 1, 0.6, 8);
 
-    //End Title
+    //End Title^
     if (m_Character->m_Behavior->IfPlayingTime(8)) {
         app->m_Root.RemoveAllChildren();
         app->m_AppState = App::AppState::START;
