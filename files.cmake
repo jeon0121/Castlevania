@@ -5,7 +5,7 @@ set(SRC_FILES
     State/Menu.cpp
     State/Title.cpp
     State/Stage0.cpp
-    Util/Time2.cpp
+    Utility/Time.cpp
 )
 
 set(INCLUDE_FILES
@@ -18,7 +18,7 @@ set(INCLUDE_FILES
     State/Scene.hpp
     State/Title.hpp
     State/Stage0.hpp
-    Util/Time2.hpp
+    Utility/Time.hpp
 )
 
 set(TEST_FILES

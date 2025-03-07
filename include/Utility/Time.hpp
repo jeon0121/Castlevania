@@ -3,7 +3,7 @@
 #include "Util/Time.hpp"
 
 
-class Time2 {
+class Time {
 public:
    static Util::ms_t GetRunTimeMs(Util::sdl_count_t s_Initial);
 };
