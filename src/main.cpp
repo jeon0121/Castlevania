@@ -5,8 +5,9 @@
 int main(int, char**) {
     auto context = Core::Context::GetInstance();
     App app;
-
+    context->Update();
     while (!context->GetExit()) {
+        context->Update();
         switch (app.GetAppState()) {
             case App::AppState::START:
                 app.Start();
@@ -21,7 +22,6 @@ int main(int, char**) {
                 context->SetExit(true);
                 break;
         }
-        context->Update();
     }
     return 0;
 }
