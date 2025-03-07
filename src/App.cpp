@@ -49,3 +49,15 @@ void App::Update() {
 void App::End() { // NOLINT(this method will mutate members in the future)
     LOG_TRACE("End");
 }
+
+void App::AddAllChildren(std::vector<std::shared_ptr<Util::GameObject>> m_All) {
+    for (auto i : m_All) {
+        m_Root.AddChild(i);
+    }
+}
+
+void App::RemoveAllChildren(std::vector<std::shared_ptr<Util::GameObject>> m_All) {
+    for (auto i : m_All) {
+        m_Root.RemoveChild(i);
+    }
+}

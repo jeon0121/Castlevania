@@ -31,6 +31,10 @@ public:
 
     void End(); // NOLINT(readability-convert-member-functions-to-static)
 
+    void AddAllChildren(std::vector<std::shared_ptr<Util::GameObject>> m_All);
+
+    void RemoveAllChildren(std::vector<std::shared_ptr<Util::GameObject>> m_All);
+
     Util::Renderer m_Root;
     AppState m_AppState = AppState::START;
     GameState m_GameState = GameState::TITLE;

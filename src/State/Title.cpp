@@ -9,7 +9,7 @@ void Title::Start(App* app){
     MenuValue menuvalue;
     m_Menu = std::make_shared<Menu>(menuvalue);
     m_Menu->SetMenuVisibility(false);
-    app->m_Root.AddChild(m_Menu);
+    m_All.push_back(m_Menu);
     for (auto &&num : m_Menu->numberImage){
         for (auto &&letter : num) app->m_Root.AddChild(letter);
     }
@@ -22,7 +22,7 @@ void Title::Start(App* app){
     // background
     m_Background = std::make_shared<ImageItems>(GA_RESOURCE_DIR"/title/title-screen/title-screen.png", glm::vec2(1, 0.9));
     m_Background->SetZIndex(0);
-    app->m_Root.AddChild(m_Background);
+    m_All.push_back(m_Background);
 
     // bat animation
     std::vector<std::string> batImages;
@@ -33,7 +33,7 @@ void Title::Start(App* app){
     m_Bat->SetPosition({368, -43});
     m_Bat->SetZIndex(5);
     m_Bat->SetPlaying();
-    app->m_Root.AddChild(m_Bat);
+    m_All.push_back(m_Bat);
 
     // key animation
     std::vector<std::string> keyImages;
@@ -44,13 +44,12 @@ void Title::Start(App* app){
     m_Key->SetPosition({0, -70});
     m_Key->SetVisible(false);
     m_Key->SetZIndex(6);
-    app->m_Root.AddChild(m_Key);
+    m_All.push_back(m_Key);
 
     //character
-    m_Character = std::make_shared<Character>(glm::vec2(480, -280));
-    m_Character->LoadBehavior(4, 0);
-    app->m_Root.AddChild(m_Character->m_Behavior);
-    app->m_Root.AddChild(m_Character->m_Image);
+    m_Character = std::make_shared<Character>(glm::vec2(480, -280), 0, 0.8);
+    m_Character->m_Behavior->SetVisible(false);
+    m_All.push_back(m_Character->m_Behavior);
 
     //boat
     std::string boatImage = GA_RESOURCE_DIR"/cutscene/boat/boat.png";
@@ -58,7 +57,7 @@ void Title::Start(App* app){
     m_Boat->SetPosition({480, 125});
     m_Boat->SetVisible(false);
     m_Boat->SetZIndex(6);
-    app->m_Root.AddChild(m_Boat);
+    m_All.push_back(m_Boat);
 
     //bat in cutscene
     std::vector<std::string> batScene;
@@ -73,9 +72,10 @@ void Title::Start(App* app){
     for (auto &&anim : m_BatScene) {
         anim->SetVisible(false);
         anim->SetZIndex(6);
-        app->m_Root.AddChild(anim);
+        m_All.push_back(anim);
     }
 
+    app->AddAllChildren(m_All);
     m_stateState = StateState::UPDATE;
 }
 
@@ -110,9 +110,8 @@ void Title::End(App* app){
     m_Character->m_Behavior->Move(m_Character->m_Behavior, -1, 0, 2.08, 3.9);
     m_Character-> SetPosition(m_Character->m_Behavior->GetPosition());
     if (m_Character->m_Behavior->IfPlayingTime(3.9)) { //end animation and idle
-        m_Character->m_Behavior->SetVisible(false);
-        m_Character->UpdatePosition();
-        m_Character->m_Image->SetVisible(true);
+        m_Character->ChangeBehavior(6, &m_All);
+        app->m_Root.AddChild(m_Character->m_Behavior);
     }
 
     glm::vec2 pos = m_Boat->GetPosition();
@@ -120,9 +119,9 @@ void Title::End(App* app){
     m_BatScene_1->Move(m_BatScene_1, -1, 0, 0.25, 8);
     m_BatScene_2->Move(m_BatScene_2, 1, 1, 0.6, 8);
 
-    //End Title^
-    if (m_Character->m_Behavior->IfPlayingTime(8)) {
-        app->m_Root.RemoveAllChildren();
+    // //End Title
+    if (m_BatScene_1->IfPlayingTime(8)) {
+        app->RemoveAllChildren(m_All);
         app->m_AppState = App::AppState::START;
         app->m_GameState = App::GameState::STAGE0;
     }

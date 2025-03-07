@@ -25,6 +25,7 @@ protected:
     std::shared_ptr<ImageItems> m_Background;
     std::shared_ptr<Character> m_Character;
     std::shared_ptr<Menu> m_Menu;
+    std::vector<std::shared_ptr<Util::GameObject>> m_All;
 };
 
 #endif
