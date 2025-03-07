@@ -32,6 +32,10 @@ Menu::Menu(const MenuValue& values)
     // enemy health
     addText("enemy", {-405, 285});
     addHealth(m_value.enemyHeart, {-260, 285}, "enemy");
+
+    // weapon
+    addText("weapon-frame", {90, 287});
+    addWeapon(m_value.weapon, {95, 285});
 }
 
 std::string Menu::formatTime(int time) {
@@ -86,6 +90,22 @@ void Menu::addHealth(int heart, const glm::vec2& position, std::string type){
         x += characterImage->GetScaledSize().x + 5;
     }
     health.push_back(healthbar);
+}
+
+void Menu::addWeapon(WeaponType weapon, const glm::vec2 &position){
+    float x = position.x, y = position.y;
+    std::string imagePath = GA_RESOURCE_DIR "/items/weapon/";
+    switch (weapon) {
+        case WeaponType::None: imagePath = GA_RESOURCE_DIR "/transparent.png"; break;
+        case WeaponType::Axe: imagePath += "axe.png"; break;
+        case WeaponType::Potion: imagePath += "potion.png"; break;
+        case WeaponType::Sword: imagePath += "sword.png"; break;
+        case WeaponType::Timestop: imagePath += "timestop.png"; break;
+    }
+    auto characterImage = std::make_shared<ImageItems>(imagePath);
+    characterImage->SetPosition({x, y});
+    characterImage->SetZIndex(50);
+    textImage.push_back(characterImage);
 }
 
 void Menu::SetMenuVisibility(const bool visible) {

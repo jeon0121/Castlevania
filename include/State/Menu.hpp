@@ -4,6 +4,15 @@
 #include "Util/GameObject.hpp"
 #include "Util/Image.hpp"
 #include "Object/ImageItems.hpp"
+
+enum class WeaponType {
+    None,
+    Axe,
+    Potion,
+    Sword,
+    Timestop
+};
+
 struct MenuValue {
     int time = 300;         // mm:dd
     int score = 0;        // 000000
@@ -12,6 +21,7 @@ struct MenuValue {
     int playerAmmo = 5;   // 00
     int playerLife = 3;   // 00
     int currentStage = 1; // 00
+    WeaponType weapon = WeaponType::None;
 };
 class Menu : public Util::GameObject {
 public:
@@ -34,6 +44,8 @@ public:
     void addNumber(std::string text, const glm::vec2& position);
 
     void addHealth(int heart, const glm::vec2& position, std::string type);
+
+    void addWeapon(WeaponType weapon, const glm::vec2& position);
 
     void SetMenuVisibility(const bool visible);
 };
