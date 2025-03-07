@@ -29,16 +29,8 @@ Character::Character(const glm::vec2 &position, int beIndex, float scale){
 
 }
 
-void Character::ChangeBehavior(int BehaviorIndex, std::vector<std::shared_ptr<Util::GameObject>>* m_All) {
-    if (m_Behavior) {
-        m_Behavior->SetVisible(false);
-    }
-    glm::vec2 oldPosition = m_Behavior->GetPosition();
-    m_Behavior = std::make_shared<AnimatedItems>(behaviorVector[BehaviorIndex], 100, glm::vec2(0.8, 0.8));
-    m_Behavior->SetPosition(oldPosition);
-    m_Behavior->SetZIndex(7);
-    m_Behavior->SetIfMove(false);
-    m_All->push_back(m_Behavior);
+void Character::ChangeBehavior(int BehaviorIndex) {
+    m_Behavior->SetAnimationFrames(behaviorVector[BehaviorIndex], 100);
 }
 
 void Character::SetPosition(const glm::vec2& Position) {

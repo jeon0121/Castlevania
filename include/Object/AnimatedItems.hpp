@@ -31,6 +31,8 @@ public:
     void Move(const std::shared_ptr<AnimatedItems> &object, int ifRight, int ifUp, float distance, float duration);
     //stay = 0, right = 1, left = -1
 
+    void SetAnimationFrames(const std::vector<std::string>& AnimationPaths, int interval);
+
     bool IfPlayingTime(float time);
 
     void SetIfStart(bool start){ifStart = start;}

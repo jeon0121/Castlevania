@@ -61,6 +61,10 @@ void AnimatedItems::Move(const std::shared_ptr<AnimatedItems> &object, int ifRig
    }
 }
 
+void AnimatedItems::SetAnimationFrames(const std::vector<std::string>& AnimationPaths, int interval) {
+   m_Drawable = std::make_shared<Util::Animation>(AnimationPaths, false, interval, false, 0);
+}
+
 bool AnimatedItems::IfPlayingTime(float duration) {
    auto animation = std::dynamic_pointer_cast<Util::Animation>(m_Drawable);
    float nowTime = Time::GetRunTimeMs(s_Initial) / 1000;

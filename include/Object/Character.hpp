@@ -6,12 +6,15 @@
 #include "Util/Animation.hpp"
 #include "Object/AnimatedItems.hpp"
 #include "Object/ImageItems.hpp"
+#include <nlohmann/json.hpp>
 
 class Character : public Util::GameObject{
 public:
     explicit Character(const glm::vec2 &position, int beIndex, float scale=1.0);
 
-    void ChangeBehavior(int BehaviorIndex, std::vector<std::shared_ptr<Util::GameObject>>* m_All);
+    void ChangeBehavior(int BehaviorIndex);
+
+    void Move();
 
     void SetPosition(const glm::vec2& Position);
 

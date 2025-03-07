@@ -110,7 +110,7 @@ void Title::End(App* app){
     m_Character->m_Behavior->Move(m_Character->m_Behavior, -1, 0, 2.08, 3.9);
     m_Character-> SetPosition(m_Character->m_Behavior->GetPosition());
     if (m_Character->m_Behavior->IfPlayingTime(3.9)) { //end animation and idle
-        m_Character->ChangeBehavior(6, &m_All);
+        m_Character->ChangeBehavior(6);
         app->m_Root.AddChild(m_Character->m_Behavior);
     }
 
