@@ -48,7 +48,7 @@ void Title::Start(App* app){
 
     //character
     m_Character = std::make_shared<Character>(glm::vec2(480, -280));
-    m_Character->LoadBehavior();
+    m_Character->LoadBehavior(4, 0);
     app->m_Root.AddChild(m_Character->m_Behavior);
     app->m_Root.AddChild(m_Character->m_Image);
 

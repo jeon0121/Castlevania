@@ -11,7 +11,7 @@ class Character : public Util::GameObject{
 public:
     explicit Character(const glm::vec2 &position);
 
-    void LoadBehavior();
+    void LoadBehavior(int imIndex, int beIndex);
 
     void UpdatePosition();
 

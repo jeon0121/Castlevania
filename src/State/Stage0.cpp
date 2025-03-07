@@ -24,6 +24,12 @@ void Stage0::Start(App* app){
     m_Background->m_Transform.scale = glm::vec2(1.1, 1);
     m_Background->SetPosition({1048, -50});
     app->m_Root.AddChild(m_Background);
+
+    //character
+    m_Character = std::make_shared<Character>(glm::vec2(0, -280));
+    m_Character->LoadBehavior(0, 0);
+    app->m_Root.AddChild(m_Character->m_Behavior);
+    app->m_Root.AddChild(m_Character->m_Image);
 }
 
 void Stage0::Update(){
