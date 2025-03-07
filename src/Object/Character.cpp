@@ -3,53 +3,53 @@
 #include "Util/Keycode.hpp"
 #include "Util/Time.hpp"
 
-Character::Character(const glm::vec2 &position) : pos(position){
-}
-
-void Character::LoadBehavior(int imIndex, int beIndex) {
+Character::Character(const glm::vec2 &position, int beIndex, float scale){
     //Image string
-    std::string duck, hurt, jump, idle, intro;
-    std::vector<std::string> imageVector;
-
-    //Animated string
-    std::vector<std::string> walkImages, deathImages;
-    std::vector<std::vector<std::string>> behaviorVector;
+    std::vector<std::string> walk, death, duck, hurt, jump, idle, intro;
 
     //ImageBehavior
-    idle = GA_RESOURCE_DIR"/main character/idle/idle.png";
-    duck = GA_RESOURCE_DIR"/main character/duck/duck.png";
-    hurt = GA_RESOURCE_DIR"/main character/hurt/hurt.png";
-    jump = GA_RESOURCE_DIR"/main character/jump/jump.png";
-    intro = GA_RESOURCE_DIR"/main character/intro/intro.png";
-    imageVector = {idle, duck, hurt, jump, intro};
-
-    m_Image = std::make_shared<ImageItems>(imageVector[imIndex], glm::vec2(0.8, 0.8));
-    m_Image->SetVisible(false);
-    m_Image->SetZIndex(7);
+    idle.emplace_back(GA_RESOURCE_DIR"/main character/idle/idle.png");
+    duck.emplace_back(GA_RESOURCE_DIR"/main character/duck/duck.png");
+    hurt.emplace_back(GA_RESOURCE_DIR"/main character/hurt/hurt.png");
+    jump.emplace_back(GA_RESOURCE_DIR"/main character/jump/jump.png");
+    intro.emplace_back(GA_RESOURCE_DIR"/main character/intro/intro.png");
 
     //AnimatedBehavior
     for (int i = 0; i < 4; ++i) {
-        walkImages.emplace_back(GA_RESOURCE_DIR"/main character/walk/walk-" + std::to_string(i + 1) + ".png");
+        walk.emplace_back(GA_RESOURCE_DIR"/main character/walk/walk-" + std::to_string(i + 1) + ".png");
     }
     for (int i = 0; i < 2; ++i) {
-        deathImages.emplace_back(GA_RESOURCE_DIR"/main character/death/death-" + std::to_string(i + 1) + ".png");
+        death.emplace_back(GA_RESOURCE_DIR"/main character/death/death-" + std::to_string(i + 1) + ".png");
     }
-    behaviorVector = {walkImages, deathImages};
+    behaviorVector = {walk, death, idle, duck, hurt, jump, intro};
 
-    m_Behavior = std::make_shared<AnimatedItems>(behaviorVector[beIndex], 100, glm::vec2(0.8, 0.8));
-    m_Behavior->SetVisible(false);
-    m_Behavior->SetPosition(pos);
+    m_Behavior = std::make_shared<AnimatedItems>(behaviorVector[beIndex], 100, glm::vec2(scale, scale));
+    m_Behavior->SetPosition(position);
     m_Behavior->SetZIndex(7);
 
 }
 
-void Character::UpdatePosition() {
-    m_Behavior->SetPosition(pos);
-    m_Image->SetPosition(pos);
+void Character::ChangeBehavior(int BehaviorIndex, std::vector<std::shared_ptr<Util::GameObject>>* m_All) {
+    if (m_Behavior) {
+        m_Behavior->SetVisible(false);
+    }
+    glm::vec2 oldPosition = m_Behavior->GetPosition();
+    m_Behavior = std::make_shared<AnimatedItems>(behaviorVector[BehaviorIndex], 100, glm::vec2(0.8, 0.8));
+    m_Behavior->SetPosition(oldPosition);
+    m_Behavior->SetZIndex(7);
+    m_Behavior->SetIfMove(false);
+    m_All->push_back(m_Behavior);
 }
 
 void Character::SetPosition(const glm::vec2& Position) {
-    pos = Position;
+    m_Behavior->SetPosition(Position);
 }
 
-const glm::vec2& Character::GetPosition() const { return pos; }
+const glm::vec2& Character::GetPosition() const {
+    return m_Behavior->GetPosition();
+}
+
+void Character::Flip() {
+    glm::vec2 scale = m_Behavior->m_Transform.scale;
+    m_Behavior->m_Transform.scale=glm::vec2(-1 * scale.x, scale.y);
+}

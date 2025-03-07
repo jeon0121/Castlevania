@@ -9,22 +9,19 @@
 
 class Character : public Util::GameObject{
 public:
-    explicit Character(const glm::vec2 &position);
+    explicit Character(const glm::vec2 &position, int beIndex, float scale=1.0);
 
-    void LoadBehavior(int imIndex, int beIndex);
-
-    void UpdatePosition();
+    void ChangeBehavior(int BehaviorIndex, std::vector<std::shared_ptr<Util::GameObject>>* m_All);
 
     void SetPosition(const glm::vec2& Position);
 
     const glm::vec2& GetPosition() const;
 
+    void Flip();
+
     std::shared_ptr<AnimatedItems> m_Behavior;
 
-    std::shared_ptr<ImageItems> m_Image;
-
-private:
-    glm::vec2 pos;
+    std::vector<std::vector<std::string>> behaviorVector;
 };
 
 #endif

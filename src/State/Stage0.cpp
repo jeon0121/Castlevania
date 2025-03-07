@@ -8,8 +8,8 @@ void Stage0::Start(App* app){
     // menu
     MenuValue menuvalue;
     m_Menu = std::make_shared<Menu>(menuvalue);
-    app->m_Root.AddChild(m_Menu);
-    app->m_Root.AddChild(m_Menu->background);
+    m_All.push_back(m_Menu);
+    m_All.push_back(m_Menu->background);
     for (auto &&num : m_Menu->numberImage){
         for (auto &&letter : num) app->m_Root.AddChild(letter);
     }
@@ -21,15 +21,16 @@ void Stage0::Start(App* app){
     }
     // background
     m_Background = std::make_shared<ImageItems>(GA_RESOURCE_DIR"/background/stage-0/castle-entrance.png");
-    m_Background->m_Transform.scale = glm::vec2(1.1, 1);
-    m_Background->SetPosition({1048, -50});
-    app->m_Root.AddChild(m_Background);
+    m_Background->m_Transform.scale = glm::vec2(1.025, 0.92);
+    m_Background->SetPosition({1050, -60});
+    m_All.push_back(m_Background);
 
     //character
-    m_Character = std::make_shared<Character>(glm::vec2(0, -280));
-    m_Character->LoadBehavior(0, 0);
-    app->m_Root.AddChild(m_Character->m_Behavior);
-    app->m_Root.AddChild(m_Character->m_Image);
+    m_Character = std::make_shared<Character>(glm::vec2(-315, -240), 0);
+    m_Character->Flip();
+    m_All.push_back(m_Character->m_Behavior);
+
+    app->AddAllChildren(m_All);
 }
 
 void Stage0::Update(){

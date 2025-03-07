@@ -33,10 +33,15 @@ public:
 
     bool IfPlayingTime(float time);
 
+    void SetIfStart(bool start){ifStart = start;}
+
+    void SetIfMove(bool move){ifMove = move;}
+
     [[nodiscard]] bool IfAnimationEnds() const;
 
 private:
-    bool ifStart = true;
+    bool ifStart = true;//if start record animation playing time
+    bool ifMove = true;//if animation should move
     Uint64 s_Initial;
 };
 
