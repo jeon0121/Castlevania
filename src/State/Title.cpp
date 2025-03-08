@@ -76,7 +76,6 @@ void Title::Start(App* app){
     }
 
     app->AddAllChildren(m_All);
-    m_stateState = StateState::UPDATE;
 }
 
 void Title::Update(){

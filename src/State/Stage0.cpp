@@ -26,15 +26,15 @@ void Stage0::Start(App* app){
     m_All.push_back(m_Background);
 
     //character
-    m_Character = std::make_shared<Character>(glm::vec2(-315, -240), 0);
+    m_Character = std::make_shared<Character>(glm::vec2(-315, -240), 2);
+    m_Character->m_direction = "right";
     m_Character->Flip();
     m_All.push_back(m_Character->m_Behavior);
-
     app->AddAllChildren(m_All);
 }
 
 void Stage0::Update(){
-
+    m_Character->Keys();
 }
 
 void Stage0::End(App* app){

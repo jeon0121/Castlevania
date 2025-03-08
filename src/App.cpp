@@ -26,6 +26,7 @@ void App::Start() {
             break;
     }
     m_Scene->Start(this);
+    m_Scene->m_stateState = Scene::StateState::UPDATE;
     m_AppState = AppState::UPDATE;
 }
 

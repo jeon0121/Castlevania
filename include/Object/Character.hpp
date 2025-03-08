@@ -6,7 +6,7 @@
 #include "Util/Animation.hpp"
 #include "Object/AnimatedItems.hpp"
 #include "Object/ImageItems.hpp"
-#include <nlohmann/json.hpp>
+#include <iostream>
 
 class Character : public Util::GameObject{
 public:
@@ -14,16 +14,21 @@ public:
 
     void ChangeBehavior(int BehaviorIndex);
 
-    void Move();
-
     void SetPosition(const glm::vec2& Position);
 
     const glm::vec2& GetPosition() const;
+
+    void Keys();
+
+    void Move(std::string direction);
 
     void Flip();
 
     std::shared_ptr<AnimatedItems> m_Behavior;
 
+    std::string m_direction;
+
+private:
     std::vector<std::vector<std::string>> behaviorVector;
 };
 

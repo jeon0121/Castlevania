@@ -41,6 +41,37 @@ const glm::vec2& Character::GetPosition() const {
     return m_Behavior->GetPosition();
 }
 
+void Character::Keys() {
+    // change behavior must called once, otherwise character will not animate since we change the m_Drawable
+    if (Util::Input::IsKeyDown(Util::Keycode::A) || Util::Input::IsKeyDown(Util::Keycode::D)) ChangeBehavior(0);
+
+    // left
+    if (Util::Input::IsKeyPressed(Util::Keycode::A)) Move("left");
+
+    // right
+    else if (Util::Input::IsKeyPressed(Util::Keycode::D)) Move("right");
+
+    // idle
+    else {
+        ChangeBehavior(2); // since idle dont have animation, its okay to be called more than once
+        m_Behavior->SetPaused();
+        m_Behavior->SetLooping(false);
+    }
+}
+
+void Character::Move(std::string direction){
+    glm::vec2 pos = GetPosition();
+    if (direction == "left") pos.x -= 3;
+    if (direction == "right") pos.x += 3;
+    if (direction != m_direction){
+        m_direction = direction;
+        Flip();
+    }
+    SetPosition(pos);
+    m_Behavior->SetPlaying();
+    m_Behavior->SetLooping(true);
+}
+
 void Character::Flip() {
     glm::vec2 scale = m_Behavior->m_Transform.scale;
     m_Behavior->m_Transform.scale=glm::vec2(-1 * scale.x, scale.y);
