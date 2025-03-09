@@ -1,8 +1,10 @@
 #ifndef POSITION_HPP
 #define POSITION_HPP
 
+#include <sstream>
 #include <iostream>
 #include "Util/Input.hpp"
+#include "Util/Logger.hpp"
 
 class Position {
 public:
@@ -12,6 +14,13 @@ public:
     * Useful for determining coordinates for placing objects (e.g., blocks, player, etc.).
     */
    void PrintCursorCoordinate();
+
+   /**
+    * @brief Logs the current cursor position to the log console.
+    *
+    * Useful for determining coordinates for placing objects (e.g., blocks, player, etc.).
+    */
+   void LogCursorCoordinate();
 };
 
 #endif
