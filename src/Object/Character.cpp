@@ -76,3 +76,24 @@ void Character::Flip() {
     glm::vec2 scale = m_Behavior->m_Transform.scale;
     m_Behavior->m_Transform.scale=glm::vec2(-1 * scale.x, scale.y);
 }
+
+void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blocks) {
+    glm::vec2 charPos = GetPosition();
+    glm::vec2 charSize = glm::abs(m_Behavior->GetScaledSize());
+    for (auto &block : m_Blocks) {
+        int blockType = block->GetType();
+        glm::vec2 blockPos = block->GetPosition();
+        glm::vec2 blockSize = glm::abs(block->GetScaledSize());
+        if (blockType == 0) {
+            float blockTop = blockPos.y + blockSize.y * 0.5f - 12;
+            if (charPos.y - charSize.y * 0.5f < blockTop) {
+                m_Behavior->SetPosition({charPos.x, blockTop + charSize.y * 0.5f});
+            }
+        }else if (blockType == 1) {
+            float blockLeft = blockPos.x - blockSize.x * 0.5f;
+            if (charPos.x - charSize.x * 0.5f < blockLeft) {
+                this->SetPosition({blockLeft + charSize.x * 0.5f, charPos.y});
+            }
+        }
+    }
+}
