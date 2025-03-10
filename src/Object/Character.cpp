@@ -104,8 +104,8 @@ void Character::Keys() {
     // right
     else if (Util::Input::IsKeyPressed(RIGHT)) Move("right");
     // idle
-    else Idle(); // since idle dont have animation, its okay to be called more than once
-    
+    else Idle();
+
     glm::vec2 pos = GetPosition();
     pos.x += x_vel;
     pos.y += y_vel;
@@ -116,8 +116,17 @@ void Character::Keys() {
 void Character::Whip(){
     ChangeBehavior(3, true);
     is_whip = true;
-    if (m_Behavior->IfAnimationEnds()) is_whip = false;
-    // if (m_Behavior->GetCurrentFrameIndex() == 3) m_Behavior->m_Pivot = glm::vec2();
+    int currentFrame = m_Behavior->GetCurrentFrameIndex();
+    glm::vec2 pos = GetPosition();
+    if (this->currentFrame != currentFrame) {
+        this->currentFrame = currentFrame;
+        pos.x += (currentFrame == 0) ? -32
+               : (currentFrame == 2) ? 88
+               : (currentFrame == 3) ? -56
+               : 0;
+        if (currentFrame == 3) is_whip = false;
+    }
+    SetPosition(pos);
 }
 
 void Character::Duck(){

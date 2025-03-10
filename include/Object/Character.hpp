@@ -58,8 +58,10 @@ private:
     float x_vel = 0;
     float y_vel = 0;
 
-    // some flag
     int currentBeIndex = 2;
+    int currentFrame = -1;
+    
+    // some flag
     bool is_whip = false;
     bool is_duck = false;
     bool is_jump = false;
