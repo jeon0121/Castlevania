@@ -47,7 +47,6 @@ void Stage0::Start(App* app){
 
 void Stage0::Update(){
     m_Character->Keys();
-    
     m_Character->CollideBoundary(m_Blocks);
 }
 

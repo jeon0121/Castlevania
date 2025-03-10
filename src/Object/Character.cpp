@@ -86,6 +86,7 @@ void Character::Keys() {
     }
     else if (Util::Input::IsKeyDown(LEFT) ||
              Util::Input::IsKeyDown(RIGHT) ||
+             Util::Input::IsKeyUp(DOWN) ||
             // to detect when releasing one key after pressing both key, it will change behavior into walk
             (Util::Input::IsKeyUp(LEFT) && Util::Input::IsKeyPressed(RIGHT)) ||
             (Util::Input::IsKeyUp(RIGHT) && Util::Input::IsKeyPressed(LEFT))) ChangeBehavior(0);
@@ -94,6 +95,12 @@ void Character::Keys() {
         ChangeBehavior(3);
     }
     if (is_whip) Whip();
+    // duck
+    else if (Util::Input::IsKeyPressed(DOWN)) {
+        ChangeBehavior(3);
+        glm::vec2 pos = GetPosition();
+        SetPosition({pos.x, pos.y - 20});
+    }
     // when pressing both key, character will idle
     else if (Util::Input::IsKeyPressed(LEFT) && Util::Input::IsKeyPressed(RIGHT)) ChangeBehavior(2);
     // left
@@ -145,7 +152,7 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
         glm::vec2 blockPos = block->GetPosition();
         glm::vec2 blockSize = glm::abs(block->GetScaledSize());
         if (blockType == 0) {
-            float blockTop = blockPos.y + blockSize.y * 0.5f - 12;
+            float blockTop = blockPos.y + blockSize.y * 0.5f - 8.5;
             if (charPos.y - charSize.y * 0.5f < blockTop) {
                 m_Behavior->SetPosition({charPos.x, blockTop + charSize.y * 0.5f});
             }
