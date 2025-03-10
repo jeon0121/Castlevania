@@ -89,14 +89,15 @@ void Character::Keys() {
      * - idle
     */
     
-    // fall
-    Fall();
+
     // whip
     if (Util::Input::IsKeyDown(B) || is_whip) Whip();
     // duck
     else if (Util::Input::IsKeyPressed(DOWN)) Duck();
     // jump
-    else if (Util::Input::IsKeyDown(UP) || is_jump) Jump();
+    else if (Util::Input::IsKeyDown(UP) && !is_jump) Jump();
+    // fall
+    else if (is_jump) Fall();
     // when pressing both key, character will idle
     else if (Util::Input::IsKeyPressed(LEFT) && Util::Input::IsKeyPressed(RIGHT)) Idle();
     // left
@@ -104,7 +105,7 @@ void Character::Keys() {
     // right
     else if (Util::Input::IsKeyPressed(RIGHT)) Move("right");
     // idle
-    else Idle(); // since idle dont have animation, its okay to be called more than once
+    else if (!is_jump) Idle(); // since idle dont have animation, its okay to be called more than once
     
     glm::vec2 pos = GetPosition();
     pos.x += x_vel;
@@ -133,7 +134,10 @@ void Character::Jump(){
 }
 
 void Character::Fall(){
-    if (y_vel <= 0) is_jump = false;
+    if (y_vel > 0) ChangeBehavior(3);
+    else ChangeBehavior(2);
+    if (y_vel <= -15.0f) is_jump = false;
+    else is_jump = true;
     y_vel >= -15.0f ? y_vel -= 0.5f : y_vel = -15.0f;
 }
 
