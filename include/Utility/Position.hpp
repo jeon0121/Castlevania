@@ -1,5 +1,5 @@
-#ifndef POSITION_HPP
-#define POSITION_HPP
+#ifndef CASTLEVANIA_UTIL_POSITION_HPP
+#define CASTLEVANIA_UTIL_POSITION_HPP
 
 #include <sstream>
 #include <iostream>

@@ -2,12 +2,15 @@
 #define CHARACTER_HPP
 
 #include <string>
+#include <iostream>
+#include "Util/Input.hpp"
+#include "Util/Keycode.hpp"
+#include "Util/Time.hpp"
 #include "Util/GameObject.hpp"
 #include "Util/Animation.hpp"
 #include "Object/AnimatedItems.hpp"
 #include "Object/ImageItems.hpp"
 #include <Object/Block.hpp>
-#include <iostream>
 
 struct CharacterValue {
     glm::vec2 position;

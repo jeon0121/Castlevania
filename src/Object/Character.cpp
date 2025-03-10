@@ -59,8 +59,18 @@ const glm::vec2& Character::GetPosition() const {
 }
 
 void Character::Keys() {
+    constexpr Util::Keycode A      = Util::Keycode::J;
+    constexpr Util::Keycode B      = Util::Keycode::K;
+    constexpr Util::Keycode UP     = Util::Keycode::W;
+    constexpr Util::Keycode DOWN   = Util::Keycode::S;
+    constexpr Util::Keycode LEFT   = Util::Keycode::A;
+    constexpr Util::Keycode RIGHT  = Util::Keycode::D;
+    constexpr Util::Keycode START  = Util::Keycode::RETURN;
+    constexpr Util::Keycode SELECT = Util::Keycode::RSHIFT;
+
     m_Behavior->SetPlaying();
     m_Behavior->SetLooping(true);
+
     /* priority order :
      * - whip
      * - duck
@@ -70,28 +80,28 @@ void Character::Keys() {
     */
 
     // change behavior must called once, otherwise character will not animate since we change the m_Drawable
-    if (Util::Input::IsKeyDown(Util::Keycode::J)) {
+    if (Util::Input::IsKeyDown(B) && !is_whip) {
         is_whip = true;
         ChangeBehavior(3, true);
     }
-    else if (Util::Input::IsKeyDown(Util::Keycode::A) ||
-             Util::Input::IsKeyDown(Util::Keycode::D) ||
+    else if (Util::Input::IsKeyDown(LEFT) ||
+             Util::Input::IsKeyDown(RIGHT) ||
             // to detect when releasing one key after pressing both key, it will change behavior into walk
-            (Util::Input::IsKeyUp(Util::Keycode::A) && Util::Input::IsKeyPressed(Util::Keycode::D))  ||
-            (Util::Input::IsKeyUp(Util::Keycode::D) && Util::Input::IsKeyPressed(Util::Keycode::A))) ChangeBehavior(0);
-
-
-    if (is_whip) {
-        Whip();
+            (Util::Input::IsKeyUp(LEFT) && Util::Input::IsKeyPressed(RIGHT)) ||
+            (Util::Input::IsKeyUp(RIGHT) && Util::Input::IsKeyPressed(LEFT))) ChangeBehavior(0);
+    if (Util::Input::IsKeyPressed(DOWN)) {
+        is_duck = true;
+        ChangeBehavior(3);
     }
+    if (is_whip) Whip();
     // when pressing both key, character will idle
-    else if (Util::Input::IsKeyPressed(Util::Keycode::A) && Util::Input::IsKeyPressed(Util::Keycode::D)) ChangeBehavior(2);
+    else if (Util::Input::IsKeyPressed(LEFT) && Util::Input::IsKeyPressed(RIGHT)) ChangeBehavior(2);
     // left
-    else if (Util::Input::IsKeyPressed(Util::Keycode::A)) Move("left");
+    else if (Util::Input::IsKeyPressed(LEFT)) Move("left");
     // right
-    else if (Util::Input::IsKeyPressed(Util::Keycode::D)) Move("right");
+    else if (Util::Input::IsKeyPressed(RIGHT)) Move("right");
     // jump
-    else if (Util::Input::IsKeyDown(Util::Keycode::K)) Jump();
+    else if (Util::Input::IsKeyDown(UP)) Jump();
     // idle
     else ChangeBehavior(2); // since idle dont have animation, its okay to be called more than once
     
@@ -106,6 +116,7 @@ void Character::Keys() {
 
 void Character::Whip(){
     if (m_Behavior->IfAnimationEnds()) is_whip = false;
+    if (m_Behavior->GetCurrentFrameIndex() == 3) m_Behavior->m_Pivot = glm::vec2();
 }
 
 void Character::Jump(){
