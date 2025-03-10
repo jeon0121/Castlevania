@@ -47,15 +47,6 @@ void Stage0::Start(App* app){
 
 void Stage0::Update(){
     m_Character->Keys();
-    
-    if (Util::Input::IsKeyPressed(Util::Keycode::DOWN)) {
-        glm::vec2 pos = m_Character->m_Behavior->GetPosition();
-        m_Character->m_Behavior->SetPosition({pos.x, pos.y-1});
-    }
-    if (Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
-        glm::vec2 pos = m_Character->m_Behavior->GetPosition();
-        m_Character->m_Behavior->SetPosition({pos.x-1, pos.y});
-    }
     m_Character->CollideBoundary(m_Blocks);
 }
 
