@@ -32,11 +32,31 @@ void Stage0::Start(App* app){
     charactervalue.beIndex = 2;
     m_Character = std::make_shared<Character>(charactervalue);
     m_All.push_back(m_Character->m_Behavior);
+
+    //block
+    std::shared_ptr<Block> block_1 = std::make_shared<Block>(0, glm::vec2(0, -322), glm::vec2(10, 0.7));
+    std::shared_ptr<Block> block_2 = std::make_shared<Block>(1, glm::vec2(-500, -50), glm::vec2(0.4, 7));
+    m_Blocks.push_back(block_1);
+    m_Blocks.push_back(block_2);
+    m_All.push_back(block_1);
+    m_All.push_back(block_2);
+
     app->AddAllChildren(m_All);
+    m_stateState = StateState::UPDATE;
 }
 
 void Stage0::Update(){
     m_Character->Keys();
+    
+    if (Util::Input::IsKeyPressed(Util::Keycode::DOWN)) {
+        glm::vec2 pos = m_Character->m_Behavior->GetPosition();
+        m_Character->m_Behavior->SetPosition({pos.x, pos.y-1});
+    }
+    if (Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
+        glm::vec2 pos = m_Character->m_Behavior->GetPosition();
+        m_Character->m_Behavior->SetPosition({pos.x-1, pos.y});
+    }
+    m_Character->CollideBoundary(m_Blocks);
 }
 
 void Stage0::End(App* app){

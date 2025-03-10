@@ -6,6 +6,7 @@
 #include "Util/Animation.hpp"
 #include "Object/AnimatedItems.hpp"
 #include "Object/ImageItems.hpp"
+#include <Object/Block.hpp>
 #include <iostream>
 
 struct CharacterValue {
@@ -34,6 +35,8 @@ public:
     void Move(std::string direction);
 
     void Flip();
+
+    void CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blocks);
 
     std::shared_ptr<AnimatedItems> m_Behavior;
 

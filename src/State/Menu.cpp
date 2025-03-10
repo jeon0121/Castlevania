@@ -27,11 +27,11 @@ Menu::Menu(const MenuValue& values)
 
     // player health
     addText("player", {-390, 317});
-    addHealth(m_value.playerHeart, {-260, 317}, "player");
+    addHealth(m_value.playerHeart, {-260, 314}, "player");
 
     // enemy health
     addText("enemy", {-405, 285});
-    addHealth(m_value.enemyHeart, {-260, 285}, "enemy");
+    addHealth(m_value.enemyHeart, {-260, 280}, "enemy");
 
     // weapon
     addText("weapon-frame", {90, 287});
@@ -85,7 +85,7 @@ void Menu::addHealth(int heart, const glm::vec2& position, std::string type){
         auto characterImage = std::make_shared<ImageItems>(imagePath);
         characterImage->SetPosition({x, y});
         characterImage->SetZIndex(50);
-        characterImage->m_Transform.scale = {0.95, 1.0};
+        characterImage->m_Transform.scale = {0.95, 0.88};
         healthbar.push_back(characterImage);
         x += characterImage->GetScaledSize().x + 5;
     }

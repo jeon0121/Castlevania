@@ -110,17 +110,17 @@ void Title::End(App* app){
     m_Menu->SetMenuVisibility(true);
 
     //Cutscene animation
-    m_Character->m_Behavior->Move(m_Character->m_Behavior, -1, 0, 2.08, 3.9);
+    m_Character->m_Behavior->Move(m_Character->m_Behavior, -1, 0, 2.08, 3.8);
     m_Character-> SetPosition(m_Character->m_Behavior->GetPosition());
-    if (m_Character->m_Behavior->IfPlayingTime(3.9)) { //end animation and idle
+    if (m_Character->m_Behavior->IfPlayingTime(3.8)) { //end animation and idle
         m_Character->ChangeBehavior(6);
         app->m_Root.AddChild(m_Character->m_Behavior);
     }
 
     glm::vec2 pos = m_Boat->GetPosition();
     m_Boat->SetPosition({pos.x-0.4, pos.y});
-    m_BatScene_1->Move(m_BatScene_1, -1, 0, 0.25, 8);
-    m_BatScene_2->Move(m_BatScene_2, 1, 1, 0.6, 8);
+    m_BatScene_1->Move(m_BatScene_1, -1, 0, 0.3, 8);
+    m_BatScene_2->Move(m_BatScene_2, 1, 1, 0.75, 8);
 
     // //End Title
     if (m_BatScene_1->IfPlayingTime(8)) {

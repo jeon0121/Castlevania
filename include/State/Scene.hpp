@@ -5,6 +5,7 @@
 #include "Util/Image.hpp"
 #include "Object/ImageItems.hpp"
 #include "Object/Character.hpp"
+#include "Object/Block.hpp"
 #include "State/Menu.hpp"
 
 class App;
@@ -26,6 +27,7 @@ protected:
     std::shared_ptr<Character> m_Character;
     std::shared_ptr<Menu> m_Menu;
     std::vector<std::shared_ptr<Util::GameObject>> m_All;
+    std::vector<std::shared_ptr<Block>> m_Blocks;
 };
 
 #endif
