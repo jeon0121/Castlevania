@@ -93,19 +93,38 @@ void Character::Keys() {
     if (Util::Input::IsKeyDown(B) || is_whip) Whip();
     // duck
     else if (Util::Input::IsKeyPressed(DOWN)) Duck();
-    // jump
-    else if (Util::Input::IsKeyDown(UP) && !is_jump) Jump();
+    // left jump
+    else if (Util::Input::IsKeyPressed(LEFT) && Util::Input::IsKeyDown(UP) && !is_jump) {
+        Jump();
+        jumptype = 1;
+    }
+    // // right jump
+    else if (Util::Input::IsKeyPressed(RIGHT) && Util::Input::IsKeyDown(UP) && !is_jump) {
+        Jump();
+        jumptype = 2;
+    }
+    // normal jump
+    else if (Util::Input::IsKeyDown(UP) && !is_jump) {
+        Jump();
+        jumptype = 0;
+    }
     // fall
     else if (is_jump) Fall();
     // when pressing both key, character will idle
     else if (Util::Input::IsKeyPressed(LEFT) && Util::Input::IsKeyPressed(RIGHT)) Idle();
     // left
-    else if (Util::Input::IsKeyPressed(LEFT)) Move("left");
+    else if (Util::Input::IsKeyPressed(LEFT)) {
+        ChangeBehavior(0);
+        Move("left");
+    }
     // right
-    else if (Util::Input::IsKeyPressed(RIGHT)) Move("right");
+    else if (Util::Input::IsKeyPressed(RIGHT)) {
+        ChangeBehavior(0);
+        Move("right");
+    }
     // idle
     else if (!is_jump) Idle(); // since idle dont have animation, its okay to be called more than once
-    
+
     glm::vec2 pos = GetPosition();
     pos.x += x_vel;
     pos.y += y_vel;
@@ -136,21 +155,25 @@ void Character::Duck(){
 }
 
 void Character::Jump(){
-    ChangeBehavior(3);
     if (!is_jump) y_vel = 9.0f;
     is_jump = true;
 }
 
 void Character::Fall(){
-    if (y_vel > 0) ChangeBehavior(3);
+    if (y_vel > -5.0f) ChangeBehavior(3);
     else ChangeBehavior(2);
-    if (y_vel <= -15.0f) is_jump = false;
-    else is_jump = true;
+    if (y_vel <= -14.5f) is_jump = false;
+    else {
+        if (y_vel >= -10.0f) {
+            if (jumptype == 1) Move("left");
+            else if (jumptype == 2) Move("right");
+        }
+        is_jump = true;
+    }
     y_vel >= -15.0f ? y_vel -= 0.5f : y_vel = -15.0f;
 }
 
 void Character::Move(std::string direction){
-    ChangeBehavior(0);
     if (direction == "left") {
         x_vel = -4.5f;
         is_left = true;

@@ -60,6 +60,7 @@ private:
 
     int currentBeIndex = 2;
     int currentFrame = -1;
+    int jumptype = 0;
     
     // some flag
     bool is_whip = false;
