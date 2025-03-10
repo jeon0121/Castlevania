@@ -8,11 +8,18 @@
 #include "Object/ImageItems.hpp"
 #include <iostream>
 
+struct CharacterValue {
+    glm::vec2 position;
+    int beIndex;
+    std::string direction = "left";
+    float scale = 1.0f;
+};
+
 class Character : public Util::GameObject{
 public:
-    explicit Character(const glm::vec2 &position, int beIndex, float scale=1.0);
+    explicit Character(const CharacterValue& value);
 
-    void ChangeBehavior(int BehaviorIndex);
+    void ChangeBehavior(int BehaviorIndex, bool if_whip=false);
 
     void SetPosition(const glm::vec2& Position);
 
@@ -20,16 +27,30 @@ public:
 
     void Keys();
 
+    void Whip();
+
+    void Jump();
+
     void Move(std::string direction);
 
     void Flip();
 
     std::shared_ptr<AnimatedItems> m_Behavior;
 
-    std::string m_direction;
-
 private:
     std::vector<std::vector<std::string>> behaviorVector;
+    std::vector<std::vector<std::vector<std::string>>> whipVector;
+    std::string m_direction = "left";
+    int m_life = 16;
+    int m_whip_level = 0;
+    float x_vel = 0;
+    float y_vel = 0;
+
+    // some flag
+    bool is_whip = false;
+    bool is_duck = false;
+    bool is_left = false;
+    bool is_right = false;
 };
 
 #endif
