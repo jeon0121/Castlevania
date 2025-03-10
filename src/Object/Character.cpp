@@ -139,10 +139,11 @@ void Character::Whip(){
     glm::vec2 pos = GetPosition();
     if (this->currentFrame != currentFrame) {
         this->currentFrame = currentFrame;
-        pos.x += (currentFrame == 0) ? -32
-               : (currentFrame == 2) ? 88
-               : (currentFrame == 4) ? -56
-               : 0;
+        int offset = (currentFrame == 0) ? -32
+                   : (currentFrame == 2) ? 88
+                   : (currentFrame == 4) ? -56
+                   : 0;
+        pos.x += (m_direction == "right") ? offset : -offset;
         if (currentFrame == 4) is_whip = false;
     }
     SetPosition(pos);
