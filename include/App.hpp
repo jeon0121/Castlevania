@@ -37,7 +37,7 @@ public:
 
     Util::Renderer m_Root;
     AppState m_AppState = AppState::START;
-    GameState m_GameState = GameState::TITLE;
+    GameState m_GameState = GameState::STAGE0; // start with stage0, so no need to wait title animation
     std::shared_ptr<Scene> m_Scene;
 };
 
