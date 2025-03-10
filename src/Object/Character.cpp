@@ -4,7 +4,7 @@
 #include "Util/Time.hpp"
 
 Character::Character(const CharacterValue& value) :
-    m_direction(value.direction) {
+    m_direction(value.direction), currentBeIndex(value.beIndex) {
     //Image string
     std::vector<std::string> walk, death, duck, hurt, jump, idle, intro;
 
@@ -46,8 +46,18 @@ Character::Character(const CharacterValue& value) :
 }
 
 void Character::ChangeBehavior(int BehaviorIndex, bool if_whip) {
-    if_whip ? m_Behavior->SetAnimationFrames(whipVector[m_whip_level][BehaviorIndex], m_whip_level == 3 ? 25 : 100)
-            : m_Behavior->SetAnimationFrames(behaviorVector[BehaviorIndex], 100);
+    if (if_whip){
+        if (currentBeIndex != BehaviorIndex) {
+            m_Behavior->SetAnimationFrames(whipVector[m_whip_level][BehaviorIndex], m_whip_level == 3 ? 25 : 100);
+            currentBeIndex = BehaviorIndex;
+        }
+    }
+    else {
+        if (currentBeIndex != BehaviorIndex) {
+            m_Behavior->SetAnimationFrames(behaviorVector[BehaviorIndex], 100);
+            currentBeIndex = BehaviorIndex;
+        }
+    }
 }
 
 void Character::SetPosition(const glm::vec2& Position) {
@@ -78,43 +88,25 @@ void Character::Keys() {
      * - left and right
      * - idle
     */
-
-    // change behavior must called once, otherwise character will not animate since we change the m_Drawable
-    if (Util::Input::IsKeyDown(B) && !is_whip) {
-        is_whip = true;
-        ChangeBehavior(3, true);
-    }
-    else if (Util::Input::IsKeyDown(LEFT) ||
-             Util::Input::IsKeyDown(RIGHT) ||
-             Util::Input::IsKeyUp(DOWN) ||
-            // to detect when releasing one key after pressing both key, it will change behavior into walk
-            (Util::Input::IsKeyUp(LEFT) && Util::Input::IsKeyPressed(RIGHT)) ||
-            (Util::Input::IsKeyUp(RIGHT) && Util::Input::IsKeyPressed(LEFT))) ChangeBehavior(0);
-    if (Util::Input::IsKeyPressed(DOWN)) {
-        is_duck = true;
-        ChangeBehavior(3);
-    }
-    if (is_whip) Whip();
+    
+    // fall
+    Fall();
+    // whip
+    if (Util::Input::IsKeyDown(B) || is_whip) Whip();
     // duck
-    else if (Util::Input::IsKeyPressed(DOWN)) {
-        ChangeBehavior(3);
-        glm::vec2 pos = GetPosition();
-        SetPosition({pos.x, pos.y - 20});
-    }
+    else if (Util::Input::IsKeyPressed(DOWN)) Duck();
+    // jump
+    else if (Util::Input::IsKeyDown(UP) || is_jump) Jump();
     // when pressing both key, character will idle
-    else if (Util::Input::IsKeyPressed(LEFT) && Util::Input::IsKeyPressed(RIGHT)) ChangeBehavior(2);
+    else if (Util::Input::IsKeyPressed(LEFT) && Util::Input::IsKeyPressed(RIGHT)) Idle();
     // left
     else if (Util::Input::IsKeyPressed(LEFT)) Move("left");
     // right
     else if (Util::Input::IsKeyPressed(RIGHT)) Move("right");
-    // jump
-    else if (Util::Input::IsKeyDown(UP)) Jump();
     // idle
-    else ChangeBehavior(2); // since idle dont have animation, its okay to be called more than once
+    else Idle(); // since idle dont have animation, its okay to be called more than once
     
     glm::vec2 pos = GetPosition();
-
-    // if (pos.y < ) 
     pos.x += x_vel;
     pos.y += y_vel;
     x_vel = 0;
@@ -122,21 +114,52 @@ void Character::Keys() {
 }
 
 void Character::Whip(){
+    ChangeBehavior(3, true);
+    is_whip = true;
     if (m_Behavior->IfAnimationEnds()) is_whip = false;
-    if (m_Behavior->GetCurrentFrameIndex() == 3) m_Behavior->m_Pivot = glm::vec2();
+    // if (m_Behavior->GetCurrentFrameIndex() == 3) m_Behavior->m_Pivot = glm::vec2();
+}
+
+void Character::Duck(){
+    ChangeBehavior(3);
+    glm::vec2 pos = GetPosition();
+    SetPosition({pos.x, pos.y - 20});
 }
 
 void Character::Jump(){
-    
+    ChangeBehavior(3);
+    if (!is_jump) y_vel = 9.0f;
+    is_jump = true;
+}
+
+void Character::Fall(){
+    if (y_vel <= 0) is_jump = false;
+    y_vel >= -15.0f ? y_vel -= 0.5f : y_vel = -15.0f;
 }
 
 void Character::Move(std::string direction){
-    if (direction == "left") x_vel = -4.5f;
-    if (direction == "right") x_vel = 4.5f;
+    ChangeBehavior(0);
+    if (direction == "left") {
+        x_vel = -4.5f;
+        is_left = true;
+    }
+    if (direction == "right") {
+        x_vel = 4.5f;
+        is_right = true;
+    }
     if (direction != m_direction){
         m_direction = direction;
         Flip();
     }
+}
+
+void Character::Idle(){
+    ChangeBehavior(2);
+    is_whip = false;
+    is_duck = false;
+    is_jump = false;
+    is_left = false;
+    is_right = false;
 }
 
 void Character::Flip() {

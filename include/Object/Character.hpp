@@ -33,9 +33,15 @@ public:
 
     void Whip();
 
+    void Duck();
+
     void Jump();
 
+    void Fall();
+
     void Move(std::string direction);
+
+    void Idle();
 
     void Flip();
 
@@ -53,8 +59,10 @@ private:
     float y_vel = 0;
 
     // some flag
+    int currentBeIndex = 2;
     bool is_whip = false;
     bool is_duck = false;
+    bool is_jump = false;
     bool is_left = false;
     bool is_right = false;
 };
