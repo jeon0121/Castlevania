@@ -28,10 +28,10 @@ Character::Character(const CharacterValue& value) :
     for (int i = 0; i < 3; i++) {
         std::vector<std::string> ascending, descending, ducking, standing;
         std::string basePath = GA_RESOURCE_DIR "/main character/whip/level-" + std::to_string(i + 1) + "/";
-        for (int j = 0; j < ((i == 3) ? 16 : 4); ++j) {
-            ascending.emplace_back(basePath + "ascending/ascending-" + std::to_string(j + 1) + ".png");
-            descending.emplace_back(basePath + "descending/descending-" + std::to_string(j + 1) + ".png");
-            ducking.emplace_back(basePath + "ducking/ducking-" + std::to_string(j + 1) + ".png");
+        for (int j = 0; j < ((i == 3) ? 20 : 5); ++j) {
+            // ascending.emplace_back(basePath + "ascending/ascending-" + std::to_string(j + 1) + ".png");
+            // descending.emplace_back(basePath + "descending/descending-" + std::to_string(j + 1) + ".png");
+            // ducking.emplace_back(basePath + "ducking/ducking-" + std::to_string(j + 1) + ".png");
             standing.emplace_back(basePath + "standing/standing-" + std::to_string(j + 1) + ".png");
         }
         std::vector<std::vector<std::string>> wVector = {ascending, descending, ducking, standing};
@@ -141,9 +141,9 @@ void Character::Whip(){
         this->currentFrame = currentFrame;
         pos.x += (currentFrame == 0) ? -32
                : (currentFrame == 2) ? 88
-               : (currentFrame == 3) ? -56
+               : (currentFrame == 4) ? -56
                : 0;
-        if (currentFrame == 3) is_whip = false;
+        if (currentFrame == 4) is_whip = false;
     }
     SetPosition(pos);
 }
