@@ -13,14 +13,14 @@ public:
     *
     * Useful for determining coordinates for placing objects (e.g., blocks, player, etc.).
     */
-   void PrintCursorCoordinate();
+   static void PrintCursorCoordinate();
 
    /**
     * @brief Logs the current cursor position to the log console.
     *
     * Useful for determining coordinates for placing objects (e.g., blocks, player, etc.).
     */
-   void LogCursorCoordinate();
+   static void LogCursorCoordinate();
 };
 
 #endif

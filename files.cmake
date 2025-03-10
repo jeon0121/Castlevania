@@ -7,6 +7,7 @@ set(SRC_FILES
     State/Title.cpp
     State/Stage0.cpp
     Utility/Time.cpp
+    Utility/Position.cpp
 )
 
 set(INCLUDE_FILES
@@ -21,6 +22,7 @@ set(INCLUDE_FILES
     State/Title.hpp
     State/Stage0.hpp
     Utility/Time.hpp
+    Utility/Position.hpp
 )
 
 set(TEST_FILES
