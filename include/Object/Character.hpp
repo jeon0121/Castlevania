@@ -53,6 +53,7 @@ private:
     std::vector<std::vector<std::string>> behaviorVector;
     std::vector<std::vector<std::vector<std::string>>> whipVector;
     std::string m_direction = "left";
+    std::string lastVecPos = "be";
     int m_life = 16;
     int m_whip_level = 0;
     float x_vel = 0;
