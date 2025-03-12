@@ -55,9 +55,8 @@ private:
     std::string m_direction = "left";
     std::string lastVecPos = "be";
 
-    glm::vec2 m_pos; // Actual character position (ignores whip size)
-    int m_width;     // Character width without whip
-    int m_height;    // Character height without whip
+    glm::vec2 m_pos;  // Actual character position (ignores whip size)
+    glm::vec2 m_size; // Character size without whip
 
     int m_life = 16;
     int m_whip_level = 1;
@@ -74,6 +73,7 @@ private:
     bool is_jump = false;
     bool is_left = false;
     bool is_right = false;
+    bool is_collide = false;
 };
 
 #endif
