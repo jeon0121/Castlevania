@@ -218,19 +218,43 @@ void Character::Flip() {
 }
 
 void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blocks) {
+    glm::vec2 charPos = GetPosition();
+    glm::vec2 charSize = glm::abs(m_Behavior->GetScaledSize());
+    float charTop = charPos.y + charSize.y * 0.5f;
+    float charBottom = charPos.y - charSize.y * 0.5f;
+    float charLeft = charPos.x - charSize.x * 0.5f;
+    float charRight = charPos.x + charSize.x * 0.5f;
+
     for (auto &block : m_Blocks) {
-        int blockType = block->GetType();
         glm::vec2 blockPos = block->GetPosition();
         glm::vec2 blockSize = glm::abs(block->GetScaledSize());
-        if (blockType == 0) {
-            float blockTop = blockPos.y + blockSize.y * 0.5f - 8.5;
-            if (m_pos.y - m_height * 0.5f < blockTop) {
-                m_Behavior->SetPosition({m_pos.x, blockTop + m_height * 0.5f});
-            }
-        }else if (blockType == 1) {
-            float blockLeft = blockPos.x - blockSize.x * 0.5f;
-            if (m_pos.x - m_width * 0.5f < blockLeft) {
-                this->SetPosition({blockLeft + m_width * 0.5f, m_pos.y});
+        float blockTop = blockPos.y + blockSize.y * 0.5f - 8.5;
+        float blockBottom = blockPos.y - blockSize.y * 0.5f;
+        float blockLeft = blockPos.x - blockSize.x * 0.5f;
+        float blockRight = blockPos.x + blockSize.x * 0.5f;
+
+        if ((charRight > blockLeft && charLeft < blockRight) &&  //overlap x
+            (charTop > blockBottom && charBottom < blockTop)) {  //overlap y
+            float overlapTop = charTop - blockBottom;
+            float overlapBottom = blockTop - charBottom;
+            float overlapLeft = charRight - blockLeft;
+            float overlapRight = blockRight - charLeft;
+
+            //determine collision base on the smallest
+            float minOverlap = std::min({overlapTop, overlapBottom, overlapLeft, overlapRight});
+
+            //above (char on the block)
+            if (minOverlap == overlapTop) {
+                m_Behavior->SetPosition({charPos.x, blockBottom - charSize.y * 0.5f});
+            //below (char hit head)
+            } else if (minOverlap == overlapBottom) {
+                m_Behavior->SetPosition({charPos.x, blockTop + charSize.y * 0.5f});
+            //left
+            } else if (minOverlap == overlapLeft) {
+                m_Behavior->SetPosition({blockLeft - charSize.x * 0.5f, charPos.y});
+            //right
+            } else if (minOverlap == overlapRight) {
+                m_Behavior->SetPosition({blockRight + charSize.x * 0.5f, charPos.y});
             }
         }
     }
