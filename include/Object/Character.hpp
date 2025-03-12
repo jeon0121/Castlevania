@@ -54,8 +54,13 @@ private:
     std::vector<std::vector<std::vector<std::string>>> whipVector;
     std::string m_direction = "left";
     std::string lastVecPos = "be";
+
+    glm::vec2 m_pos; // Actual character position (ignores whip size)
+    int m_width;     // Character width without whip
+    int m_height;    // Character height without whip
+
     int m_life = 16;
-    int m_whip_level = 0;
+    int m_whip_level = 1;
     float x_vel = 0;
     float y_vel = 0;
 

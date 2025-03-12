@@ -39,14 +39,16 @@ Character::Character(const CharacterValue& value) :
     m_Behavior = std::make_shared<AnimatedItems>(behaviorVector[value.beIndex], 100, glm::vec2(value.scale, value.scale));
     m_Behavior->SetPosition(value.position);
     m_Behavior->SetZIndex(7);
-
+    glm::vec2 charSize = glm::abs(m_Behavior->GetScaledSize());
+    m_width  = charSize.x;
+    m_height = charSize.y;
     if (value.direction == "right") Flip();
 }
 
 void Character::ChangeBehavior(int BehaviorIndex, bool if_whip) {
     if (if_whip){
         if ((currentBeIndex != BehaviorIndex) || (currentBeIndex == BehaviorIndex && lastVecPos == "be")) {
-            m_Behavior->SetAnimationFrames(whipVector[m_whip_level][BehaviorIndex], m_whip_level == 3 ? 25 : 100);
+            m_Behavior->SetAnimationFrames(whipVector[m_whip_level - 1][BehaviorIndex], m_whip_level == 3 ? 25 : 100);
             currentBeIndex = BehaviorIndex;
             lastVecPos = "whip";
         }
@@ -60,8 +62,9 @@ void Character::ChangeBehavior(int BehaviorIndex, bool if_whip) {
     }
 }
 
-void Character::SetPosition(const glm::vec2& Position) {
-    m_Behavior->SetPosition(Position);
+void Character::SetPosition(const glm::vec2& position) {
+    if (!is_whip || !is_duck) m_pos = position;
+    m_Behavior->SetPosition(position);
 }
 
 const glm::vec2& Character::GetPosition() const {
@@ -92,21 +95,21 @@ void Character::Keys() {
     */
     
     // whip
-    if (Util::Input::IsKeyDown(B) || is_whip) Whip();
+    if (Util::Input::IsKeyDown(A) || is_whip) Whip();
     // duck
     else if (Util::Input::IsKeyPressed(DOWN) && !is_jump) Duck();
     // left jump
-    else if (Util::Input::IsKeyPressed(LEFT) && Util::Input::IsKeyDown(UP) && !is_jump) {
+    else if (Util::Input::IsKeyPressed(LEFT) && Util::Input::IsKeyDown(B) && !is_jump) {
         Jump();
         jumptype = 1;
     }
     // right jump
-    else if (Util::Input::IsKeyPressed(RIGHT) && Util::Input::IsKeyDown(UP) && !is_jump) {
+    else if (Util::Input::IsKeyPressed(RIGHT) && Util::Input::IsKeyDown(B) && !is_jump) {
         Jump();
         jumptype = 2;
     }
     // normal jump
-    else if (Util::Input::IsKeyDown(UP) && !is_jump) {
+    else if (Util::Input::IsKeyDown(B) && !is_jump) {
         Jump();
         jumptype = 0;
     }
@@ -125,8 +128,8 @@ void Character::Keys() {
         Move("right");
     }
     // idle
-    else if (!is_jump) Idle(); // since idle dont have animation, its okay to be called more than once
-
+    else if (!is_jump) Idle();
+    
     glm::vec2 pos = GetPosition();
     pos.x += x_vel;
     pos.y += y_vel;
@@ -139,16 +142,15 @@ void Character::Whip(){
     Fall();
     ChangeBehavior(3, true);
     int currentFrame = m_Behavior->GetCurrentFrameIndex();
+    if (this->currentFrame == currentFrame) return;
+    this->currentFrame = currentFrame;
     glm::vec2 pos = GetPosition();
-    if (this->currentFrame != currentFrame) {
-        this->currentFrame = currentFrame;
-        int offset = (currentFrame == 0) ? -32
-                   : (currentFrame == 2) ? 88
-                   : (currentFrame == 4) ? -56
-                   : 0;
-        pos.x += (m_direction == "right") ? offset : -offset;
-        if (currentFrame == 4) is_whip = false;
-    }
+    int offset = (currentFrame == 0) ? -32
+               : (currentFrame == 2 * (m_whip_level == 3 ? 4 : 1)) ? 88
+               : (currentFrame == 4 * (m_whip_level == 3 ? 4 : 1)) ? -56
+               : 0;
+    pos.x += (m_direction == "right") ? offset : -offset;
+    if (currentFrame == 4 * (m_whip_level == 3 ? 4 : 1)) is_whip = false;
     SetPosition(pos);
 }
 
@@ -156,6 +158,8 @@ void Character::Duck(){
     ChangeBehavior(3);
     glm::vec2 pos = GetPosition();
     SetPosition({pos.x, pos.y - 20});
+    is_duck = true;
+    if (!is_duck) m_height /= 2;
 }
 
 void Character::Jump(){
@@ -198,6 +202,9 @@ void Character::Move(std::string direction){
 
 void Character::Idle(){
     ChangeBehavior(2);
+    glm::vec2 charSize = glm::abs(m_Behavior->GetScaledSize());
+    m_width  = charSize.x;
+    m_height = charSize.y;
     is_whip = false;
     is_duck = false;
     is_jump = false;
@@ -211,21 +218,19 @@ void Character::Flip() {
 }
 
 void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blocks) {
-    glm::vec2 charPos = GetPosition();
-    glm::vec2 charSize = glm::abs(m_Behavior->GetScaledSize());
     for (auto &block : m_Blocks) {
         int blockType = block->GetType();
         glm::vec2 blockPos = block->GetPosition();
         glm::vec2 blockSize = glm::abs(block->GetScaledSize());
         if (blockType == 0) {
             float blockTop = blockPos.y + blockSize.y * 0.5f - 8.5;
-            if (charPos.y - charSize.y * 0.5f < blockTop) {
-                m_Behavior->SetPosition({charPos.x, blockTop + charSize.y * 0.5f});
+            if (m_pos.y - m_height * 0.5f < blockTop) {
+                m_Behavior->SetPosition({m_pos.x, blockTop + m_height * 0.5f});
             }
         }else if (blockType == 1) {
             float blockLeft = blockPos.x - blockSize.x * 0.5f;
-            if (charPos.x - charSize.x * 0.5f < blockLeft) {
-                this->SetPosition({blockLeft + charSize.x * 0.5f, charPos.y});
+            if (m_pos.x - m_width * 0.5f < blockLeft) {
+                this->SetPosition({blockLeft + m_width * 0.5f, m_pos.y});
             }
         }
     }
