@@ -70,7 +70,7 @@ const glm::vec2& Character::GetPosition() const {
 }
 
 void Character::Keys() {
-    Position::PrintCursorCoordinate();
+    // Position::PrintCursorCoordinate();
 
     constexpr Util::Keycode A      = Util::Keycode::J;
     constexpr Util::Keycode B      = Util::Keycode::K;
@@ -128,11 +128,16 @@ void Character::Keys() {
     // idle
     else if (!is_jump) Idle();
     
+    std::cout << is_collide.y << ", " << is_jump << ", " << is_collide.x <<  ", " << y_vel << std::endl;
+
     glm::vec2 pos = GetPosition();
     pos.x += x_vel;
     pos.y += y_vel;
     x_vel = 0;
-    is_collide = false;
+    y_vel = (y_vel > -17.0f) ? 
+            ((-2.0f <= y_vel && y_vel <= 2.0f) ? y_vel - 0.3f : y_vel - 1.0f) 
+            : -17.0f;
+    is_collide.y = false;
     SetPosition(pos);
 }
 
@@ -169,16 +174,18 @@ void Character::Jump(){
 void Character::Fall(){
     if (!is_whip) ChangeBehavior(y_vel > -5.0f ? 3 : 2);
     if (y_vel <= -17.0f) is_jump = false;
+    if (is_collide.y) {
+        y_vel = 0;
+        is_jump = false;
+        return;
+    }
     else {
-        if (y_vel >= -16.0f && !is_collide) {
+        if (y_vel >= -16.0f && !is_collide.y) {
             if (jumptype == 1) Move("left");
             else if (jumptype == 2) Move("right");
         }
         is_jump = true;
     }
-    y_vel = (y_vel >= -17.0f) ? 
-            ((-2.0f <= y_vel && y_vel <= 2.0f) ? y_vel - 0.3f : y_vel - 1.0f) 
-            : -17.0f;
 }
 
 void Character::Move(std::string direction){
@@ -240,19 +247,20 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
             //above (char on the block)
             if (minOverlap == overlapTop) {
                 m_Behavior->SetPosition({charPos.x, blockBottom - charSize.y * 0.5f});
-                is_collide = true;
+                is_collide.y = true;
             //below (char hit head)
             } else if (minOverlap == overlapBottom) {
                 m_Behavior->SetPosition({charPos.x, blockTop + charSize.y * 0.5f});
-                is_collide = true;
+                is_collide.y = true;
+                y_vel = 0;
             //left
             } else if (minOverlap == overlapLeft) {
                 m_Behavior->SetPosition({blockLeft - charSize.x * 0.5f, charPos.y});
-                is_collide = true;
+                is_collide.x = true;
             //right
             } else if (minOverlap == overlapRight) {
                 m_Behavior->SetPosition({blockRight + charSize.x * 0.5f, charPos.y});
-                is_collide = true;
+                is_collide.x = true;
             }
         }
     }

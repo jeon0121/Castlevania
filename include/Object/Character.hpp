@@ -57,6 +57,7 @@ private:
 
     glm::vec2 m_pos;  // Actual character position (ignores whip size)
     glm::vec2 m_size; // Character size without whip
+    glm::vec2 is_collide = {0, 0};
 
     int m_life = 16;
     int m_whip_level = 1;
@@ -73,7 +74,6 @@ private:
     bool is_jump = false;
     bool is_left = false;
     bool is_right = false;
-    bool is_collide = false;
 };
 
 #endif
