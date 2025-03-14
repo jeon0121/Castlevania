@@ -31,6 +31,8 @@ public:
 
     void Keys();
 
+    float OffsetValues(std::string typeName);
+
     void Whip();
 
     void Duck();
