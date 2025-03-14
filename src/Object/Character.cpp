@@ -159,23 +159,24 @@ void Character::Keys() {
 }
 
 float Character::OffsetValues(std::string typeName) {
-    switch (typeName) {
-        case("whipOffset"):
-            float whipOffset = (currentFrame == 0) ? -32
-                 : (currentFrame == 2 * (m_whip_level == 3 ? 4 : 1)) ? 88
-                 : (currentFrame == 4 * (m_whip_level == 3 ? 4 : 1)) ? -56
-                 : 0;
-            return whipOffset;
-        case("whipWidth"):
-            float whipWidth = (currentFrame == 0) ? 35
-                : (currentFrame == 1 * (m_whip_level == 3 ? 4 : 1)) ? 60
-                : (currentFrame == 2 * (m_whip_level == 3 ? 4 : 1)) ? 130
-                : (currentFrame == 3 * (m_whip_level == 3 ? 4 : 1)) ? 140
-                : 0;
-            return whipWidth;
-        case("duck"):
-            float duck = 20.0f;
-            return duck;
+    if (typeName == "whipOffset") {
+        float whipOffset = (currentFrame == 0) ? -32
+                         : (currentFrame == 2 * (m_whip_level == 3 ? 4 : 1)) ? 88
+                         : (currentFrame == 4 * (m_whip_level == 3 ? 4 : 1)) ? -56
+                         : 0;
+        return whipOffset;
+    }
+    if (typeName == "whipWidth") {
+        float whipWidth = (currentFrame == 0) ? 35
+                        : (currentFrame == 1 * (m_whip_level == 3 ? 4 : 1)) ? 60
+                        : (currentFrame == 2 * (m_whip_level == 3 ? 4 : 1)) ? 130
+                        : (currentFrame == 3 * (m_whip_level == 3 ? 4 : 1)) ? 140
+                        : 0;
+        return whipWidth;
+    }
+    if (typeName == "duck"){
+        float duck = 50.0f;
+        return duck;
     }
     return 0;
 }
@@ -195,8 +196,11 @@ void Character::Duck(){
     ChangeBehavior(3);
     glm::vec2 pos = GetPosition();
     is_duck = true;
-    float duck = OffsetValues("duck");
+
     m_size = glm::abs(m_Behavior->GetScaledSize());
+    float duck = OffsetValues("duck");
+    m_size.y -= duck;
+    m_pos.y -= duck * 0.5;
 }
 
 void Character::Jump(){
