@@ -6,6 +6,7 @@ Block::Block(const glm::vec2 &position, glm::vec2 scale, const std::string path)
     glm::vec2 size = GetScaledSize();
     this->width = size.x;
     this->height = size.y;
+    SetZIndex(10);
 }
 
 const glm::vec2& Block::GetPosition() const { return m_Transform.translation; }

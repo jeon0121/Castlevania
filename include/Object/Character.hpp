@@ -68,10 +68,12 @@ private:
     float jumph = 0;
     float landh = 0;
     float height = 0;
+    float landPosition = -299.35;
 
     int currentBeIndex = 2;
     int currentFrame = -1;
     int jumptype = 0;
+    int countTime = 0;
     
     // some flag
     bool is_whip = false;
@@ -79,6 +81,7 @@ private:
     bool is_jump = false;
     bool is_left = false;
     bool is_right = false;
+    bool change_land = false;
 };
 
 #endif
