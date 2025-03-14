@@ -41,6 +41,7 @@ Character::Character(const CharacterValue& value) :
     m_Behavior->SetPosition(value.position);
     m_Behavior->SetZIndex(7);
     m_size = glm::abs(m_Behavior->GetScaledSize());
+    jumph = landh = value.position.y;
     if (value.direction == "right") Flip();
 }
 
@@ -145,10 +146,14 @@ void Character::Keys() {
     // idle
     else if (!is_jump) Idle();
     
+    glm::vec2 pos = GetPosition();
+    if (is_jump) jumph = pos.y;
+    height = jumph - landh;
+
     m_pos.x += x_vel;
     m_pos.y += y_vel;
     x_vel = 0;
-    y_vel = (y_vel > -17.0f) ? 
+    y_vel = (y_vel > -17.0f) ?
             ((-2.0f <= y_vel && y_vel <= 2.0f) ? y_vel - 0.3f : y_vel - 1.0f) 
             : -17.0f;
     is_collide.y = false;
@@ -175,7 +180,7 @@ void Character::Jump(){
 }
 
 void Character::Fall(){
-    if (!is_whip) ChangeBehavior(y_vel > -5.0f ? 3 : 2);
+    if (!is_whip) ChangeBehavior(height > 80.0f ? 3 : 2);
     if (y_vel <= -17.0f) is_jump = false;
     if (is_collide.y) {
         y_vel = 0;
@@ -213,6 +218,8 @@ void Character::Idle(){
     is_left = false;
     is_right = false;
     m_size = glm::abs(m_Behavior->GetScaledSize());
+    glm::vec2 pos = GetPosition();
+    jumph = landh = pos.y;
 }
 
 void Character::Flip() {

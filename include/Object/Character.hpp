@@ -63,6 +63,9 @@ private:
     int m_whip_level = 1;
     float x_vel = 0;
     float y_vel = 0;
+    float jumph = 0;
+    float landh = 0;
+    float height = 0;
 
     int currentBeIndex = 2;
     int currentFrame = -1;
