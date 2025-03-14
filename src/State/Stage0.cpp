@@ -36,12 +36,12 @@ void Stage0::Start(App* app){
     //block
     std::shared_ptr<Block> block_1 = std::make_shared<Block>(glm::vec2(0, -322), glm::vec2(10, 0.7));
     std::shared_ptr<Block> block_2 = std::make_shared<Block>(glm::vec2(-540, -50), glm::vec2(0.4, 7));
-    std::shared_ptr<Block> block_3 = std::make_shared<Block>(glm::vec2(0, -180), glm::vec2(1, 0.5));
+    std::shared_ptr<Block> block_3 = std::make_shared<Block>(glm::vec2(0, -180), glm::vec2(1, 1));
     m_Blocks.push_back(block_1);
     m_Blocks.push_back(block_2);
     m_Blocks.push_back(block_3);
     m_All.push_back(block_1);
-    // m_All.push_back(block_2);
+    m_All.push_back(block_2);
     m_All.push_back(block_3);
 
     app->AddAllChildren(m_All);

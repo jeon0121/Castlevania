@@ -29,7 +29,7 @@ Character::Character(const CharacterValue& value) :
         for (int j = 0; j < ((i == 3) ? 20 : 5); ++j) {
             // ascending.emplace_back(basePath + "ascending/ascending-" + std::to_string(j + 1) + ".png");
             // descending.emplace_back(basePath + "descending/descending-" + std::to_string(j + 1) + ".png");
-            // ducking.emplace_back(basePath + "ducking/ducking-" + std::to_string(j + 1) + ".png");
+            ducking.emplace_back(basePath + "ducking/ducking-" + std::to_string(j + 1) + ".png");
             standing.emplace_back(basePath + "standing/standing-" + std::to_string(j + 1) + ".png");
         }
         std::vector<std::vector<std::string>> wVector = {ascending, descending, ducking, standing};
@@ -102,10 +102,28 @@ void Character::Keys() {
      * - idle
     */
     
+    // duck whip
+    if (Util::Input::IsKeyPressed(DOWN) && (Util::Input::IsKeyDown(A) || is_whip) && is_duck){
+        Duck("");
+        Whip();
+    }
     // whip
-    if (Util::Input::IsKeyDown(A) || is_whip) Whip();
+    else if (Util::Input::IsKeyDown(A) || is_whip) Whip();
+    // duck left
+    else if (Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyPressed(LEFT) && !is_jump) {
+        ChangeBehavior(3);
+        Duck("left");
+    }
+    // duck right
+    else if (Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyPressed(RIGHT) && !is_jump) {
+        ChangeBehavior(3);
+        Duck("right");
+    }
     // duck
-    else if (Util::Input::IsKeyPressed(DOWN) && !is_jump) Duck();
+    else if (Util::Input::IsKeyPressed(DOWN) && !is_jump) {
+        ChangeBehavior(3);
+        Duck("");
+    }
     // left jump
     else if (Util::Input::IsKeyPressed(LEFT) && Util::Input::IsKeyDown(B) && !is_jump) {
         Jump();
@@ -128,19 +146,27 @@ void Character::Keys() {
     // when pressing both key, character will idle
     else if (Util::Input::IsKeyPressed(LEFT) && Util::Input::IsKeyPressed(RIGHT)) Idle();
     // left
-    else if (Util::Input::IsKeyPressed(LEFT)) {
+    else if (Util::Input::IsKeyPressed(LEFT) && !is_duck) {
         ChangeBehavior(0);
         Move("left");
     }
     // right
-    else if (Util::Input::IsKeyPressed(RIGHT)) {
+    else if (Util::Input::IsKeyPressed(RIGHT) && !is_duck) {
         ChangeBehavior(0);
         Move("right");
     }
     // idle
     else if (!is_jump) Idle();
-    
+
     glm::vec2 pos = GetPosition();
+    std::cout << pos.x << ","
+            << pos.y << ", "
+            << m_pos.x << ", "
+            << m_pos.y << ", "
+            << m_size.x << ", "
+            << m_size.y << ", "
+            << std::endl;
+    
     if (is_jump) jumph = pos.y;
     height = jumph - landh;
 
@@ -150,6 +176,7 @@ void Character::Keys() {
     y_vel = (y_vel > -17.0f) ?
             ((-2.0f <= y_vel && y_vel <= 2.0f) ? y_vel - 0.3f : y_vel - 1.0f) 
             : -17.0f;
+    is_collide.x = false;
     is_collide.y = false;
     SetPosition(m_pos);
 }
@@ -182,7 +209,8 @@ float Character::OffsetValues(std::string typeName) {
 void Character::Whip(){
     is_whip = true;
     if (is_jump) Fall();
-    ChangeBehavior(3, true);
+    if (is_duck) ChangeBehavior(2, true);
+    else ChangeBehavior(3, true);
 
     // m_size = glm::abs(m_Behavior->GetScaledSize());
     // float whipWidth = OffsetValues("whipWidth");
@@ -190,12 +218,17 @@ void Character::Whip(){
     // m_pos.x += (m_direction == "right") ? (-1 * whipWidth * 0.5f) : (whipWidth * 0.5f);
 }
 
-void Character::Duck(){
-    ChangeBehavior(3);
-    glm::vec2 pos = GetPosition();
-    SetPosition({pos.x, pos.y - 20});
+void Character::Duck(std::string direction){
+    if (direction != m_direction && direction != ""){
+        m_direction = direction;
+        Flip();
+    }
     is_duck = true;
-    if (!is_duck) m_size.y /= 2;
+    // std::cout << m_Behavior->GetScaledSize().x << ", " << m_Behavior->GetScaledSize().y << std::endl;
+    m_size = glm::abs(m_Behavior->GetScaledSize());
+    float duck = OffsetValues("duck");
+    m_size.y -= duck;
+    m_pos.y -= duck * 0.5;
 }
 
 void Character::Jump(){
@@ -276,14 +309,13 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
             float minOverlap = std::min({overlapTop, overlapBottom, overlapLeft, overlapRight});
 
             //above (char on the block)
-            if (minOverlap == overlapTop && !is_whip) {
+            if (minOverlap == overlapTop) {
                 SetPosition({m_pos.x, blockBottom - m_size.y * 0.5f});
                 is_collide.y = true;
             //below (char hit head)
             } else if (minOverlap == overlapBottom) {
                 SetPosition({m_pos.x, blockTop + m_size.y * 0.5f});
                 is_collide.y = true;
-                y_vel = 0;
             //left
             } else if (minOverlap == overlapLeft) {
                 SetPosition({blockLeft - m_size.x * 0.5f, m_pos.y});

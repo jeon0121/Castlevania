@@ -35,7 +35,7 @@ public:
 
     void Whip();
 
-    void Duck();
+    void Duck(std::string direction);
 
     void Jump();
 
