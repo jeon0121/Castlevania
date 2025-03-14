@@ -108,7 +108,9 @@ void Character::Keys() {
         Whip();
     }
     // whip
-    else if (Util::Input::IsKeyDown(A) || is_whip) Whip();
+    else if (Util::Input::IsKeyDown(A) || is_whip) {
+        Whip();
+    }
     // duck left
     else if (Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyPressed(LEFT) && !is_jump) {
         ChangeBehavior(3);
@@ -124,68 +126,32 @@ void Character::Keys() {
         ChangeBehavior(3);
         Duck("");
     }
-    // left jump
-    else if (Util::Input::IsKeyPressed(LEFT) && Util::Input::IsKeyDown(B) && !is_jump) {
-        Jump();
-        jumptype = 1;
-    }
-    // right jump
-    else if (Util::Input::IsKeyPressed(RIGHT) && Util::Input::IsKeyDown(B) && !is_jump) {
-        Jump();
-        jumptype = 2;
-    }
-    // normal jump
+    // jump
     else if (Util::Input::IsKeyDown(B) && !is_jump) {
         Jump();
-        jumptype = 0;
+        jumptype = (Util::Input::IsKeyPressed(LEFT)) ? 1 :
+                   (Util::Input::IsKeyPressed(RIGHT)) ? 2 : 0;
     }
     // fall
     else if (is_jump) {
         Fall();
     }
     // when pressing both key, character will idle
-    else if (Util::Input::IsKeyPressed(LEFT) && Util::Input::IsKeyPressed(RIGHT)) Idle();
+    else if (Util::Input::IsKeyPressed(LEFT) && Util::Input::IsKeyPressed(RIGHT)) {
+        Idle();
+    }
     // left
     else if (Util::Input::IsKeyPressed(LEFT) && !is_duck) {
-        if (change_land) {
-            if (countTime < 20) {
-                ChangeBehavior(3);
-                countTime++;
-            } else {
-                change_land = false;
-                countTime = 0;
-            }
-        }
-        if (!change_land) {
-            ChangeBehavior(0);
-            Move("left");
-            y_vel = -18.0f;
-        }else {
-            Duck();
-        }
+        HandleFallDuck("left");
     }
     // right
     else if (Util::Input::IsKeyPressed(RIGHT) && !is_duck) {
-        if (change_land) {
-            if (countTime < 20) {
-                ChangeBehavior(3);
-                countTime++;
-            } else {
-                change_land = false;
-                countTime = 0;
-            }
-        }
-        if (!change_land) {
-            ChangeBehavior(0);
-            Move("right");
-            y_vel = -18.0f;
-        }else {
-            Duck();
-        }
+        HandleFallDuck("right");
     }
     // idle
-    else if (!is_jump) Idle();
-
+    else if (!is_jump) {
+        Idle();
+    }
     glm::vec2 pos = GetPosition();
     std::cout << pos.x << ","
             << pos.y << ", "
@@ -207,6 +173,23 @@ void Character::Keys() {
     is_collide.x = false;
     is_collide.y = false;
     SetPosition(m_pos);
+}
+
+void Character::HandleFallDuck(const std::string& direction) {
+    if (change_land) {
+        Duck(direction);
+        if (countTime < 20) {
+            ChangeBehavior(3);
+            countTime++;
+        } else {
+            change_land = false;
+            countTime = 0;
+        }
+    } else {
+        ChangeBehavior(0);
+        Move(direction);
+        y_vel = -18.0f;
+    }
 }
 
 float Character::OffsetValues(std::string typeName) {
@@ -368,13 +351,13 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
             }
         }
         if ((charRight > blockLeft && charLeft < blockRight) && // Overlap X
-            (charBottom >= blockBottom) && // Character is above block
+            (charBottom >= blockBottom && charTop > blockTop) && // Character is above block
             (blockTop > testLanding)) { // Highest block detected
             testLanding = blockTop;
         }
     }
     if (testLanding != landPosition) {
-        if (testLanding < landPosition && !is_jump) {
+        if (testLanding < landPosition && (landPosition - testLanding) > 100.0f && !is_jump) {
             change_land = true;
         }
         landPosition = testLanding;

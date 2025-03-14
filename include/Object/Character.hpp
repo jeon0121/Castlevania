@@ -33,6 +33,8 @@ public:
 
     float OffsetValues(std::string typeName);
 
+    void HandleFallDuck(const std::string& direction);
+
     void Whip();
 
     void Duck(std::string direction);
