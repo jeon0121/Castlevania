@@ -65,12 +65,8 @@ void Character::ChangeBehavior(int BehaviorIndex, bool if_whip) {
 void Character::SetPosition(const glm::vec2& position) {
     m_pos = position;
     m_Behavior->SetPosition(position);
-    glm::vec2 pos = m_Behavior->GetPosition();
     if (is_whip) {
-        int currentFrame = m_Behavior->GetCurrentFrameIndex();
-        if (this->currentFrame == currentFrame) return;
-        this->currentFrame = currentFrame;
-
+        this->currentFrame = m_Behavior->GetCurrentFrameIndex();
         glm::vec2 pos = position;
         int offset = OffsetValues("whipOffset");
         pos.x += (m_direction == "right") ? offset : -offset;
@@ -161,8 +157,10 @@ void Character::Keys() {
 float Character::OffsetValues(std::string typeName) {
     if (typeName == "whipOffset") {
         float whipOffset = (currentFrame == 0) ? -32
-                         : (currentFrame == 2 * (m_whip_level == 3 ? 4 : 1)) ? 88
-                         : (currentFrame == 4 * (m_whip_level == 3 ? 4 : 1)) ? -56
+                         : (currentFrame == 1 * (m_whip_level == 3 ? 4 : 1)) ? -32
+                         : (currentFrame == 2 * (m_whip_level == 3 ? 4 : 1)) ? 56
+                         : (currentFrame == 3 * (m_whip_level == 3 ? 4 : 1)) ? 56
+                         : (currentFrame == 4 * (m_whip_level == 3 ? 4 : 1)) ? 0
                          : 0;
         return whipOffset;
     }
@@ -186,21 +184,18 @@ void Character::Whip(){
     if (is_jump) Fall();
     ChangeBehavior(3, true);
 
-    m_size = glm::abs(m_Behavior->GetScaledSize());
-    float whipWidth = OffsetValues("whipWidth");
-    m_size.x -= whipWidth;
-    m_pos.x += (m_direction == "right") ? (-1 * whipWidth * 0.5f) : (whipWidth * 0.5f);
+    // m_size = glm::abs(m_Behavior->GetScaledSize());
+    // float whipWidth = OffsetValues("whipWidth");
+    // m_size.x -= whipWidth;
+    // m_pos.x += (m_direction == "right") ? (-1 * whipWidth * 0.5f) : (whipWidth * 0.5f);
 }
 
 void Character::Duck(){
     ChangeBehavior(3);
     glm::vec2 pos = GetPosition();
+    SetPosition({pos.x, pos.y - 20});
     is_duck = true;
-
-    m_size = glm::abs(m_Behavior->GetScaledSize());
-    float duck = OffsetValues("duck");
-    m_size.y -= duck;
-    m_pos.y -= duck * 0.5;
+    if (!is_duck) m_size.y /= 2;
 }
 
 void Character::Jump(){
