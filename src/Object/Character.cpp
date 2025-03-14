@@ -129,17 +129,45 @@ void Character::Keys() {
     else if (Util::Input::IsKeyPressed(LEFT) && Util::Input::IsKeyPressed(RIGHT)) Idle();
     // left
     else if (Util::Input::IsKeyPressed(LEFT)) {
-        ChangeBehavior(0);
-        Move("left");
+        if (change_land) {
+            if (countTime < 20) {
+                ChangeBehavior(3);
+                countTime++;
+            } else {
+                change_land = false;
+                countTime = 0;
+            }
+        }
+        if (!change_land) {
+            ChangeBehavior(0);
+            Move("left");
+            y_vel = -18.0f;
+        }else {
+            Duck();
+        }
     }
     // right
     else if (Util::Input::IsKeyPressed(RIGHT)) {
-        ChangeBehavior(0);
-        Move("right");
+        if (change_land) {
+            if (countTime < 20) {
+                ChangeBehavior(3);
+                countTime++;
+            } else {
+                change_land = false;
+                countTime = 0;
+            }
+        }
+        if (!change_land) {
+            ChangeBehavior(0);
+            Move("right");
+            y_vel = -18.0f;
+        }else {
+            Duck();
+        }
     }
     // idle
     else if (!is_jump) Idle();
-    
+
     glm::vec2 pos = GetPosition();
     if (is_jump) jumph = pos.y;
     height = jumph - landh;
@@ -235,15 +263,26 @@ void Character::Move(std::string direction){
 }
 
 void Character::Idle(){
-    ChangeBehavior(2);
-    is_whip = false;
-    is_duck = false;
-    is_jump = false;
-    is_left = false;
-    is_right = false;
-    m_size = glm::abs(m_Behavior->GetScaledSize());
-    glm::vec2 pos = GetPosition();
-    jumph = landh = pos.y;
+    if (change_land) {
+        if (countTime < 20) {
+            ChangeBehavior(3);
+            countTime++;
+        } else {
+            ChangeBehavior(2);
+            change_land = false;
+            countTime = 0;
+        }
+    }else {
+        ChangeBehavior(2);
+        is_whip = false;
+        is_duck = false;
+        is_jump = false;
+        is_left = false;
+        is_right = false;
+        m_size = glm::abs(m_Behavior->GetScaledSize());
+        glm::vec2 pos = GetPosition();
+        jumph = landh = pos.y;
+    }
 }
 
 void Character::Flip() {
@@ -252,6 +291,7 @@ void Character::Flip() {
 }
 
 void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blocks) {
+    float testLanding = -300.0f;
     float charTop = m_pos.y + m_size.y * 0.5f;
     float charBottom = m_pos.y - m_size.y * 0.5f;
     float charLeft = m_pos.x - m_size.x * 0.5f;
@@ -265,15 +305,16 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
         float blockLeft = blockPos.x - blockSize.x * 0.5f;
         float blockRight = blockPos.x + blockSize.x * 0.5f;
 
+        float overlapTop = charTop - blockBottom;
+        float overlapBottom = blockTop - charBottom;
+        float overlapLeft = charRight - blockLeft;
+        float overlapRight = blockRight - charLeft;
+
         if ((charRight > blockLeft && charLeft < blockRight) &&  //overlap x
             (charTop > blockBottom && charBottom < blockTop)) {  //overlap y
-            float overlapTop = abs(charTop - blockBottom);
-            float overlapBottom = abs(blockTop - charBottom);
-            float overlapLeft = abs(charRight - blockLeft);
-            float overlapRight = abs(blockRight - charLeft);
 
             //determine collision base on the smallest
-            float minOverlap = std::min({overlapTop, overlapBottom, overlapLeft, overlapRight});
+            float minOverlap = std::min({abs(overlapTop), abs(overlapBottom), abs(overlapLeft), abs(overlapRight)});
 
             //above (char on the block)
             if (minOverlap == overlapTop && !is_whip) {
@@ -294,5 +335,17 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
                 is_collide.x = true;
             }
         }
+        if ((charRight > blockLeft && charLeft < blockRight) && // Overlap X
+            (charBottom >= blockBottom) && // Character is above block
+            (blockTop > testLanding)) { // Highest block detected
+            testLanding = blockTop;
+        }
     }
+    if (testLanding != landPosition) {
+        if (testLanding < landPosition && !is_jump) {
+            change_land = true;
+        }
+        landPosition = testLanding;
+    }
+    // std::cout << landPosition<< std::endl;
 }
