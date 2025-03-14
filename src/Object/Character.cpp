@@ -37,6 +37,7 @@ Character::Character(const CharacterValue& value) :
     }
     
     m_Behavior = std::make_shared<AnimatedItems>(behaviorVector[value.beIndex], 100, glm::vec2(value.scale, value.scale));
+    SetPosition(value.position);
     m_Behavior->SetPosition(value.position);
     m_Behavior->SetZIndex(7);
     m_size = glm::abs(m_Behavior->GetScaledSize());
@@ -61,8 +62,22 @@ void Character::ChangeBehavior(int BehaviorIndex, bool if_whip) {
 }
 
 void Character::SetPosition(const glm::vec2& position) {
-    if (!is_whip || !is_duck) m_pos = position;
+    m_pos = position;
     m_Behavior->SetPosition(position);
+    glm::vec2 pos = m_Behavior->GetPosition();
+    if (is_whip) {
+        int currentFrame = m_Behavior->GetCurrentFrameIndex();
+        if (this->currentFrame == currentFrame) return;
+        this->currentFrame = currentFrame;
+        glm::vec2 pos = position;
+        int offset = (currentFrame == 0) ? -32
+                : (currentFrame == 2 * (m_whip_level == 3 ? 4 : 1)) ? 88
+                : (currentFrame == 4 * (m_whip_level == 3 ? 4 : 1)) ? -56
+                : 0;
+        pos.x += (m_direction == "right") ? offset : -offset;
+        if (currentFrame == 4 * (m_whip_level == 3 ? 4 : 1)) is_whip = false;
+        m_Behavior->SetPosition(pos);
+    }
 }
 
 const glm::vec2& Character::GetPosition() const {
@@ -112,7 +127,9 @@ void Character::Keys() {
         jumptype = 0;
     }
     // fall
-    else if (is_jump) Fall();
+    else if (is_jump) {
+        Fall();
+    }
     // when pressing both key, character will idle
     else if (Util::Input::IsKeyPressed(LEFT) && Util::Input::IsKeyPressed(RIGHT)) Idle();
     // left
@@ -127,45 +144,21 @@ void Character::Keys() {
     }
     // idle
     else if (!is_jump) Idle();
-
-    std::cout << is_collide.y << ", " << is_jump << ", " << is_collide.x <<  ", " << y_vel << std::endl;
-
-    glm::vec2 pos = GetPosition();
-    pos.x += x_vel;
-    pos.y += y_vel;
+    
+    m_pos.x += x_vel;
+    m_pos.y += y_vel;
     x_vel = 0;
     y_vel = (y_vel > -17.0f) ? 
             ((-2.0f <= y_vel && y_vel <= 2.0f) ? y_vel - 0.3f : y_vel - 1.0f) 
             : -17.0f;
     is_collide.y = false;
-    SetPosition(pos);
+    SetPosition(m_pos);
 }
 
 void Character::Whip(){
     is_whip = true;
     if (is_jump) Fall();
     ChangeBehavior(3, true);
-    int currentFrame = m_Behavior->GetCurrentFrameIndex();
-    if (this->currentFrame == currentFrame) return;
-    this->currentFrame = currentFrame;
-    glm::vec2 pos = GetPosition();
-    int offset = (currentFrame == 0) ? -32
-               : (currentFrame == 2 * (m_whip_level == 3 ? 4 : 1)) ? 88
-               : (currentFrame == 4 * (m_whip_level == 3 ? 4 : 1)) ? -56
-               : 0;
-    pos.x += (m_direction == "right") ? offset : -offset;
-
-    m_size = glm::abs(m_Behavior->GetScaledSize());
-    float whipWidth = (currentFrame == 0) ? 35
-                    : (currentFrame == 1 * (m_whip_level == 3 ? 4 : 1)) ? 60
-                    : (currentFrame == 2 * (m_whip_level == 3 ? 4 : 1)) ? 130
-                    : (currentFrame == 3 * (m_whip_level == 3 ? 4 : 1)) ? 140
-                    : 0;
-    m_size.x -= whipWidth;
-    m_pos.x += (m_direction == "right") ? (-1 * whipWidth * 0.5f) : (whipWidth * 0.5f);
-
-    if (currentFrame == 4 * (m_whip_level == 3 ? 4 : 1)) is_whip = false;
-    SetPosition(pos);
 }
 
 void Character::Duck(){
@@ -253,20 +246,20 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
 
             //above (char on the block)
             if (minOverlap == overlapTop && !is_whip) {
-                m_Behavior->SetPosition({m_pos.x, blockBottom - m_size.y * 0.5f});
+                SetPosition({m_pos.x, blockBottom - m_size.y * 0.5f});
                 is_collide.y = true;
             //below (char hit head)
             } else if (minOverlap == overlapBottom) {
-                m_Behavior->SetPosition({m_pos.x, blockTop + m_size.y * 0.5f});
+                SetPosition({m_pos.x, blockTop + m_size.y * 0.5f});
                 is_collide.y = true;
                 y_vel = 0;
             //left
             } else if (minOverlap == overlapLeft) {
-                m_Behavior->SetPosition({blockLeft - m_size.x * 0.5f, m_pos.y});
+                SetPosition({blockLeft - m_size.x * 0.5f, m_pos.y});
                 is_collide.x = true;
             //right
             } else if (minOverlap == overlapRight) {
-                m_Behavior->SetPosition({blockRight + m_size.x * 0.5f, m_pos.y});
+                SetPosition({blockRight + m_size.x * 0.5f, m_pos.y});
                 is_collide.x = true;
             }
         }
