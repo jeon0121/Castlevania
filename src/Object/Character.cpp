@@ -79,6 +79,22 @@ const glm::vec2& Character::GetPosition() const {
     return m_Behavior->GetPosition();
 }
 
+void Character::UpdatePosition() {
+    glm::vec2 pos = GetPosition();
+    if (is_jump) jumph = pos.y;
+    height = jumph - landh;
+
+    m_pos.x += x_vel;
+    m_pos.y += y_vel;
+    x_vel = 0;
+    y_vel = (y_vel > -17.0f) ?
+            ((-2.0f <= y_vel && y_vel <= 2.0f) ? y_vel - 0.3f : y_vel - 1.0f)
+            : -17.0f;
+    is_collide.x = false;
+    is_collide.y = false;
+    SetPosition(m_pos);
+}
+
 void Character::Keys() {
     // Position::PrintCursorCoordinate();
 
@@ -103,9 +119,10 @@ void Character::Keys() {
     */
     
     // duck whip
-    if (Util::Input::IsKeyPressed(DOWN) && (Util::Input::IsKeyDown(A) || is_whip) && is_duck){
+    if ((Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyDown(A)) || (is_whip && is_duck)){
         Duck("");
         Whip();
+        m_size.x = 64;
     }
     // whip
     else if (Util::Input::IsKeyDown(A) || is_whip) {
@@ -160,19 +177,8 @@ void Character::Keys() {
             << m_size.x << ", "
             << m_size.y << ", "
             << std::endl;
-    
-    if (is_jump) jumph = pos.y;
-    height = jumph - landh;
 
-    m_pos.x += x_vel;
-    m_pos.y += y_vel;
-    x_vel = 0;
-    y_vel = (y_vel > -17.0f) ?
-            ((-2.0f <= y_vel && y_vel <= 2.0f) ? y_vel - 0.3f : y_vel - 1.0f) 
-            : -17.0f;
-    is_collide.x = false;
-    is_collide.y = false;
-    SetPosition(m_pos);
+    UpdatePosition();
 }
 
 void Character::HandleFallDuck(const std::string& direction) {
@@ -284,7 +290,6 @@ void Character::Idle(){
             ChangeBehavior(3);
             countTime++;
         } else {
-            ChangeBehavior(2);
             change_land = false;
             countTime = 0;
         }

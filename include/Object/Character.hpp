@@ -29,6 +29,8 @@ public:
 
     const glm::vec2& GetPosition() const;
 
+    void UpdatePosition();
+
     void Keys();
 
     float OffsetValues(std::string typeName);
