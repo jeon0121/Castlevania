@@ -182,7 +182,9 @@ void Character::Keys() {
 }
 
 void Character::HandleFallDuck(const std::string& direction) {
-    if (change_land) {
+    glm::vec2 pos = GetPosition();
+    float charBottom = pos.y - m_size.y * 0.5f;
+    if (change_land && charBottom <= landPosition) {
         Duck(direction);
         if (countTime < 20) {
             ChangeBehavior(3);
@@ -191,7 +193,8 @@ void Character::HandleFallDuck(const std::string& direction) {
             change_land = false;
             countTime = 0;
         }
-    } else {
+    }
+    if (!is_jump && !change_land) {
         ChangeBehavior(0);
         Move(direction);
         y_vel = -18.0f;
@@ -228,11 +231,6 @@ void Character::Whip(){
     if (is_jump) Fall();
     if (is_duck) ChangeBehavior(2, true);
     else ChangeBehavior(3, true);
-
-    // m_size = glm::abs(m_Behavior->GetScaledSize());
-    // float whipWidth = OffsetValues("whipWidth");
-    // m_size.x -= whipWidth;
-    // m_pos.x += (m_direction == "right") ? (-1 * whipWidth * 0.5f) : (whipWidth * 0.5f);
 }
 
 void Character::Duck(std::string direction){
@@ -262,8 +260,13 @@ void Character::Fall(){
     }
     else {
         if (y_vel >= -16.0f && !is_collide.y) {
-            if (jumptype == 1) Move("left");
-            else if (jumptype == 2) Move("right");
+            if (jumptype == 1) {
+                if (change_land)  HandleFallDuck("left");
+                Move("left");
+            }else if (jumptype == 2) {
+                if (change_land)  HandleFallDuck("right");
+                Move("right");
+            }
         }
         is_jump = true;
     }
@@ -285,7 +288,10 @@ void Character::Move(std::string direction){
 }
 
 void Character::Idle(){
-    if (change_land) {
+    glm::vec2 pos = GetPosition();
+    float charBottom = pos.y - m_size.y * 0.5f;
+    if (change_land && charBottom <= landPosition) {
+        Duck(m_direction);
         if (countTime < 20) {
             ChangeBehavior(3);
             countTime++;
@@ -293,7 +299,8 @@ void Character::Idle(){
             change_land = false;
             countTime = 0;
         }
-    }else {
+    }
+    if (!change_land) {
         ChangeBehavior(2);
         is_whip = false;
         is_duck = false;
@@ -301,7 +308,6 @@ void Character::Idle(){
         is_left = false;
         is_right = false;
         m_size = glm::abs(m_Behavior->GetScaledSize());
-        glm::vec2 pos = GetPosition();
         jumph = landh = pos.y;
     }
 }
@@ -356,13 +362,12 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
             }
         }
         if ((charRight > blockLeft && charLeft < blockRight) && // Overlap X
-            (charBottom >= blockBottom && charTop > blockTop) && // Character is above block
-            (blockTop > testLanding)) { // Highest block detected
+            (charTop > blockTop && blockTop > testLanding)) { // character above block & highest block detected
             testLanding = blockTop;
         }
     }
     if (testLanding != landPosition) {
-        if (testLanding < landPosition && (landPosition - testLanding) > 100.0f && !is_jump) {
+        if (testLanding < landPosition && ((landPosition - testLanding) > 120.0f || is_jump)) {
             change_land = true;
         }
         landPosition = testLanding;
