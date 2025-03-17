@@ -72,6 +72,7 @@ private:
     float jumph = 0;
     float landh = 0;
     float height = 0;
+    float prevLandPosition = -299.35;
     float landPosition = -299.35;
 
     int currentBeIndex = 2;
@@ -83,8 +84,6 @@ private:
     bool is_whip = false;
     bool is_duck = false;
     bool is_jump = false;
-    bool is_left = false;
-    bool is_right = false;
     bool change_land = false;
 };
 
