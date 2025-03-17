@@ -14,8 +14,11 @@ Character::Character(const CharacterValue& value) :
     intro.emplace_back(GA_RESOURCE_DIR"/main character/intro/intro.png");
 
     //AnimatedBehavior
-    for (int i = 0; i < 4; ++i) walk.emplace_back(GA_RESOURCE_DIR"/main character/walk/walk-" + std::to_string(i + 1) + ".png");
-    for (int i = 0; i < 2; ++i) death.emplace_back(GA_RESOURCE_DIR"/main character/death/death-" + std::to_string(i + 1) + ".png");
+    for (int i = 0; i < 4; ++i)
+        walk.emplace_back(GA_RESOURCE_DIR"/main character/walk/walk-" + std::to_string(i + 1) + ".png");
+
+    for (int i = 0; i < 2; ++i)
+        death.emplace_back(GA_RESOURCE_DIR"/main character/death/death-" + std::to_string(i + 1) + ".png");
 
     behaviorVector = {walk, death, idle, duck, hurt, jump, intro};
 
@@ -37,7 +40,8 @@ Character::Character(const CharacterValue& value) :
     m_Behavior->SetZIndex(7);
     m_size = glm::abs(m_Behavior->GetScaledSize());
     jumph = landh = value.position.y;
-    if (value.direction == "right") Flip();
+    if (value.direction == "right")
+        Flip();
 }
 
 void Character::ChangeBehavior(int BehaviorIndex, bool if_whip) {
@@ -51,7 +55,8 @@ void Character::ChangeBehavior(int BehaviorIndex, bool if_whip) {
 
 void Character::SetPosition(const glm::vec2& position) {
     m_pos = position;
-    if (!is_whip) m_Behavior->SetPosition(position);
+    if (!is_whip)
+        m_Behavior->SetPosition(position);
 }
 
 const glm::vec2& Character::GetPosition() const {
@@ -60,14 +65,16 @@ const glm::vec2& Character::GetPosition() const {
 
 void Character::UpdatePosition() {
     glm::vec2 pos = m_Behavior->GetPosition();
-    if (is_jump) jumph = pos.y;
+    if (is_jump)
+        jumph = pos.y;
     height = jumph - landh;
 
     if (is_whip) {
         this->currentFrame = m_Behavior->GetCurrentFrameIndex();
         int offset = OffsetValues("whipOffset");
         m_Behavior->SetPosition({m_pos.x + (m_direction == "right" ? offset : -offset), m_pos.y});
-        if (this->currentFrame == 4 * (m_whip_level == 3 ? 4 : 1)) is_whip = false;
+        if (this->currentFrame == 4 * (m_whip_level == 3 ? 4 : 1))
+            is_whip = false;
     }
     m_pos += glm::vec2(x_vel, y_vel);
     x_vel = 0;
@@ -103,13 +110,21 @@ void Character::Keys() {
         Whip();
     }
     // whip
-    else if (Util::Input::IsKeyDown(A) || is_whip) Whip();
+    else if (Util::Input::IsKeyDown(A) || is_whip)
+        Whip();
+
     // duck left
-    else if (Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyPressed(LEFT) && !is_jump) Duck("left");
+    else if (Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyPressed(LEFT) && !is_jump)
+        Duck("left");
+
     // duck right
-    else if (Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyPressed(RIGHT) && !is_jump) Duck("right");
+    else if (Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyPressed(RIGHT) && !is_jump)
+        Duck("right");
+
     // duck
-    else if (Util::Input::IsKeyPressed(DOWN) && !is_jump) Duck("");
+    else if (Util::Input::IsKeyPressed(DOWN) && !is_jump)
+        Duck("");
+
     // jump
     else if (Util::Input::IsKeyDown(B) && !is_jump && !change_land) {
         Jump();
@@ -117,15 +132,24 @@ void Character::Keys() {
                    (Util::Input::IsKeyPressed(RIGHT)) ? 2 : 0;
     }
     // fall
-    else if (is_jump) Fall();
+    else if (is_jump)
+        Fall();
+
     // when pressing both key, character will idle
-    else if (Util::Input::IsKeyPressed(LEFT) && Util::Input::IsKeyPressed(RIGHT)) Idle();
+    else if (Util::Input::IsKeyPressed(LEFT) && Util::Input::IsKeyPressed(RIGHT))
+        Idle();
+
     // left
-    else if (Util::Input::IsKeyPressed(LEFT) && !is_duck) HandleFallDuck("left");
+    else if (Util::Input::IsKeyPressed(LEFT) && !is_duck)
+        HandleFallDuck("left");
+
     // right
-    else if (Util::Input::IsKeyPressed(RIGHT) && !is_duck) HandleFallDuck("right");
+    else if (Util::Input::IsKeyPressed(RIGHT) && !is_duck)
+        HandleFallDuck("right");
+
     // idle
-    else if (!is_jump) Idle();
+    else if (!is_jump)
+        Idle();
 
     // glm::vec2 pos = GetPosition();
     // std::cout << pos.x << ","
@@ -142,13 +166,14 @@ void Character::Keys() {
 void Character::HandleFallDuck(const std::string& direction) {
     if ((change_land && prevLandPosition > landPosition) || countTime) {
         Duck(direction);
-        if (countTime < 20) countTime++;
+        if (countTime < 20)
+            countTime++;
         else {
             change_land = false;
             countTime = 0;
         }
-    }
-    else Move(direction);
+    }else
+        Move(direction);
 }
 
 float Character::OffsetValues(std::string typeName) {
@@ -167,17 +192,21 @@ float Character::OffsetValues(std::string typeName) {
              : (currentFrame == 3 * (m_whip_level == 3 ? 4 : 1)) ? 140
              : 0;
     }
-    if (typeName == "duck") return 50.0f;
+    if (typeName == "duck") {
+        return 50.0f;
+    }
     return 0;
 }
 
 void Character::Whip(){
     m_size.x = 64;
     is_whip = true;
-    if (is_jump) Fall();
-    if (is_duck) ChangeBehavior(2, true);
-    else ChangeBehavior(3, true);
-
+    if (is_jump)
+        Fall();
+    if (is_duck)
+        ChangeBehavior(2, true);
+    else
+        ChangeBehavior(3, true);
     // m_size = glm::abs(m_Behavior->GetScaledSize());
     // float whipWidth = OffsetValues("whipWidth");
     // m_size.x -= whipWidth;
@@ -185,7 +214,8 @@ void Character::Whip(){
 }
 
 void Character::Duck(std::string direction){
-    if (!is_whip) ChangeBehavior(3);
+    if (!is_whip)
+        ChangeBehavior(3);
     if (direction != m_direction && direction != ""){
         m_direction = direction;
         Flip();
@@ -196,17 +226,24 @@ void Character::Duck(std::string direction){
 }
 
 void Character::Jump(){
-    if (!is_jump) y_vel = 17.0f;
+    if (!is_jump)
+        y_vel = 17.0f;
     is_jump = true;
 }
 
-void Character::Fall() {
-    if (!is_whip) ChangeBehavior(height > 80.0f ? 3 : 2);
+void Character::Fall(){
+    if (!is_whip){
+        ChangeBehavior(height > 80.0f ? 3 : 2);
+    }
     is_jump = false;
-    if (is_collide.y) y_vel = 0;
-    else {
-        if (jumptype == 1) x_vel = -4.5f;
-        else if (jumptype == 2) x_vel = 4.5f;
+    if (is_collide.y){
+        y_vel = 0;
+    }else{
+        if (jumptype == 1){
+            x_vel = -4.5f;
+        }else if (jumptype == 2){
+            x_vel = 4.5f;
+        }
         is_jump = true;
     }
 }
@@ -225,7 +262,8 @@ void Character::Idle() {
     if ((change_land && prevLandPosition > landPosition) || countTime) {
         m_pos.y -= OffsetValues("duck") * 0.5;
         Duck(m_direction);
-        if (countTime < 20) countTime++;
+        if (countTime < 20)
+            countTime++;
         else {
             change_land = false;
             countTime = 0;
@@ -291,8 +329,7 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
             }
         }
         if ((charRight > blockLeft && charLeft < blockRight) && // Overlap X
-            (charBottom >= blockBottom && charTop > blockTop) && // Character is above block
-            (blockTop > testLanding)) { // Highest block detected
+            (charTop > blockTop && blockTop > testLanding)) { // character above block & highest block detected
             testLanding = blockTop;
         }
     }
