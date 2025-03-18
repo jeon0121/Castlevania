@@ -78,7 +78,7 @@ void Character::UpdatePosition() {
     }
     m_pos += glm::vec2(x_vel, y_vel);
     x_vel = 0;
-    y_vel = std::max(y_vel - ((-2.0f <= y_vel && y_vel <= 2.0f) ? 0.3f : 1.0f), -17.0f);
+    y_vel = std::max(y_vel - ((-2.0f <= y_vel && y_vel <= 2.0f) ? 0.3f : 1.0f), -14.5f);
     if (m_pos.y - m_size.y * 0.5f < landPosition && !is_jump)
         m_pos.y = landPosition + m_size.y * 0.5f;
     is_collide = {false, false};
@@ -155,14 +155,14 @@ void Character::Keys() {
     else if (!is_jump)
         Idle();
 
-    glm::vec2 pos = GetPosition();
-    std::cout << pos.x << ","
-            << pos.y << ", "
-            << m_pos.x << ", "
-            << m_pos.y << ", "
-            << m_size.x << ", "
-            << m_size.y << ", "
-            << std::endl;
+    // glm::vec2 pos = GetPosition();
+    // std::cout << pos.x << ","
+    //         << pos.y << ", "
+    //         << m_pos.x << ", "
+    //         << m_pos.y << ", "
+    //         << m_size.x << ", "
+    //         << m_size.y << ", "
+    //         << std::endl;
 
     UpdatePosition();
 }
@@ -197,7 +197,7 @@ float Character::OffsetValues(std::string typeName) {
              : 0;
     }
     if (typeName == "duck") {
-        return 32.0f;//32
+        return 50.0f;//32
     }
     return 0;
 }
@@ -228,13 +228,13 @@ void Character::Duck(std::string direction){
     m_pos = m_Behavior->GetPosition();
     // std::cout << "Duck size: " << m_size.x << ", " << m_size.y << std::endl;
     m_size.y -= OffsetValues("duck");
-    m_pos.y -= OffsetValues("duck") * 0.5;
+        m_pos.y -= OffsetValues("duck") * 0.5;
     is_duck = true;
 }
 
 void Character::Jump(){
     if (!is_jump)
-        y_vel = 17.0f;
+        y_vel = 14.5f;
     is_jump = true;
 }
 
@@ -246,10 +246,12 @@ void Character::Fall(){
     if (is_collide.y){
         y_vel = 0;
     }else{
-        if (jumptype == 1){
-            x_vel = -4.5f;
-        }else if (jumptype == 2){
-            x_vel = 4.5f;
+        if (!is_collide.x) {
+            if (jumptype == 1){
+                x_vel = -4.5f;
+            }else if (jumptype == 2){
+                x_vel = 4.5f;
+            }
         }
         is_jump = true;
     }
@@ -295,6 +297,8 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
     float testLanding = -300.0f;
     float charTop = m_pos.y + m_size.y * 0.5f;
     float charBottom = m_pos.y - m_size.y * 0.5f;
+    if (currentBeIndex == 3 && is_jump && !is_whip && (jumph - landPosition)>=50.0f)
+        charBottom += 32.0f;
     float charLeft = m_pos.x - m_size.x * 0.5f;
     float charRight = m_pos.x + m_size.x * 0.5f;
 
@@ -336,7 +340,7 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
                 is_collide.x = true;
             }
         }
-        if ((charRight > blockLeft && charLeft < blockRight) && // Overlap X
+        if ((charRight > blockLeft + 5.0f && charLeft < blockRight - 5.0f) && // Overlap X
             (charTop > blockTop && blockTop > testLanding)) { // character above block & highest block detected
             testLanding = blockTop;
         }
@@ -348,5 +352,5 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
         }
         landPosition = testLanding;
     }
-    // std::cout << prevLandPosition << ',' << landPosition << std::endl;
+    std::cout << prevLandPosition << ',' << landPosition << std::endl;
 }
