@@ -79,11 +79,15 @@ void Character::UpdatePosition() {
     m_pos += glm::vec2(x_vel, y_vel);
     x_vel = 0;
     y_vel = std::max(y_vel - ((-2.0f <= y_vel && y_vel <= 2.0f) ? 0.3f : 1.0f), -17.0f);
+    if (m_pos.y - m_size.y * 0.5f < landPosition && !is_jump)
+        m_pos.y = landPosition + m_size.y * 0.5f;
     is_collide = {false, false};
     SetPosition(m_pos);
 }
 
 void Character::Keys() {
+    // Position::PrintCursorCoordinate();
+
     constexpr Util::Keycode A      = Util::Keycode::J;
     constexpr Util::Keycode B      = Util::Keycode::K;
     constexpr Util::Keycode UP     = Util::Keycode::W;
@@ -151,14 +155,14 @@ void Character::Keys() {
     else if (!is_jump)
         Idle();
 
-    // glm::vec2 pos = GetPosition();
-    // std::cout << pos.x << ","
-    //         << pos.y << ", "
-    //         << m_pos.x << ", "
-    //         << m_pos.y << ", "
-    //         << m_size.x << ", "
-    //         << m_size.y << ", "
-    //         << std::endl;
+    glm::vec2 pos = GetPosition();
+    std::cout << pos.x << ","
+            << pos.y << ", "
+            << m_pos.x << ", "
+            << m_pos.y << ", "
+            << m_size.x << ", "
+            << m_size.y << ", "
+            << std::endl;
 
     UpdatePosition();
 }
@@ -193,7 +197,7 @@ float Character::OffsetValues(std::string typeName) {
              : 0;
     }
     if (typeName == "duck") {
-        return 50.0f;
+        return 32.0f;//32
     }
     return 0;
 }
@@ -220,9 +224,12 @@ void Character::Duck(std::string direction){
         m_direction = direction;
         Flip();
     }
-    is_duck = true;
     m_size = glm::abs(m_Behavior->GetScaledSize());
+    m_pos = m_Behavior->GetPosition();
+    // std::cout << "Duck size: " << m_size.x << ", " << m_size.y << std::endl;
     m_size.y -= OffsetValues("duck");
+    m_pos.y -= OffsetValues("duck") * 0.5;
+    is_duck = true;
 }
 
 void Character::Jump(){
@@ -303,7 +310,8 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
         float overlapBottom = blockTop - charBottom;
         float overlapLeft = charRight - blockLeft;
         float overlapRight = blockRight - charLeft;
-
+        // std::cout << charTop << ", "<< blockBottom << std::endl;
+        // std::cout << m_pos.y << ", "<< charTop <<", "<<charBottom<< std::endl;
         if ((charRight > blockLeft && charLeft < blockRight) &&  //overlap x
             (charTop > blockBottom && charBottom < blockTop)) {  //overlap y
 
