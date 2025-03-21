@@ -1,2 +1,3 @@
 - Character
-  - [] Filp image (TransformUtils.cpp/rotate y or scale -x)
+  - [] when falling from block, character can jump although it haven't landed
+  - [] when jump and touch the bottom part of block, character would landed duck
