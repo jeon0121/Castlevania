@@ -50,6 +50,8 @@ public:
 
    void IsCollected(std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu);
 
+   bool IfCollected();
+
 private:
    LootType type;
    float x_vel = 0;
@@ -59,6 +61,7 @@ private:
    float itemLeft;
    float itemRight;
    bool is_landed = false;
+   bool is_collected = false;
 };
 
 #endif

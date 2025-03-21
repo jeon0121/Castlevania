@@ -11,8 +11,7 @@
 #include "Object/Torch.hpp"
 #include "Object/Loot.hpp"
 #include "State/Menu.hpp"
-
-class App;
+#include "App.hpp"
 
 class Scene {
 public:
@@ -22,8 +21,24 @@ public:
         END,
     };
     virtual void Start(App* app) = 0;
-    virtual void Update() = 0;
+    virtual void Update(App* app) = 0;
     virtual void End(App* app) = 0;
+
+    void TorchBehavior(App* app) {
+        for (auto torch : m_Torches) {
+            torch->CollideDetection(m_Character);
+            if (torch->is_destroyed && !torch->IfCollected()) {
+                torch->Destroy();
+            }
+            if (torch->loot && !torch->loot->IfCollected()) {
+                app->m_Root.AddChild(torch->loot);
+                torch->loot->Fall(m_Blocks);
+                torch->loot->IsCollected(m_Character, m_Menu);
+                torch->SetCollected();
+            }
+        }
+    }
+
     StateState m_stateState = StateState::START;
 
 protected:
@@ -33,8 +48,6 @@ protected:
     std::vector<std::shared_ptr<Util::GameObject>> m_All;
     std::vector<std::shared_ptr<Block>> m_Blocks;
     std::vector<std::shared_ptr<Torch>> m_Torches;
-    
-    std::shared_ptr<Loot> testLoot;
 };
 
 #endif

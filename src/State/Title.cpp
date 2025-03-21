@@ -79,7 +79,7 @@ void Title::Start(App* app){
     app->AddAllChildren(m_All);
 }
 
-void Title::Update(){
+void Title::Update(App* app){
     if (m_Bat->IfAnimationEnds()) {
         m_Bat->SetCurrentFrame(37);
     }

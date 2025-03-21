@@ -1,9 +1,9 @@
 #ifndef APP_HPP
 #define APP_HPP
 #include "Util/Renderer.hpp"
-#include "State/Scene.hpp"
 #include "pch.hpp" // IWYU pragma: export
 
+class Scene;
 
 class App {
 public:

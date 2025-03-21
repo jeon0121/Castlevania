@@ -50,24 +50,15 @@ void Stage0::Start(App* app){
     // m_All.push_back(block_3);
     // m_All.push_back(block_4);
 
-    //test loot
-    testLoot = std::make_shared<Axe>(glm::vec2(0, -53));
-    m_All.push_back(testLoot);
 
     app->AddAllChildren(m_All);
     m_stateState = StateState::UPDATE;
 }
 
-void Stage0::Update(){
+void Stage0::Update(App* app){
     m_Character->Keys();
     m_Character->CollideBoundary(m_Blocks);
-    for (auto torch : m_Torches) {
-        torch->CollideDetection(m_Character);
-        if (torch->is_destroyed)
-            torch->IsWhipped();
-    }
-    testLoot->Fall(m_Blocks);
-    testLoot->IsCollected(m_Character, m_Menu);
+    TorchBehavior(app);
 }
 
 void Stage0::End(App* app){
