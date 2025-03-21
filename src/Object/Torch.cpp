@@ -33,7 +33,9 @@ void Torch::CollideDetection(std::shared_ptr<Character> &character) {
         float whipLeft = (character->GetDirection() == "left") ? charLeft - whipWidth : charRight;
         float whipRight = (character->GetDirection() == "left") ? charLeft : charRight + whipWidth;
 
-        bool overlapX = (whipLeft > torchLeft && whipLeft < torchRight) || (whipRight > torchLeft && whipRight < torchRight);
+        bool overlapX = (whipLeft > torchLeft && whipLeft < torchRight) ||
+                        (whipRight > torchLeft && whipRight < torchRight) ||
+                        (whipLeft < torchLeft && whipRight > torchRight);
         bool overlapY = torchTop > charPos.y && torchBottom < charPos.y;
 
         if (overlapX && overlapY) {
@@ -44,7 +46,7 @@ void Torch::CollideDetection(std::shared_ptr<Character> &character) {
 
 }
 
-void Torch::IsWhipped() {
+void Torch::Destroy() {
     if (IfAnimationStart())
         SetAnimationFrames(torchDeath, 120);
     SetPlaying();
@@ -52,5 +54,26 @@ void Torch::IsWhipped() {
         SetPaused();
         SetVisible(false);
         is_destroyed = false;
+        loot = CreateLoot(itemType, GetPosition());
+        loot->SetVisible(true);
     }
 }
+
+std::shared_ptr<Loot> Torch::CreateLoot(LootType itemType, glm::vec2 position) {
+    switch (itemType) {
+        case LootType::Axe:
+            return std::make_shared<Axe>(position);
+        // case LootType::Dagger:
+        //     return std::make_shared<Dagger>();
+        // case LootType::HolyWater:
+        //     return std::make_shared<HolyWater>();
+        // case LootType::Heart:
+        //     return std::make_shared<Heart>();
+        default:
+            return nullptr;
+    }
+}
+
+bool Torch::IfCollected() {return is_collected;}
+
+void Torch::SetCollected() {is_collected = true;}

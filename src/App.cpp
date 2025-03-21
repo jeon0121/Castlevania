@@ -32,7 +32,7 @@ void App::Start() {
 
 void App::Update() {
 
-    m_Scene->Update();
+    m_Scene->Update(this);
     if(m_Scene->m_stateState == Scene::StateState::END) {
         m_Scene->End(this);
     }

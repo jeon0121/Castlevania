@@ -8,7 +8,7 @@
 class Title : public Scene{
 public:
     void Start(App* app) override;
-    void Update() override;
+    void Update(App* app) override;
     void End(App* app) override;
 
 private:

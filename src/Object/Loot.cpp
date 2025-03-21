@@ -57,5 +57,8 @@ void Loot::IsCollected(std::shared_ptr<Character>& character, std::shared_ptr<Me
    if (overlapX && overlapY) {
       SetVisible(false);
       Result(character, menu);
+      is_collected = true;
    }
 }
+
+bool Loot::IfCollected() {return is_collected;}
