@@ -144,16 +144,20 @@ void Character::Keys() {
         Idle();
 
     // left
-    else if (Util::Input::IsKeyPressed(LEFT) && !is_duck)
+    else if (Util::Input::IsKeyPressed(LEFT) && !is_duck) {
         HandleFallDuck("left");
-
-    // right
-    else if (Util::Input::IsKeyPressed(RIGHT) && !is_duck)
-        HandleFallDuck("right");
-
-    // idle
-    else if (!is_jump)
         Idle();
+    }
+    // right
+    else if (Util::Input::IsKeyPressed(RIGHT) && !is_duck) {
+        HandleFallDuck("right");
+        Idle();
+    }
+    // idle
+    else if (!is_jump) {
+        ChangeBehavior(2);
+        Idle();
+    }
 
     // glm::vec2 pos = GetPosition();
     // std::cout << pos.x << ","
@@ -170,7 +174,7 @@ void Character::Keys() {
 void Character::HandleFallDuck(const std::string& direction) {
     if ((change_land && prevLandPosition > landPosition) || countTime) {
         Duck(direction);
-        if (countTime < 20)
+        if (countTime < 10)
             countTime++;
         else {
             change_land = false;
@@ -224,12 +228,9 @@ void Character::Duck(std::string direction){
         m_direction = direction;
         Flip();
     }
-    m_size = glm::abs(m_Behavior->GetScaledSize());
-    m_pos = m_Behavior->GetPosition();
-    // std::cout << "Duck size: " << m_size.x << ", " << m_size.y << std::endl;
-    m_size.y -= OffsetValues("duck");
-        m_pos.y -= OffsetValues("duck") * 0.5;
     is_duck = true;
+    m_size = glm::abs(m_Behavior->GetScaledSize());
+    m_size.y -= OffsetValues("duck");
 }
 
 void Character::Jump(){
@@ -246,12 +247,10 @@ void Character::Fall(){
     if (is_collide.y){
         y_vel = 0;
     }else{
-        if (!is_collide.x) {
-            if (jumptype == 1){
-                x_vel = -4.5f;
-            }else if (jumptype == 2){
-                x_vel = 4.5f;
-            }
+        if (jumptype == 1){
+            x_vel = -4.5f;
+        }else if (jumptype == 2){
+            x_vel = 4.5f;
         }
         is_jump = true;
     }
@@ -280,7 +279,6 @@ void Character::Idle() {
     }
     else {
         countTime = 0;
-        ChangeBehavior(2);
         change_land = is_whip = is_duck = is_jump = false;
         m_size = glm::abs(m_Behavior->GetScaledSize());
         jumph = landh = GetPosition().y;
@@ -297,11 +295,10 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
     float testLanding = -300.0f;
     float charTop = m_pos.y + m_size.y * 0.5f;
     float charBottom = m_pos.y - m_size.y * 0.5f;
-    if (currentBeIndex == 3 && is_jump && !is_whip && (jumph - landPosition)>=50.0f)
-        charBottom += 32.0f;
+    if (currentBeIndex == 3 && is_jump && !is_whip && (jumph - landPosition)>=25.0f)
+        charBottom += 30.0f;
     float charLeft = m_pos.x - m_size.x * 0.5f;
     float charRight = m_pos.x + m_size.x * 0.5f;
-
     for (auto &block : m_Blocks) {
         glm::vec2 blockPos = block->GetPosition();
         glm::vec2 blockSize = glm::abs(block->GetScaledSize());
@@ -314,8 +311,7 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
         float overlapBottom = blockTop - charBottom;
         float overlapLeft = charRight - blockLeft;
         float overlapRight = blockRight - charLeft;
-        // std::cout << charTop << ", "<< blockBottom << std::endl;
-        // std::cout << m_pos.y << ", "<< charTop <<", "<<charBottom<< std::endl;
+        // std::cout << charRight << ", " << blockLeft<< std::endl;
         if ((charRight > blockLeft && charLeft < blockRight) &&  //overlap x
             (charTop > blockBottom && charBottom < blockTop)) {  //overlap y
 
@@ -323,7 +319,7 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
             float minOverlap = std::min({abs(overlapTop), abs(overlapBottom), abs(overlapLeft), abs(overlapRight)});
 
             //below (char hit head)
-            if (minOverlap == overlapTop) {
+            if (minOverlap == overlapTop && !is_jump) {
                 SetPosition({m_pos.x, blockBottom - m_size.y * 0.5f});
                 is_collide.y = true;
             //above (char on the block)
@@ -331,11 +327,11 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
                 SetPosition({m_pos.x, blockTop + m_size.y * 0.5f});
                 is_collide.y = true;
             //left
-            } else if (minOverlap == overlapLeft) {
+            } else if (minOverlap == overlapLeft && !(is_jump && charRight - 5.0f >= blockLeft)) {
                 SetPosition({blockLeft - m_size.x * 0.5f, m_pos.y});
                 is_collide.x = true;
             //right
-            } else if (minOverlap == overlapRight) {
+            } else if (minOverlap == overlapRight && !(is_jump && charLeft + 5.0f <= blockRight)) {
                 SetPosition({blockRight + m_size.x * 0.5f, m_pos.y});
                 is_collide.x = true;
             }
