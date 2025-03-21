@@ -55,6 +55,10 @@ public:
 
     void CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blocks);
 
+    bool IfWhip() const;
+
+    std::string GetDirection() const;
+
     std::shared_ptr<AnimatedItems> m_Behavior;
 
 private:

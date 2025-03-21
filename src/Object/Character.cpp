@@ -354,3 +354,7 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
     }
     std::cout << prevLandPosition << ',' << landPosition << std::endl;
 }
+
+bool Character::IfWhip() const {return is_whip;}
+
+std::string Character::GetDirection() const {return m_direction;}
