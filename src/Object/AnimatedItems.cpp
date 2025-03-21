@@ -74,6 +74,8 @@ bool AnimatedItems::IfPlayingTime(float duration) {
    return false;
 }
 
+bool AnimatedItems::IfAnimationStart() const {return ifStart;}
+
 bool AnimatedItems::IfAnimationEnds() const {
    auto animation = std::dynamic_pointer_cast<Util::Animation>(m_Drawable);
    return animation->GetCurrentFrameIndex() == animation->GetFrameCount() - 1;

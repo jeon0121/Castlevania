@@ -39,6 +39,8 @@ public:
 
     void SetIfMove(bool move){ifMove = move;}
 
+    bool IfAnimationStart() const;
+
     [[nodiscard]] bool IfAnimationEnds() const;
 
 private:

@@ -5,17 +5,15 @@
 
 class Torch : public AnimatedItems {
 public:
-   Torch(int type, glm::vec2 position)
-      : AnimatedItems((type == 1) ? std::vector<std::string>{GA_RESOURCE_DIR "/items/fire/fire-1.png", GA_RESOURCE_DIR "/items/fire/fire-2.png"}
-                                  : std::vector<std::string>{GA_RESOURCE_DIR "/items/fire/fire-3.png", GA_RESOURCE_DIR "/items/fire/fire-4.png"},
-      65) {
-      SetPosition(position);
-   }
+   Torch(glm::vec2 position, glm::vec2 scale, int type=1);
 
-   void IsWhipped() {}
+   void IsWhipped();
+
+   bool is_destroyed;
 
 private:
    int type;
+   std::vector<std::string> torchDeath;
 };
 
 #endif
