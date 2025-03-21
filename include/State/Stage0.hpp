@@ -1,6 +1,7 @@
 #ifndef STAGE0_HPP
 #define STAGE0_HPP
 #include "Scene.hpp"
+#include "App.hpp"
 
 #include "Object/AnimatedItems.hpp"
 

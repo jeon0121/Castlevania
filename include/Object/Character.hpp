@@ -29,6 +29,8 @@ public:
 
     const glm::vec2& GetPosition() const;
 
+    const glm::vec2& GetSize() const;
+
     void UpdatePosition();
 
     void Keys();

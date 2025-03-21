@@ -2,6 +2,7 @@
 #define TITLE_HPP
 
 #include "Scene.hpp"
+#include "App.hpp"
 #include "Object/AnimatedItems.hpp"
 
 class Title : public Scene{

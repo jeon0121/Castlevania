@@ -60,7 +60,11 @@ void Character::SetPosition(const glm::vec2& position) {
 }
 
 const glm::vec2& Character::GetPosition() const {
-    return m_Behavior->GetPosition();
+    return m_pos;
+}
+
+const glm::vec2& Character::GetSize() const {
+    return m_size;
 }
 
 void Character::UpdatePosition() {
@@ -281,7 +285,7 @@ void Character::Idle() {
         countTime = 0;
         change_land = is_whip = is_duck = is_jump = false;
         m_size = glm::abs(m_Behavior->GetScaledSize());
-        jumph = landh = GetPosition().y;
+        jumph = landh = m_Behavior->GetPosition().y;
     }
 }
 
@@ -302,7 +306,7 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
     for (auto &block : m_Blocks) {
         glm::vec2 blockPos = block->GetPosition();
         glm::vec2 blockSize = glm::abs(block->GetScaledSize());
-        float blockTop = blockPos.y + blockSize.y * 0.5f - 8.5;
+        float blockTop = blockPos.y + blockSize.y * 0.5f - 8.5f;
         float blockBottom = blockPos.y - blockSize.y * 0.5f;
         float blockLeft = blockPos.x - blockSize.x * 0.5f;
         float blockRight = blockPos.x + blockSize.x * 0.5f;

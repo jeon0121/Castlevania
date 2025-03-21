@@ -96,11 +96,21 @@ void Menu::addWeapon(WeaponType weapon, const glm::vec2 &position){
     float x = position.x, y = position.y;
     std::string imagePath = GA_RESOURCE_DIR "/items/weapon/";
     switch (weapon) {
-        case WeaponType::None: imagePath = GA_RESOURCE_DIR "/transparent.png"; break;
-        case WeaponType::Axe: imagePath += "axe.png"; break;
-        case WeaponType::HolyWater: imagePath += "potion.png"; break;
-        case WeaponType::Dagger: imagePath += "sword.png"; break;
-        case WeaponType::Stopwatch: imagePath += "timestop.png"; break;
+        case WeaponType::None:
+            imagePath = GA_RESOURCE_DIR "/transparent.png";
+            break;
+        case WeaponType::Axe:
+            imagePath += "axe.png";
+            break;
+        case WeaponType::HolyWater:
+            imagePath += "holywater.png";
+            break;
+        case WeaponType::Dagger:
+            imagePath += "dagger.png";
+            break;
+        case WeaponType::Stopwatch:
+            imagePath += "stopwatch.png";
+            break;
     }
     auto characterImage = std::make_shared<ImageItems>(imagePath);
     characterImage->SetPosition({x, y});
@@ -110,12 +120,14 @@ void Menu::addWeapon(WeaponType weapon, const glm::vec2 &position){
 
 void Menu::SetMenuVisibility(const bool visible) {
     for (auto &&num : numberImage){
-        for (auto &&letter : num) letter->SetVisible(visible);
+        for (auto &&letter : num)
+            letter->SetVisible(visible);
     }
     for (auto &&txt : textImage){
         txt->SetVisible(visible);
     }
     for (auto &&healthbar : health){
-        for (auto &&h : healthbar) h->SetVisible(visible);
+        for (auto &&h : healthbar)
+            h->SetVisible(visible);
     }
 }

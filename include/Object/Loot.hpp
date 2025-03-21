@@ -2,7 +2,8 @@
 #define LOOT_HPP
 
 #include "Object/AnimatedItems.hpp"
-#include <string>
+#include "Object/Character.hpp"
+#include "Object/Block.hpp"
 
 enum class LootType {
    // Sub weapon
@@ -14,9 +15,10 @@ enum class LootType {
    // Whip
    Whip,
 
-   // Utility
+   // Relic
    Pot,        // invisibility
    Rosary,     // kill all enemies
+   Badge,      // badge
 
    // Heals
    Crystal,    // recover full life (when boss defeated)
@@ -35,16 +37,27 @@ enum class LootType {
 
 class Loot : public AnimatedItems {
 public:
-
-   Loot();
+   Loot(glm::vec2 position, std::vector<std::string> animationPath, int interval);
 
    LootType GetType();
 
-   void IsCollected();
+   glm::vec2 UpdatePosition();
+
+   virtual void Result() = 0;
+
+   void Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks);
+
+   void IsCollected(std::shared_ptr<Character> &character);
 
 private:
    LootType type;
-   bool isCollected;
+   float x_vel = 0;
+   float y_vel = 0;
+   float itemBottom;
+   float itemTop;
+   float itemLeft;
+   float itemRight;
+   bool is_landed = false;
 };
 
 #endif
