@@ -9,7 +9,7 @@ class Torch : public AnimatedItems {
 public:
    Torch(glm::vec2 position, glm::vec2 scale, LootType itemType, int type=1);
 
-   bool CollideDetection(std::shared_ptr<Character> &character);
+   void CollideDetection(std::shared_ptr<Character> &character);
 
    void IsWhipped();
 

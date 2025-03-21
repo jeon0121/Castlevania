@@ -18,7 +18,15 @@ set(INCLUDE_FILES
     App.hpp
     State.hpp
     
-    Object/Loot/Subweapon/Axe.hpp
+    Object/LootType/Loot.hpp
+    Object/LootType/Item/Chicken.hpp
+    Object/LootType/Item/Crystal.hpp
+    Object/LootType/Item/Pot.hpp
+    Object/LootType/Subweapon/Axe.hpp
+    Object/LootType/Subweapon/HolyWater.hpp
+    Object/LootType/Subweapon/Dagger.hpp
+    Object/LootType/Subweapon/Stopwatch.hpp
+    Object/LootType/Whip/Whip.hpp
     
     Object/AnimatedItems.hpp
     Object/Block.hpp

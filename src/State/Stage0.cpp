@@ -1,6 +1,5 @@
 #include "State/Stage0.hpp"
 #include "Util/Logger.hpp"
-#include "Object/Loot/Subweapon/Axe.hpp"
 
 void Stage0::Start(App* app){
     // menu
@@ -51,7 +50,7 @@ void Stage0::Start(App* app){
     // m_All.push_back(block_4);
 
     //test loot
-    testLoot = std::make_shared<Axe>(glm::vec2(0, -53));
+    testLoot = std::make_shared<LootItem::Whip>(glm::vec2(0, -53));
     m_All.push_back(testLoot);
 
     app->AddAllChildren(m_All);

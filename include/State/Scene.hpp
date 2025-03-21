@@ -10,6 +10,7 @@
 #include "Object/Block.hpp"
 #include "Object/Torch.hpp"
 #include "Object/Loot.hpp"
+#include "Object/LootType/Loot.hpp"
 #include "State/Menu.hpp"
 
 class App;

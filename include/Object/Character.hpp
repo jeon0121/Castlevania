@@ -57,6 +57,8 @@ public:
 
     bool IfWhip() const;
 
+    void LevelUpWhip();
+
     std::string GetDirection() const;
 
     std::shared_ptr<AnimatedItems> m_Behavior;

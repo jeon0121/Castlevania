@@ -52,6 +52,9 @@ void Character::ChangeBehavior(int BehaviorIndex, bool if_whip) {
         lastVecPos = if_whip ? "whip" : "be";
     }
 }
+void Character::LevelUpWhip(){
+    m_whip_level += 1;
+}
 
 void Character::SetPosition(const glm::vec2& position) {
     m_pos = position;

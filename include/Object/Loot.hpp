@@ -44,7 +44,7 @@ public:
 
    glm::vec2 UpdatePosition();
 
-   virtual void Result(std::shared_ptr<Menu>& menu) = 0;
+   virtual void Result(std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) = 0;
 
    void Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks);
 

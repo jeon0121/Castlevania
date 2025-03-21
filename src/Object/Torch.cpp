@@ -22,7 +22,7 @@ Torch::Torch(glm::vec2 position, glm::vec2 scale, LootType itemType, int type)
     torchRight = torchPos.x + torchSize.x * 0.5f;
 }
 
-bool Torch::CollideDetection(std::shared_ptr<Character> &character) {
+void Torch::CollideDetection(std::shared_ptr<Character> &character) {
     int frameIndex = character->m_Behavior->GetCurrentFrameIndex();
     if (character->IfWhip() && (frameIndex == 2 || frameIndex == 3)) {
         float whipWidth = abs(character->OffsetValues("whipWidth"));
@@ -41,6 +41,7 @@ bool Torch::CollideDetection(std::shared_ptr<Character> &character) {
             SetPaused();
         }
     }
+
 }
 
 void Torch::IsWhipped() {
