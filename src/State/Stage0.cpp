@@ -32,7 +32,7 @@ void Stage0::Start(App* app){
     m_All.push_back(m_Character->m_Behavior);
 
     //torch
-    std::shared_ptr<Torch> torch_1 = std::make_shared<Torch>(glm::vec2(395, -242), glm::vec2(1, 0.9), 2);
+    std::shared_ptr<Torch> torch_1 = std::make_shared<Torch>(glm::vec2(395, -242), glm::vec2(1, 0.9), LootType::Axe, 2);
     m_Torches.push_back(torch_1);
     m_All.push_back(torch_1);
 
@@ -61,12 +61,11 @@ void Stage0::Start(App* app){
 void Stage0::Update(){
     m_Character->Keys();
     m_Character->CollideBoundary(m_Blocks);
-    if (Util::Input::IsKeyPressed(Util::Keycode::T)) {
-        m_Torches[0]->is_destroyed = true;
-        m_Torches[0]->SetPaused();
+    for (auto torch : m_Torches) {
+        torch->CollideDetection(m_Character);
+        if (torch->is_destroyed)
+            torch->IsWhipped();
     }
-    if (m_Torches[0]->is_destroyed)
-        m_Torches[0]->IsWhipped();
     testLoot->Fall(m_Blocks);
     testLoot->IsCollected(m_Character, m_Menu);
 }
