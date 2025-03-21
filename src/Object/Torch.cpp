@@ -1,9 +1,9 @@
 #include "Object/Torch.hpp"
 
 Torch::Torch(glm::vec2 position, glm::vec2 scale, LootType itemType, int type)
-   : AnimatedItems((type == 1) ? std::vector<std::string>{GA_RESOURCE_DIR "/items/fire/fire-1.png", GA_RESOURCE_DIR "/items/fire/fire-2.png"}
-                               : std::vector<std::string>{GA_RESOURCE_DIR "/items/fire/fire-3.png", GA_RESOURCE_DIR "/items/fire/fire-4.png"},
-   120) {
+    : AnimatedItems((type == 1) ? std::vector<std::string>{GA_RESOURCE_DIR "/items/fire/fire-1.png", GA_RESOURCE_DIR "/items/fire/fire-2.png"}
+                                : std::vector<std::string>{GA_RESOURCE_DIR "/items/fire/fire-3.png", GA_RESOURCE_DIR "/items/fire/fire-4.png"},
+    120) {
     SetPosition(position);
     m_Transform.scale = scale;
     SetPlaying();
@@ -22,9 +22,9 @@ Torch::Torch(glm::vec2 position, glm::vec2 scale, LootType itemType, int type)
     torchRight = torchPos.x + torchSize.x * 0.5f;
 }
 
-void Torch::CollideDetection(std::shared_ptr<Character> &character) {
+bool Torch::CollideDetection(std::shared_ptr<Character> &character) {
     int frameIndex = character->m_Behavior->GetCurrentFrameIndex();
-    if (character->IfWhip() && (frameIndex == 2 || frameIndex == 3)) {
+    if (character->IfWhip() && (frameIndex == 2 || frameIndex == 3) && !is_destroyed) {
         float whipWidth = abs(character->OffsetValues("whipWidth"));
         glm::vec2 charPos = character->GetPosition();
         glm::vec2 charSize = character->GetSize();
@@ -39,30 +39,31 @@ void Torch::CollideDetection(std::shared_ptr<Character> &character) {
         bool overlapY = torchTop > charPos.y && torchBottom < charPos.y;
 
         if (overlapX && overlapY) {
-            is_destroyed = true;
             SetPaused();
+            is_destroyed = true;
         }
     }
-
+    return is_destroyed;
 }
 
-void Torch::Destroy() {
+void Torch::Destroy(App* app) {
     if (IfAnimationStart())
         SetAnimationFrames(torchDeath, 120);
     SetPlaying();
     if (IfPlayingTime(0.5)) {
         SetPaused();
         SetVisible(false);
-        is_destroyed = false;
-        loot = CreateLoot(itemType, GetPosition());
-        loot->SetVisible(true);
+        if (!loot) {
+            loot = CreateLoot(itemType, GetPosition());
+            app->m_Root.AddChild(loot);
+        }
     }
 }
 
 std::shared_ptr<Loot> Torch::CreateLoot(LootType itemType, glm::vec2 position) {
     switch (itemType) {
         case LootType::Axe:
-            return std::make_shared<Axe>(position);
+            return std::make_shared<LootItem::Axe>(position);
         // case LootType::Dagger:
         //     return std::make_shared<Dagger>();
         // case LootType::HolyWater:
@@ -74,6 +75,13 @@ std::shared_ptr<Loot> Torch::CreateLoot(LootType itemType, glm::vec2 position) {
     }
 }
 
-bool Torch::IfCollected() {return is_collected;}
-
-void Torch::SetCollected() {is_collected = true;}
+void Torch::Update(App* app, std::shared_ptr<Character> character, std::shared_ptr<Menu> menu, const std::vector<std::shared_ptr<Block>>& blocks, std::shared_ptr<Torch> torch) {
+    if (loot) 
+        loot->Fall(blocks);
+    if (CollideDetection(character)) 
+        Destroy(app);
+    if (loot && loot->IsCollected(character, menu)) {
+        app->m_Root.RemoveChild(torch);
+        app->m_Root.RemoveChild(loot);
+    }
+}

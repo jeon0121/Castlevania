@@ -25,21 +25,6 @@ public:
     virtual void Update(App* app) = 0;
     virtual void End(App* app) = 0;
 
-    void TorchBehavior(App* app) {
-        for (auto torch : m_Torches) {
-            torch->CollideDetection(m_Character);
-            if (torch->is_destroyed && !torch->IfCollected()) {
-                torch->Destroy();
-            }
-            if (torch->loot && !torch->loot->IfCollected()) {
-                app->m_Root.AddChild(torch->loot);
-                torch->loot->Fall(m_Blocks);
-                torch->loot->IsCollected(m_Character, m_Menu);
-                torch->SetCollected();
-            }
-        }
-    }
-
     StateState m_stateState = StateState::START;
 
 protected:

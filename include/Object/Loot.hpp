@@ -48,9 +48,7 @@ public:
 
    void Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks);
 
-   void IsCollected(std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu);
-
-   bool IfCollected();
+   bool IsCollected(std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu);
 
 private:
    LootType type;
@@ -61,7 +59,6 @@ private:
    float itemLeft;
    float itemRight;
    bool is_landed = false;
-   bool is_collected = false;
 };
 
 #endif

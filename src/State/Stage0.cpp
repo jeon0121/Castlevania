@@ -57,7 +57,8 @@ void Stage0::Start(App* app){
 void Stage0::Update(App* app){
     m_Character->Keys();
     m_Character->CollideBoundary(m_Blocks);
-    TorchBehavior(app);
+    for (auto torch : m_Torches) 
+        torch->Update(app, m_Character, m_Menu, m_Blocks, torch);
 }
 
 void Stage0::End(App* app){

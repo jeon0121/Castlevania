@@ -80,6 +80,7 @@ void Title::Start(App* app){
 }
 
 void Title::Update(App* app){
+    (void) app;
     if (m_Bat->IfAnimationEnds()) {
         m_Bat->SetCurrentFrame(37);
     }
