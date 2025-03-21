@@ -8,9 +8,9 @@
 enum class WeaponType {
     None,
     Axe,
-    Potion,
-    Sword,
-    Timestop
+    HolyWater,
+    Dagger,
+    Stopwatch
 };
 
 struct MenuValue {

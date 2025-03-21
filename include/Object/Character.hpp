@@ -10,7 +10,7 @@
 #include "Util/Animation.hpp"
 #include "Object/AnimatedItems.hpp"
 #include "Object/ImageItems.hpp"
-#include <Object/Block.hpp>
+#include "Object/Block.hpp"
 
 struct CharacterValue {
     glm::vec2 position;

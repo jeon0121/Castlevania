@@ -98,9 +98,9 @@ void Menu::addWeapon(WeaponType weapon, const glm::vec2 &position){
     switch (weapon) {
         case WeaponType::None: imagePath = GA_RESOURCE_DIR "/transparent.png"; break;
         case WeaponType::Axe: imagePath += "axe.png"; break;
-        case WeaponType::Potion: imagePath += "potion.png"; break;
-        case WeaponType::Sword: imagePath += "sword.png"; break;
-        case WeaponType::Timestop: imagePath += "timestop.png"; break;
+        case WeaponType::HolyWater: imagePath += "potion.png"; break;
+        case WeaponType::Dagger: imagePath += "sword.png"; break;
+        case WeaponType::Stopwatch: imagePath += "timestop.png"; break;
     }
     auto characterImage = std::make_shared<ImageItems>(imagePath);
     characterImage->SetPosition({x, y});

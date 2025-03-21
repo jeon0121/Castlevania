@@ -15,6 +15,7 @@ set(INCLUDE_FILES
     State.hpp
     Object/AnimatedItems.hpp
     Object/Block.hpp
+    Object/Torch.hpp
     Object/Character.hpp
     Object/ImageItems.hpp
     State/Menu.hpp
