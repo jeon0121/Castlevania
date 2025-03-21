@@ -4,6 +4,7 @@ set(SRC_FILES
     Object/Block.cpp
     Object/Character.cpp
     Object/Loot.cpp
+    Object/Torch.cpp
 
     State/Menu.cpp
     State/Title.cpp

@@ -4,6 +4,7 @@
 #include "Object/AnimatedItems.hpp"
 #include "Object/Character.hpp"
 #include "Object/Block.hpp"
+#include "State/Menu.hpp"
 
 enum class LootType {
    // Sub weapon
@@ -43,11 +44,11 @@ public:
 
    glm::vec2 UpdatePosition();
 
-   virtual void Result() = 0;
+   virtual void Result(std::shared_ptr<Menu>& menu) = 0;
 
    void Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks);
 
-   void IsCollected(std::shared_ptr<Character> &character);
+   void IsCollected(std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu);
 
 private:
    LootType type;

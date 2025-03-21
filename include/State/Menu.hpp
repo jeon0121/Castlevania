@@ -14,10 +14,10 @@ enum class WeaponType {
 };
 
 struct MenuValue {
-    int time = 300;         // mm:dd
+    int time = 300;       // mm:dd
     int score = 0;        // 000000
-    int playerHeart = 16;  // [][][][][][][][][][][][][][][][][]
-    int enemyHeart = 16;   // [][][][][][][][][][][][][][][][][]
+    int playerHeart = 16; // [][][][][][][][][][][][][][][][][]
+    int enemyHeart = 16;  // [][][][][][][][][][][][][][][][][]
     int playerAmmo = 5;   // 00
     int playerLife = 3;   // 00
     int currentStage = 1; // 00
@@ -43,9 +43,15 @@ public:
 
     void addNumber(std::string text, const glm::vec2& position);
 
+    void modifyNumber(std::string text, int type);
+
     void addHealth(int heart, const glm::vec2& position, std::string type);
 
+    void modifyHealth(int heart, std::string type);
+
     void addWeapon(WeaponType weapon, const glm::vec2& position);
+
+    void modifyWeapon(WeaponType weapon);
 
     void SetMenuVisibility(const bool visible);
 };

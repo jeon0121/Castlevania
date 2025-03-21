@@ -77,6 +77,12 @@ void Menu::addNumber(std::string text, const glm::vec2& position){
     numberImage.push_back(textRow);
 }
 
+void Menu::modifyNumber(std::string text, int type){
+    std::vector<std::shared_ptr<ImageItems>>& numberbar = numberImage[type];
+    for (int i = 0; i < text.length(); i++)
+        numberbar[i]->SetImage(GA_RESOURCE_DIR "/fonts/number/" + std::string(1, text[i]) + ".png");
+}
+
 void Menu::addHealth(int heart, const glm::vec2& position, std::string type){
     std::vector<std::shared_ptr<ImageItems>> healthbar;
     float x = position.x, y = position.y;
@@ -92,8 +98,18 @@ void Menu::addHealth(int heart, const glm::vec2& position, std::string type){
     health.push_back(healthbar);
 }
 
-void Menu::addWeapon(WeaponType weapon, const glm::vec2 &position){
-    float x = position.x, y = position.y;
+void Menu::modifyHealth(int heart, std::string type) {
+    std::vector<std::shared_ptr<ImageItems>>& healthbar = health[type == "player" ? 0 : 1];
+    for (auto &&h : healthbar)
+        h->SetVisible(false);
+    int i = 0;
+    for (auto &&h : healthbar){
+        if (i++ != heart)
+            h->SetVisible(true);
+    }
+}
+
+std::string SetWeaponImagePath(WeaponType weapon){
     std::string imagePath = GA_RESOURCE_DIR "/items/weapon/";
     switch (weapon) {
         case WeaponType::None:
@@ -112,10 +128,21 @@ void Menu::addWeapon(WeaponType weapon, const glm::vec2 &position){
             imagePath += "stopwatch.png";
             break;
     }
+    return imagePath;
+}
+
+void Menu::addWeapon(WeaponType weapon, const glm::vec2 &position){
+    float x = position.x, y = position.y;
+    std::string imagePath = SetWeaponImagePath(weapon);
     auto characterImage = std::make_shared<ImageItems>(imagePath);
     characterImage->SetPosition({x, y});
     characterImage->SetZIndex(50);
     textImage.push_back(characterImage);
+}
+
+void Menu::modifyWeapon(WeaponType weapon) {
+    std::string imagePath = SetWeaponImagePath(weapon);
+    textImage[7]->SetImage(imagePath);
 }
 
 void Menu::SetMenuVisibility(const bool visible) {

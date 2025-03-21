@@ -68,7 +68,7 @@ void Stage0::Update(){
     if (m_Torches[0]->is_destroyed)
         m_Torches[0]->IsWhipped();
     testLoot->Fall(m_Blocks);
-    testLoot->IsCollected(m_Character);
+    testLoot->IsCollected(m_Character, m_Menu);
 }
 
 void Stage0::End(App* app){

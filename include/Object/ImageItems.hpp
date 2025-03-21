@@ -11,6 +11,10 @@ public:
       m_Transform.scale = scale;
    }
    
+   void SetImage(const std::string& imagePath) {
+      m_Drawable = std::make_shared<Util::Image>(imagePath);
+   }
+
    [[nodiscard]] const glm::vec2& GetPosition() const { return m_Transform.translation; }
 
    [[nodiscard]] bool GetVisibility() const { return m_Visible; }
