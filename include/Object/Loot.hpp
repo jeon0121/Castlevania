@@ -5,6 +5,7 @@
 #include "Object/Character.hpp"
 #include "Object/Block.hpp"
 #include "State/Menu.hpp"
+#include "App.hpp"
 
 enum class LootType {
    // Sub weapon
@@ -44,13 +45,17 @@ public:
 
    glm::vec2 UpdatePosition();
 
-   virtual void Result(std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) = 0;
+   virtual void Result(App* app, std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) = 0;
 
    void Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks);
 
-   bool IsCollected(std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu);
+   bool IsCollected(std::shared_ptr<Character> &character);
 
-private:
+   bool IfCollected() const;
+
+   bool IfEnded() const;
+
+protected:
    LootType type;
    float x_vel = 0;
    float y_vel = 0;
@@ -59,6 +64,8 @@ private:
    float itemLeft;
    float itemRight;
    bool is_landed = false;
+   bool is_collected = false;
+   bool is_endResult = false;
 };
 
 #endif

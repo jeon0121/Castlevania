@@ -355,7 +355,7 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
         }
         landPosition = testLanding;
     }
-    std::cout << prevLandPosition << ',' << landPosition << std::endl;
+    // std::cout << prevLandPosition << ',' << landPosition << std::endl;
 }
 
 bool Character::IfWhip() const {return is_whip;}
