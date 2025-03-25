@@ -7,13 +7,15 @@
 namespace LootItem {
 class Bag : public Loot {
 public:
-   Bag(glm::vec2 position, int type) : Loot(position, {}, 0) {
-      
-   }
+   Bag(glm::vec2 position, LootType type);
 
-   void Result(std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) override {
-      
-   }
+   std::vector<std::string> GetImage();
+
+   void Result(App* app, std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) override;
+
+private:
+   int addScore;
+   std::shared_ptr<AnimatedItems> score = nullptr;
 };
-}
+};
 #endif

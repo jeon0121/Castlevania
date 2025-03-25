@@ -42,7 +42,7 @@ void Loot::Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks){
       y_vel = 0.0f;
 }
 
-bool Loot::IsCollected(std::shared_ptr<Character>& character, std::shared_ptr<Menu>& menu) {
+bool Loot::IsCollected(std::shared_ptr<Character>& character) {
    UpdatePosition();
    glm::vec2 charPos = character->GetPosition();
    glm::vec2 charSize = character->GetSize();
@@ -56,8 +56,12 @@ bool Loot::IsCollected(std::shared_ptr<Character>& character, std::shared_ptr<Me
 
    if (overlapX && overlapY) {
       SetVisible(false);
-      Result(character, menu);
+      is_collected = true;
       return true;
    }
    return false;
 }
+
+bool Loot::IfCollected() const {return is_collected;}
+
+bool Loot::IfEnded() const {return is_endResult;}

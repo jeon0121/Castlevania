@@ -1,6 +1,7 @@
 #ifndef LOOTTYPE_HPP
 #define LOOTTYPE_HPP
 
+#include "Object/LootType/Item/Bag.hpp"
 #include "Object/LootType/Subweapon/Axe.hpp"
 #include "Object/LootType/Subweapon/HolyWater.hpp"
 #include "Object/LootType/Subweapon/Dagger.hpp"

@@ -1,5 +1,6 @@
 set(SRC_FILES
     App.cpp
+    Object/LootType/Item/Bag.cpp
     Object/AnimatedItems.cpp
     Object/Block.cpp
     Object/Character.cpp
@@ -19,6 +20,7 @@ set(INCLUDE_FILES
     State.hpp
     
     Object/LootType/Loot.hpp
+    Object/LootType/Item/Bag.hpp
     Object/LootType/Item/Chicken.hpp
     Object/LootType/Item/Crystal.hpp
     Object/LootType/Item/Pot.hpp

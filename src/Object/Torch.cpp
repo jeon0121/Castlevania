@@ -62,26 +62,40 @@ void Torch::Destroy(App* app) {
 
 std::shared_ptr<Loot> Torch::CreateLoot(LootType itemType, glm::vec2 position) {
     switch (itemType) {
+        // Sub weapon
         case LootType::Axe:
             return std::make_shared<LootItem::Axe>(position);
-        // case LootType::Dagger:
-        //     return std::make_shared<Dagger>();
-        // case LootType::HolyWater:
-        //     return std::make_shared<HolyWater>();
-        // case LootType::Heart:
-        //     return std::make_shared<Heart>();
+        case LootType::Dagger:
+            return std::make_shared<LootItem::Dagger>(position);
+        case LootType::HolyWater:
+            return std::make_shared<LootItem::HolyWater>(position);
+        case LootType::Stopwatch:
+            return std::make_shared<LootItem::Stopwatch>(position);
+
+        // Bags
+        case LootType::RedBag:
+            return std::make_shared<LootItem::Bag>(position, LootType::RedBag);
+        case LootType::WhiteBag:
+            return std::make_shared<LootItem::Bag>(position, LootType::WhiteBag);
+        case LootType::PurpleBag:
+            return std::make_shared<LootItem::Bag>(position, LootType::PurpleBag);
+        case LootType::SpecialBag:
+            return std::make_shared<LootItem::Bag>(position, LootType::SpecialBag);
         default:
             return nullptr;
     }
 }
 
 void Torch::Update(App* app, std::shared_ptr<Character> character, std::shared_ptr<Menu> menu, const std::vector<std::shared_ptr<Block>>& blocks, std::shared_ptr<Torch> torch) {
-    if (loot) 
+    if (loot && !loot->IfCollected()) {
         loot->Fall(blocks);
-    if (CollideDetection(character)) 
-        Destroy(app);
-    if (loot && loot->IsCollected(character, menu)) {
-        app->m_Root.RemoveChild(torch);
-        app->m_Root.RemoveChild(loot);
+        if (loot->IsCollected(character))
+            app->m_Root.RemoveChild(torch);
+    }else if (loot && loot->IfCollected() && !loot->IfEnded()) {
+        loot->Result(app, character, menu);
+        if (loot->IfEnded())
+            app->m_Root.RemoveChild(loot);
     }
+    if (CollideDetection(character) && !loot)
+        Destroy(app);
 }
