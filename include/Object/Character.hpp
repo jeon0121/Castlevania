@@ -57,9 +57,13 @@ public:
 
     bool IfWhip() const;
 
+    int GetWhipLevel() const;
+
     void LevelUpWhip();
 
     std::string GetDirection() const;
+
+    void SetLevelUpWhip(bool ifLevelUp); // check if it's still at level-up animation
 
     std::shared_ptr<AnimatedItems> m_Behavior;
 
@@ -93,6 +97,7 @@ private:
     bool is_duck = false;
     bool is_jump = false;
     bool change_land = false;
+    bool is_levelUpWhip = false;
 };
 
 #endif

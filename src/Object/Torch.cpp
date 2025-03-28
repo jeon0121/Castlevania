@@ -8,6 +8,7 @@ Torch::Torch(glm::vec2 position, glm::vec2 scale, LootType itemType, int type)
     m_Transform.scale = scale;
     SetPlaying();
     SetLooping(true);
+    SetZIndex(6);
     this->itemType = itemType;
 
     for (int i = 0; i < 4; ++i) {
@@ -24,23 +25,28 @@ Torch::Torch(glm::vec2 position, glm::vec2 scale, LootType itemType, int type)
 
 bool Torch::CollideDetection(std::shared_ptr<Character> &character) {
     int frameIndex = character->m_Behavior->GetCurrentFrameIndex();
-    if (character->IfWhip() && (frameIndex == 2 || frameIndex == 3) && !is_destroyed) {
-        float whipWidth = abs(character->OffsetValues("whipWidth"));
-        glm::vec2 charPos = character->GetPosition();
-        glm::vec2 charSize = character->GetSize();
-        float charLeft = charPos.x - charSize.x * 0.5f;
-        float charRight = charPos.x + charSize.x * 0.5f;
-        float whipLeft = (character->GetDirection() == "left") ? charLeft - whipWidth : charRight;
-        float whipRight = (character->GetDirection() == "left") ? charLeft : charRight + whipWidth;
+    int whipLevel = character->GetWhipLevel();
+    if (character->IfWhip() && !is_destroyed) {
+        bool isNormalWhip = (whipLevel != 3 && (frameIndex == 2 || frameIndex == 3));
+        bool isLv3Whip = (whipLevel == 3 && frameIndex >= 8 && frameIndex <= 15);
+        if (isNormalWhip || isLv3Whip) {
+            float whipWidth = (whipLevel == 3) ? abs(character->OffsetValues("whipWidth_lv3")) : abs(character->OffsetValues("whipWidth"));
+            glm::vec2 charPos = character->GetPosition();
+            glm::vec2 charSize = character->GetSize();
+            float charLeft = charPos.x - charSize.x * 0.5f;
+            float charRight = charPos.x + charSize.x * 0.5f;
+            float whipLeft = (character->GetDirection() == "left") ? charLeft - whipWidth : charRight;
+            float whipRight = (character->GetDirection() == "left") ? charLeft : charRight + whipWidth;
 
-        bool overlapX = (whipLeft > torchLeft && whipLeft < torchRight) ||
-                        (whipRight > torchLeft && whipRight < torchRight) ||
-                        (whipLeft < torchLeft && whipRight > torchRight);
-        bool overlapY = torchTop > charPos.y && torchBottom < charPos.y;
+            bool overlapX = (whipLeft > torchLeft && whipLeft < torchRight) ||
+                            (whipRight > torchLeft && whipRight < torchRight) ||
+                            (whipLeft < torchLeft && whipRight > torchRight);
+            bool overlapY = torchTop > charPos.y && torchBottom < charPos.y;
 
-        if (overlapX && overlapY) {
-            SetPaused();
-            is_destroyed = true;
+            if (overlapX && overlapY) {
+                SetPaused();
+                is_destroyed = true;
+            }
         }
     }
     return is_destroyed;
@@ -71,6 +77,10 @@ std::shared_ptr<Loot> Torch::CreateLoot(LootType itemType, glm::vec2 position) {
             return std::make_shared<LootItem::HolyWater>(position);
         case LootType::Stopwatch:
             return std::make_shared<LootItem::Stopwatch>(position);
+
+        // Whip
+        case LootType::Whip:
+            return std::make_shared<LootItem::Whip>(position);
 
         // Bags
         case LootType::RedBag:

@@ -25,7 +25,7 @@ Character::Character(const CharacterValue& value) :
     for (int i = 0; i < 3; i++) {
         std::vector<std::string> ascending, descending, ducking, standing;
         std::string basePath = GA_RESOURCE_DIR "/main character/whip/level-" + std::to_string(i + 1) + "/";
-        for (int j = 0; j < ((i == 3) ? 20 : 5); ++j) {
+        for (int j = 0; j < ((i == 2) ? 20 : 5); ++j) {
             // ascending.emplace_back(basePath + "ascending/ascending-" + std::to_string(j + 1) + ".png");
             // descending.emplace_back(basePath + "descending/descending-" + std::to_string(j + 1) + ".png");
             ducking.emplace_back(basePath + "ducking/ducking-" + std::to_string(j + 1) + ".png");
@@ -54,6 +54,7 @@ void Character::ChangeBehavior(int BehaviorIndex, bool if_whip) {
 }
 void Character::LevelUpWhip(){
     m_whip_level += 1;
+    is_levelUpWhip = true;
 }
 
 void Character::SetPosition(const glm::vec2& position) {
@@ -78,8 +79,9 @@ void Character::UpdatePosition() {
 
     if (is_whip) {
         this->currentFrame = m_Behavior->GetCurrentFrameIndex();
-        int offset = OffsetValues("whipOffset");
-        m_Behavior->SetPosition({m_pos.x + (m_direction == "right" ? offset : -offset), m_pos.y});
+        int offset = (m_whip_level == 3) ? OffsetValues("whipOffset_lv3") : OffsetValues("whipOffset");
+        int offsetHeight = (m_whip_level == 3 && !is_duck) ? OffsetValues("whipHeight_lv3") : 0;
+        m_Behavior->SetPosition({m_pos.x + (m_direction == "right" ? offset : -offset), m_pos.y + offsetHeight});
         if (this->currentFrame == 4 * (m_whip_level == 3 ? 4 : 1))
             is_whip = false;
     }
@@ -93,89 +95,91 @@ void Character::UpdatePosition() {
 }
 
 void Character::Keys() {
-    // Position::PrintCursorCoordinate();
+    if (!is_levelUpWhip) {
+        // Position::PrintCursorCoordinate();
 
-    constexpr Util::Keycode A      = Util::Keycode::J;
-    constexpr Util::Keycode B      = Util::Keycode::K;
-    constexpr Util::Keycode UP     = Util::Keycode::W;
-    constexpr Util::Keycode DOWN   = Util::Keycode::S;
-    constexpr Util::Keycode LEFT   = Util::Keycode::A;
-    constexpr Util::Keycode RIGHT  = Util::Keycode::D;
-    constexpr Util::Keycode START  = Util::Keycode::RETURN;
-    constexpr Util::Keycode SELECT = Util::Keycode::RSHIFT;
+        constexpr Util::Keycode A      = Util::Keycode::J;
+        constexpr Util::Keycode B      = Util::Keycode::K;
+        constexpr Util::Keycode UP     = Util::Keycode::W;
+        constexpr Util::Keycode DOWN   = Util::Keycode::S;
+        constexpr Util::Keycode LEFT   = Util::Keycode::A;
+        constexpr Util::Keycode RIGHT  = Util::Keycode::D;
+        constexpr Util::Keycode START  = Util::Keycode::RETURN;
+        constexpr Util::Keycode SELECT = Util::Keycode::RSHIFT;
 
-    m_Behavior->SetPlaying();
-    m_Behavior->SetLooping(true);
+        m_Behavior->SetPlaying();
+        m_Behavior->SetLooping(true);
 
-    /* priority order :
-     * - whip
-     * - duck
-     * - jump
-     * - left and right
-     * - idle
-    */
-    
-    // duck whip
-    if (((Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyDown(A)) || (is_whip && is_duck)) && !is_jump){
-        Duck("");
-        Whip();
+        /* priority order :
+         * - whip
+         * - duck
+         * - jump
+         * - left and right
+         * - idle
+        */
+
+        // duck whip
+        if (((Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyDown(A)) || (is_whip && is_duck)) && !is_jump){
+            Duck("");
+            Whip();
+        }
+        // whip
+        else if (Util::Input::IsKeyDown(A) || is_whip)
+            Whip();
+
+        // duck left
+        else if (Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyPressed(LEFT) && !is_jump)
+            Duck("left");
+
+        // duck right
+        else if (Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyPressed(RIGHT) && !is_jump)
+            Duck("right");
+
+        // duck
+        else if (Util::Input::IsKeyPressed(DOWN) && !is_jump)
+            Duck("");
+
+        // jump
+        else if (Util::Input::IsKeyDown(B) && !is_jump && !change_land) {
+            Jump();
+            jumptype = (Util::Input::IsKeyPressed(LEFT)) ? 1 :
+                       (Util::Input::IsKeyPressed(RIGHT)) ? 2 : 0;
+        }
+        // fall
+        else if (is_jump)
+            Fall();
+
+        // when pressing both key, character will idle
+        else if (Util::Input::IsKeyPressed(LEFT) && Util::Input::IsKeyPressed(RIGHT))
+            Idle();
+
+        // left
+        else if (Util::Input::IsKeyPressed(LEFT) && !is_duck) {
+            HandleFallDuck("left");
+            Idle();
+        }
+        // right
+        else if (Util::Input::IsKeyPressed(RIGHT) && !is_duck) {
+            HandleFallDuck("right");
+            Idle();
+        }
+        // idle
+        else if (!is_jump) {
+            ChangeBehavior(2);
+            Idle();
+        }
+
+        // glm::vec2 pos = GetPosition();
+        // std::cout << pos.x << ","
+        //         << pos.y << ", "
+        //         << m_pos.x << ", "
+        //         << m_pos.y << ", "
+        //         << m_size.x << ", "
+        //         << m_size.y << ", "
+        //         << std::endl;
+
+        UpdatePosition();
     }
-    // whip
-    else if (Util::Input::IsKeyDown(A) || is_whip)
-        Whip();
-
-    // duck left
-    else if (Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyPressed(LEFT) && !is_jump)
-        Duck("left");
-
-    // duck right
-    else if (Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyPressed(RIGHT) && !is_jump)
-        Duck("right");
-
-    // duck
-    else if (Util::Input::IsKeyPressed(DOWN) && !is_jump)
-        Duck("");
-
-    // jump
-    else if (Util::Input::IsKeyDown(B) && !is_jump && !change_land) {
-        Jump();
-        jumptype = (Util::Input::IsKeyPressed(LEFT)) ? 1 :
-                   (Util::Input::IsKeyPressed(RIGHT)) ? 2 : 0;
-    }
-    // fall
-    else if (is_jump)
-        Fall();
-
-    // when pressing both key, character will idle
-    else if (Util::Input::IsKeyPressed(LEFT) && Util::Input::IsKeyPressed(RIGHT))
-        Idle();
-
-    // left
-    else if (Util::Input::IsKeyPressed(LEFT) && !is_duck) {
-        HandleFallDuck("left");
-        Idle();
-    }
-    // right
-    else if (Util::Input::IsKeyPressed(RIGHT) && !is_duck) {
-        HandleFallDuck("right");
-        Idle();
-    }
-    // idle
-    else if (!is_jump) {
-        ChangeBehavior(2);
-        Idle();
-    }
-
-    // glm::vec2 pos = GetPosition();
-    // std::cout << pos.x << ","
-    //         << pos.y << ", "
-    //         << m_pos.x << ", "
-    //         << m_pos.y << ", "
-    //         << m_size.x << ", "
-    //         << m_size.y << ", "
-    //         << std::endl;
-
-    UpdatePosition();
 }
 
 void Character::HandleFallDuck(const std::string& direction) {
@@ -194,17 +198,37 @@ void Character::HandleFallDuck(const std::string& direction) {
 float Character::OffsetValues(std::string typeName) {
     if (typeName == "whipOffset") {
         return (currentFrame == 0) ? -32
-             : (currentFrame == 1 * (m_whip_level == 3 ? 4 : 1)) ? -32
-             : (currentFrame == 2 * (m_whip_level == 3 ? 4 : 1)) ? 56
-             : (currentFrame == 3 * (m_whip_level == 3 ? 4 : 1)) ? 56
-             : (currentFrame == 4 * (m_whip_level == 3 ? 4 : 1)) ? 0
+             : (currentFrame == 1) ? -32
+             : (currentFrame == 2) ? 56
+             : (currentFrame == 3) ? 56
+             : (currentFrame == 4) ? 0
+             : 0;
+    }
+    if (typeName == "whipOffset_lv3") {
+        return (currentFrame <= 3) ? -32
+             : (currentFrame <= 7 && currentFrame >= 4) ? -32
+             : (currentFrame <= 11 && currentFrame >= 8) ? 88
+             : (currentFrame <= 15 && currentFrame >= 12) ? 88
+             : (currentFrame <= 19 && currentFrame >= 16) ? 0
+             : 0;
+    }
+    if (typeName == "whipHeight_lv3") {
+        return (currentFrame <= 7 && currentFrame >= 4) ? 2
+             : (currentFrame <= 15 && currentFrame >= 12) ? 2
              : 0;
     }
     if (typeName == "whipWidth") {
         return (currentFrame == 0) ? 35
-             : (currentFrame == 1 * (m_whip_level == 3 ? 4 : 1)) ? 60
-             : (currentFrame == 2 * (m_whip_level == 3 ? 4 : 1)) ? 130
-             : (currentFrame == 3 * (m_whip_level == 3 ? 4 : 1)) ? 140
+             : (currentFrame == 1) ? 60
+             : (currentFrame == 2) ? 100
+             : (currentFrame == 3) ? 110
+             : 0;
+    }
+    if (typeName == "whipWidth_lv3") {
+        return (currentFrame <= 3) ? 61
+             : (currentFrame <= 7 && currentFrame >= 4) ? 104
+             : (currentFrame <= 11 && currentFrame >= 8) ? 165
+             : (currentFrame <= 15 && currentFrame >= 12) ? 175
              : 0;
     }
     if (typeName == "duck") {
@@ -360,4 +384,8 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
 
 bool Character::IfWhip() const {return is_whip;}
 
+int Character::GetWhipLevel() const {return m_whip_level;}
+
 std::string Character::GetDirection() const {return m_direction;}
+
+void Character::SetLevelUpWhip(bool ifLevelUp) {is_levelUpWhip = ifLevelUp;}
