@@ -1,6 +1,7 @@
 set(SRC_FILES
     App.cpp
     Object/LootType/Item/Bag.cpp
+    Object/LootType/Item/Heart.cpp
     Object/AnimatedItems.cpp
     Object/Block.cpp
     Object/Character.cpp

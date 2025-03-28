@@ -24,6 +24,7 @@ public:
     virtual void Start(App* app) = 0;
     virtual void Update(App* app) = 0;
     virtual void End(App* app) = 0;
+    
 
     StateState m_stateState = StateState::START;
 
