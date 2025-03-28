@@ -20,7 +20,6 @@ glm::vec2 Loot::UpdatePosition() {
 void Loot::Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks){
    glm::vec2 itemPos = UpdatePosition();
    SetPosition(itemPos + glm::vec2(x_vel, y_vel));
-   itemPos = GetPosition();
    y_vel = std::max(y_vel - ((y_vel >= -2.0f) ? 0.5f : 1.5f), -15.0f);
 
    if (!is_landed){

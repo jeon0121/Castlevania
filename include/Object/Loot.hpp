@@ -47,7 +47,7 @@ public:
 
    virtual void Result(App* app, std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) = 0;
 
-   void Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks);
+   virtual void Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks);
 
    bool IsCollected(std::shared_ptr<Character> &character);
 

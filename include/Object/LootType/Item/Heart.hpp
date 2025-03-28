@@ -1,0 +1,70 @@
+#ifndef LOOT_HEART_HPP
+#define LOOT_HEART_HPP
+
+#include "Object/Loot.hpp"
+#include "State/Menu.hpp"
+#include <iostream>
+
+namespace LootItem {
+class Heart : public Loot {
+public:
+   Heart(glm::vec2 position, LootType type) : Loot(position, {}, 0) {
+      SetPosition({position.x, position.y + 20.0f});
+      this->type = type;
+      switch(type) {
+         case LootType::HeartSmall:
+            SetAnimationFrames({GA_RESOURCE_DIR"/items/heart/heart-1.png"}, 0);
+            addScore = 1;
+            y_vel = -0.7f;
+            break;
+         case LootType::HeartBig:
+            SetAnimationFrames({GA_RESOURCE_DIR"/items/heart/heart-2.png"}, 0);
+            addScore = 5;
+            break;
+         default:
+            break;
+      }
+   }
+
+   void Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks) override {
+      glm::vec2 itemPos = UpdatePosition();
+      if (type == LootType::HeartBig){
+         SetPosition(itemPos + glm::vec2(x_vel, y_vel));
+         y_vel = std::max(y_vel - ((y_vel >= -2.0f) ? 0.5f : 1.3f), -15.0f);
+      }
+      if (!is_landed){
+         if (type == LootType::HeartSmall){
+            itemPos.y += y_vel;
+            itemPos.x -= 3 * sin(itemPos.y / 28);
+            SetPosition(itemPos + glm::vec2(x_vel, y_vel));
+         }
+         for (auto &&block : m_Blocks) {
+            glm::vec2 blockPos = block->GetPosition();
+            glm::vec2 blockSize = glm::abs(block->GetScaledSize());
+            float blockTop = blockPos.y + blockSize.y * 0.5f;
+            float blockLeft = blockPos.x - blockSize.x * 0.5f;
+            float blockRight = blockPos.x + blockSize.x * 0.5f;
+            bool overlapX = itemRight > blockLeft && itemLeft < blockRight;
+            bool isLanding = itemBottom <= blockTop;
+            if (overlapX && isLanding) {
+               is_landed = true;
+               break;
+            }
+         }
+      }
+      if (is_landed) {
+         y_vel = 0.0f;
+         x_vel = 0.0f;
+      }
+   }
+
+   void Result(App* app, std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) override {
+      menu->modifyNumber(menu->formatTwoDigits(menu->m_value.playerAmmo + addScore), 3);
+   }
+
+private:
+   int addScore;
+   std::shared_ptr<AnimatedItems> score = nullptr;
+};
+};
+#endif

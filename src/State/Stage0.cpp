@@ -31,9 +31,12 @@ void Stage0::Start(App* app){
     m_All.push_back(m_Character->m_Behavior);
 
     //torch
-    std::shared_ptr<Torch> torch_1 = std::make_shared<Torch>(glm::vec2(395, -242), glm::vec2(1, 0.9), LootType::SpecialBag, 2);
+    std::shared_ptr<Torch> torch_1 = std::make_shared<Torch>(glm::vec2(150, -242), glm::vec2(1, 0.9), LootType::HeartSmall, 2);
+    std::shared_ptr<Torch> torch_2 = std::make_shared<Torch>(glm::vec2(255, -242), glm::vec2(1, 0.9), LootType::Axe, 2);
     m_Torches.push_back(torch_1);
+    m_Torches.push_back(torch_2);
     m_All.push_back(torch_1);
+    m_All.push_back(torch_2);
 
     //block
     std::shared_ptr<Block> block_1 = std::make_shared<Block>(glm::vec2(0, -322), glm::vec2(10, 0.7));

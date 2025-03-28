@@ -81,6 +81,12 @@ std::shared_ptr<Loot> Torch::CreateLoot(LootType itemType, glm::vec2 position) {
             return std::make_shared<LootItem::Bag>(position, LootType::PurpleBag);
         case LootType::SpecialBag:
             return std::make_shared<LootItem::Bag>(position, LootType::SpecialBag);
+
+        // Items
+        case LootType::HeartSmall:
+            return std::make_shared<LootItem::Heart>(position, LootType::HeartSmall);
+        case LootType::HeartBig:
+            return std::make_shared<LootItem::Heart>(position, LootType::HeartBig);
         default:
             return nullptr;
     }

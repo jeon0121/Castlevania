@@ -23,6 +23,7 @@ set(INCLUDE_FILES
     Object/LootType/Item/Bag.hpp
     Object/LootType/Item/Chicken.hpp
     Object/LootType/Item/Crystal.hpp
+    Object/LootType/Item/Heart.hpp
     Object/LootType/Item/Pot.hpp
     Object/LootType/Subweapon/Axe.hpp
     Object/LootType/Subweapon/HolyWater.hpp
