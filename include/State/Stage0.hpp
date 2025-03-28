@@ -12,7 +12,7 @@ public:
     void End(App* app) override;
 
 private:
-
+    int mapWidth = 3072;
 };
 #endif
 

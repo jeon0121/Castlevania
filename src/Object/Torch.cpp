@@ -14,7 +14,10 @@ Torch::Torch(glm::vec2 position, glm::vec2 scale, LootType itemType, int type)
     for (int i = 0; i < 4; ++i) {
         torchDeath.emplace_back(GA_RESOURCE_DIR"/items/fire/torch/torchDeath-" + std::to_string(i + 1) + ".png");
     }
+    UpdatePosition();
+}
 
+void Torch::UpdatePosition() {
     glm::vec2 torchPos = GetPosition();
     glm::vec2 torchSize = glm::abs(GetScaledSize());
     torchTop = torchPos.y + torchSize.y * 0.5f;
@@ -26,6 +29,7 @@ Torch::Torch(glm::vec2 position, glm::vec2 scale, LootType itemType, int type)
 bool Torch::CollideDetection(std::shared_ptr<Character> &character) {
     int frameIndex = character->m_Behavior->GetCurrentFrameIndex();
     int whipLevel = character->GetWhipLevel();
+    UpdatePosition();
     if (character->IfWhip() && !is_destroyed) {
         bool isNormalWhip = (whipLevel != 3 && (frameIndex == 2 || frameIndex == 3));
         bool isLv3Whip = (whipLevel == 3 && frameIndex >= 8 && frameIndex <= 15);

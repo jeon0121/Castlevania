@@ -24,7 +24,10 @@ public:
     virtual void Start(App* app) = 0;
     virtual void Update(App* app) = 0;
     virtual void End(App* app) = 0;
-    
+
+    void UpdateTorch(App* app);
+
+    void UpdateScroll(int mapWidth);
 
     StateState m_stateState = StateState::START;
 
@@ -35,6 +38,8 @@ protected:
     std::vector<std::shared_ptr<Util::GameObject>> m_All;
     std::vector<std::shared_ptr<Block>> m_Blocks;
     std::vector<std::shared_ptr<Torch>> m_Torches;
+    float offsetX = 0.0f;
+    int screenWidth = 1024;
 };
 
 #endif

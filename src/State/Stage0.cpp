@@ -42,7 +42,7 @@ void Stage0::Start(App* app){
     m_All.push_back(torch_3);
 
     //block
-    std::shared_ptr<Block> block_1 = std::make_shared<Block>(glm::vec2(0, -322), glm::vec2(10, 0.7));
+    std::shared_ptr<Block> block_1 = std::make_shared<Block>(glm::vec2(0, -322), glm::vec2(100, 0.7));
     std::shared_ptr<Block> block_2 = std::make_shared<Block>(glm::vec2(-545, -50), glm::vec2(0.4, 7));
     // std::shared_ptr<Block> block_3 = std::make_shared<Block>(glm::vec2(0, -203), glm::vec2(1, 0.7));
     // std::shared_ptr<Block> block_4 = std::make_shared<Block>(glm::vec2(190, -80), glm::vec2(1, 0.7));
@@ -63,8 +63,8 @@ void Stage0::Start(App* app){
 void Stage0::Update(App* app){
     m_Character->Keys();
     m_Character->CollideBoundary(m_Blocks);
-    for (auto torch : m_Torches) 
-        torch->Update(app, m_Character, m_Menu, m_Blocks, torch);
+    UpdateTorch(app);
+    UpdateScroll(mapWidth);
 }
 
 void Stage0::End(App* app){

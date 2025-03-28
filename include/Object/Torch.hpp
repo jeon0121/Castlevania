@@ -11,6 +11,8 @@ class Torch : public AnimatedItems {
 public:
    Torch(glm::vec2 position, glm::vec2 scale, LootType itemType, int type=1);
 
+   void UpdatePosition();
+
    bool CollideDetection(std::shared_ptr<Character> &character);
 
    void Destroy(App* app);

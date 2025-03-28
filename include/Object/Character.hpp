@@ -27,6 +27,8 @@ public:
 
     void SetPosition(const glm::vec2& Position);
 
+    const glm::vec2& GetLastPosition() const;
+
     const glm::vec2& GetPosition() const;
 
     const glm::vec2& GetSize() const;
@@ -73,6 +75,7 @@ private:
     std::string m_direction = "left";
     std::string lastVecPos = "be";
 
+    glm::vec2 lastPos;
     glm::vec2 m_pos;  // Actual character position (ignores whip size)
     glm::vec2 m_size; // Character size without whip
     glm::vec2 is_collide = {0, 0};

@@ -63,6 +63,10 @@ void Character::SetPosition(const glm::vec2& position) {
         m_Behavior->SetPosition(position);
 }
 
+const glm::vec2& Character::GetLastPosition() const {
+    return lastPos;
+}
+
 const glm::vec2& Character::GetPosition() const {
     return m_pos;
 }
@@ -85,6 +89,7 @@ void Character::UpdatePosition() {
         if (this->currentFrame == 4 * (m_whip_level == 3 ? 4 : 1))
             is_whip = false;
     }
+    lastPos = m_pos;
     m_pos += glm::vec2(x_vel, y_vel);
     x_vel = 0;
     y_vel = std::max(y_vel - ((-2.0f <= y_vel && y_vel <= 2.0f) ? 0.3f : 1.0f), -14.5f);
@@ -169,14 +174,11 @@ void Character::Keys() {
             Idle();
         }
 
-        // glm::vec2 pos = GetPosition();
-        // std::cout << pos.x << ","
-        //         << pos.y << ", "
-        //         << m_pos.x << ", "
-        //         << m_pos.y << ", "
-        //         << m_size.x << ", "
-        //         << m_size.y << ", "
-        //         << std::endl;
+        // std::cout << m_pos.x << ", "
+        //           << m_pos.y << ", "
+        //           << m_size.x << ", "
+        //           << m_size.y << ", "
+        //           << std::endl;
 
         UpdatePosition();
     }

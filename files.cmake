@@ -9,6 +9,7 @@ set(SRC_FILES
     Object/Torch.cpp
 
     State/Menu.cpp
+    State/Scene.cpp
     State/Title.cpp
     State/Stage0.cpp
 
