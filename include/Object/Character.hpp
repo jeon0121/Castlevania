@@ -41,6 +41,8 @@ public:
 
     void HandleFallDuck(const std::string& direction);
 
+    void SubWeapon();
+
     void Whip();
 
     void Duck(std::string direction);
@@ -99,6 +101,7 @@ private:
     bool is_whip = false;
     bool is_duck = false;
     bool is_jump = false;
+    bool is_subweapon = false;
     bool change_land = false;
     bool is_levelUpWhip = false;
 };

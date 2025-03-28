@@ -4,7 +4,7 @@
 Character::Character(const CharacterValue& value) :
     m_direction(value.direction), currentBeIndex(value.beIndex) {
     //Image string
-    std::vector<std::string> walk, death, duck, hurt, jump, idle, intro;
+    std::vector<std::string> walk, death, duck, hurt, jump, idle, intro, sub_as, sub_de, sub_du, sub_st;
 
     //ImageBehavior
     idle.emplace_back(GA_RESOURCE_DIR"/main character/idle/idle.png");
@@ -20,7 +20,13 @@ Character::Character(const CharacterValue& value) :
     for (int i = 0; i < 2; ++i)
         death.emplace_back(GA_RESOURCE_DIR"/main character/death/death-" + std::to_string(i + 1) + ".png");
 
-    behaviorVector = {walk, death, idle, duck, hurt, jump, intro};
+    for (int i = 0; i < 4; ++i) {
+        // sub_as.emplace_back(GA_RESOURCE_DIR"/main character/use_subweapon/ascending/ascending-" + std::to_string(i + 1) + ".png");
+        // sub_de.emplace_back(GA_RESOURCE_DIR"/main character/use_subweapon/descending/descending-" + std::to_string(i + 1) + ".png");
+        sub_du.emplace_back(GA_RESOURCE_DIR"/main character/use_subweapon/ducking/ducking-" + std::to_string(i + 1) + ".png");
+        sub_st.emplace_back(GA_RESOURCE_DIR"/main character/use_subweapon/standing/standing-" + std::to_string(i + 1) + ".png");
+    }
+    behaviorVector = {walk, death, idle, duck, hurt, jump, intro, sub_as, sub_de, sub_du, sub_st};
 
     for (int i = 0; i < 3; i++) {
         std::vector<std::string> ascending, descending, ducking, standing;
@@ -46,7 +52,7 @@ Character::Character(const CharacterValue& value) :
 
 void Character::ChangeBehavior(int BehaviorIndex, bool if_whip) {
     auto& targetVector = if_whip ? whipVector[m_whip_level - 1] : behaviorVector;
-    if (currentBeIndex != BehaviorIndex || lastVecPos != (if_whip ? "whip" : "be")) {
+    if (currentBeIndex != BehaviorIndex || lastVecPos != (if_whip ? "whip" : "be")  || is_levelUpWhip) {
         m_Behavior->SetAnimationFrames(targetVector[BehaviorIndex], if_whip && m_whip_level == 3 ? 25 : 100);
         currentBeIndex = BehaviorIndex;
         lastVecPos = if_whip ? "whip" : "be";
@@ -59,7 +65,7 @@ void Character::LevelUpWhip(){
 
 void Character::SetPosition(const glm::vec2& position) {
     m_pos = position;
-    if (!is_whip)
+    if (!is_whip && !is_subweapon)
         m_Behavior->SetPosition(position);
 }
 
@@ -90,6 +96,13 @@ void Character::UpdatePosition() {
             is_whip = false;
     }
     lastPos = m_pos;
+    if (is_subweapon) {
+        this->currentFrame = m_Behavior->GetCurrentFrameIndex();
+        float offset = OffsetValues("subWeaponOffset");
+        m_Behavior->SetPosition({m_pos.x + (m_direction == "right" ? offset : -offset), m_pos.y});
+        if (this->currentFrame == 3)
+            is_subweapon = false;
+    }
     m_pos += glm::vec2(x_vel, y_vel);
     x_vel = 0;
     y_vel = std::max(y_vel - ((-2.0f <= y_vel && y_vel <= 2.0f) ? 0.3f : 1.0f), -14.5f);
@@ -123,8 +136,18 @@ void Character::Keys() {
          * - idle
         */
 
+        // duck subweapon
+        if (((Util::Input::IsKeyPressed(UP) && Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyDown(A)) || (is_subweapon && is_duck)) && !is_jump) {
+            Duck("");
+            SubWeapon();
+        }
+
+        // subweapon
+        else if ((Util::Input::IsKeyPressed(UP) && Util::Input::IsKeyPressed(A) && !is_jump) || is_subweapon) {
+            SubWeapon();
+        }
         // duck whip
-        if (((Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyDown(A)) || (is_whip && is_duck)) && !is_jump){
+        else if (((Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyDown(A)) || (is_whip && is_duck)) && !is_jump){
             Duck("");
             Whip();
         }
@@ -132,17 +155,9 @@ void Character::Keys() {
         else if (Util::Input::IsKeyDown(A) || is_whip)
             Whip();
 
-        // duck left
-        else if (Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyPressed(LEFT) && !is_jump)
-            Duck("left");
-
-        // duck right
-        else if (Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyPressed(RIGHT) && !is_jump)
-            Duck("right");
-
         // duck
         else if (Util::Input::IsKeyPressed(DOWN) && !is_jump)
-            Duck("");
+            Duck(Util::Input::IsKeyPressed(LEFT) ? "left" : (Util::Input::IsKeyPressed(RIGHT) ? "right" : ""));
 
         // jump
         else if (Util::Input::IsKeyDown(B) && !is_jump && !change_land) {
@@ -233,10 +248,25 @@ float Character::OffsetValues(std::string typeName) {
              : (currentFrame <= 15 && currentFrame >= 12) ? 175
              : 0;
     }
+    if (typeName == "subWeaponOffset") {
+        return (currentFrame == 0) ? -16
+             : (currentFrame == 2 || currentFrame == 3) ? 16
+             : 0;
+    }
     if (typeName == "duck") {
         return 50.0f;//32
     }
     return 0;
+}
+
+void Character::SubWeapon() {
+    is_subweapon = true;
+    if (is_jump)
+        Fall();
+    if (is_duck)
+        ChangeBehavior(9);
+    else
+        ChangeBehavior(10);
 }
 
 void Character::Whip(){
@@ -255,7 +285,7 @@ void Character::Whip(){
 }
 
 void Character::Duck(std::string direction){
-    if (!is_whip)
+    if (!is_whip && !is_subweapon)
         ChangeBehavior(3);
     if (direction != m_direction && direction != ""){
         m_direction = direction;
