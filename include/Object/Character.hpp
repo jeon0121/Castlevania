@@ -23,51 +23,33 @@ class Character : public Util::GameObject{
 public:
     explicit Character(const CharacterValue& value);
 
-    void ChangeBehavior(int BehaviorIndex, bool if_whip=false);
-
     void SetPosition(const glm::vec2& Position);
-
-    const glm::vec2& GetLastPosition() const;
-
     const glm::vec2& GetPosition() const;
-
+    const glm::vec2& GetLastPosition() const;
     const glm::vec2& GetSize() const;
+    float OffsetValues(std::string typeName);
+    std::string GetDirection() const;
+    bool IfWhip() const;
+    int GetWhipLevel() const;
+    void SetLevelUpWhip(bool ifLevelUp); // check if it's still at level-up animation
+    void LevelUpWhip();
+
+    void ChangeBehavior(int BehaviorIndex, bool if_whip = false);
 
     void UpdatePosition();
-
     void Keys();
 
-    float OffsetValues(std::string typeName);
-
     void HandleFallDuck(const std::string& direction);
-
     void SubWeapon();
-
     void Whip();
-
     void Duck(std::string direction);
-
     void Jump();
-
     void Fall();
-
     void Move(std::string direction);
-
     void Idle();
-
     void Flip();
 
     void CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blocks);
-
-    bool IfWhip() const;
-
-    int GetWhipLevel() const;
-
-    void LevelUpWhip();
-
-    std::string GetDirection() const;
-
-    void SetLevelUpWhip(bool ifLevelUp); // check if it's still at level-up animation
 
     std::shared_ptr<AnimatedItems> m_Behavior;
 

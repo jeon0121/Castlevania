@@ -50,6 +50,92 @@ Character::Character(const CharacterValue& value) :
         Flip();
 }
 
+void Character::SetPosition(const glm::vec2& position) {
+    m_pos = position;
+    if (!is_whip && !is_subweapon)
+        m_Behavior->SetPosition(position);
+}
+
+const glm::vec2& Character::GetPosition() const {
+    return m_pos;
+}
+
+const glm::vec2& Character::GetLastPosition() const {
+    return lastPos;
+}
+
+const glm::vec2& Character::GetSize() const {
+    return m_size;
+}
+
+float Character::OffsetValues(std::string typeName) {
+    if (typeName == "whipOffset") {
+        return (currentFrame == 0) ? -32
+             : (currentFrame == 1) ? -32
+             : (currentFrame == 2) ? 56
+             : (currentFrame == 3) ? 56
+             : (currentFrame == 4) ? 0
+             : 0;
+    }
+    if (typeName == "whipOffset_lv3") {
+        return (currentFrame <= 3) ? -32
+             : (currentFrame <= 7 && currentFrame >= 4) ? -32
+             : (currentFrame <= 11 && currentFrame >= 8) ? 88
+             : (currentFrame <= 15 && currentFrame >= 12) ? 88
+             : (currentFrame <= 19 && currentFrame >= 16) ? 0
+             : 0;
+    }
+    if (typeName == "whipHeight_lv3") {
+        return (currentFrame <= 7 && currentFrame >= 4) ? 2
+             : (currentFrame <= 15 && currentFrame >= 12) ? 2
+             : 0;
+    }
+    if (typeName == "whipWidth") {
+        return (currentFrame == 0) ? 35
+             : (currentFrame == 1) ? 60
+             : (currentFrame == 2) ? 100
+             : (currentFrame == 3) ? 110
+             : 0;
+    }
+    if (typeName == "whipWidth_lv3") {
+        return (currentFrame <= 3) ? 61
+             : (currentFrame <= 7 && currentFrame >= 4) ? 104
+             : (currentFrame <= 11 && currentFrame >= 8) ? 165
+             : (currentFrame <= 15 && currentFrame >= 12) ? 175
+             : 0;
+    }
+    if (typeName == "subWeaponOffset") {
+        return (currentFrame == 0) ? -16
+             : (currentFrame == 2 || currentFrame == 3) ? 16
+             : 0;
+    }
+    if (typeName == "duck") {
+        return 50.0f;//32
+    }
+    return 0;
+}
+
+std::string Character::GetDirection() const {
+    return m_direction;
+}
+
+bool Character::IfWhip() const {
+    return is_whip;
+}
+
+int Character::GetWhipLevel() const {
+    return m_whip_level;
+}
+
+void Character::SetLevelUpWhip(bool ifLevelUp) {
+    is_levelUpWhip = ifLevelUp;
+}
+
+void Character::LevelUpWhip(){
+    m_whip_level += 1;
+    is_levelUpWhip = true;
+}
+
 void Character::ChangeBehavior(int BehaviorIndex, bool if_whip) {
     auto& targetVector = if_whip ? whipVector[m_whip_level - 1] : behaviorVector;
     if (currentBeIndex != BehaviorIndex || lastVecPos != (if_whip ? "whip" : "be")  || is_levelUpWhip) {
@@ -57,28 +143,6 @@ void Character::ChangeBehavior(int BehaviorIndex, bool if_whip) {
         currentBeIndex = BehaviorIndex;
         lastVecPos = if_whip ? "whip" : "be";
     }
-}
-void Character::LevelUpWhip(){
-    m_whip_level += 1;
-    is_levelUpWhip = true;
-}
-
-void Character::SetPosition(const glm::vec2& position) {
-    m_pos = position;
-    if (!is_whip && !is_subweapon)
-        m_Behavior->SetPosition(position);
-}
-
-const glm::vec2& Character::GetLastPosition() const {
-    return lastPos;
-}
-
-const glm::vec2& Character::GetPosition() const {
-    return m_pos;
-}
-
-const glm::vec2& Character::GetSize() const {
-    return m_size;
 }
 
 void Character::UpdatePosition() {
@@ -212,53 +276,6 @@ void Character::HandleFallDuck(const std::string& direction) {
         Move(direction);
 }
 
-float Character::OffsetValues(std::string typeName) {
-    if (typeName == "whipOffset") {
-        return (currentFrame == 0) ? -32
-             : (currentFrame == 1) ? -32
-             : (currentFrame == 2) ? 56
-             : (currentFrame == 3) ? 56
-             : (currentFrame == 4) ? 0
-             : 0;
-    }
-    if (typeName == "whipOffset_lv3") {
-        return (currentFrame <= 3) ? -32
-             : (currentFrame <= 7 && currentFrame >= 4) ? -32
-             : (currentFrame <= 11 && currentFrame >= 8) ? 88
-             : (currentFrame <= 15 && currentFrame >= 12) ? 88
-             : (currentFrame <= 19 && currentFrame >= 16) ? 0
-             : 0;
-    }
-    if (typeName == "whipHeight_lv3") {
-        return (currentFrame <= 7 && currentFrame >= 4) ? 2
-             : (currentFrame <= 15 && currentFrame >= 12) ? 2
-             : 0;
-    }
-    if (typeName == "whipWidth") {
-        return (currentFrame == 0) ? 35
-             : (currentFrame == 1) ? 60
-             : (currentFrame == 2) ? 100
-             : (currentFrame == 3) ? 110
-             : 0;
-    }
-    if (typeName == "whipWidth_lv3") {
-        return (currentFrame <= 3) ? 61
-             : (currentFrame <= 7 && currentFrame >= 4) ? 104
-             : (currentFrame <= 11 && currentFrame >= 8) ? 165
-             : (currentFrame <= 15 && currentFrame >= 12) ? 175
-             : 0;
-    }
-    if (typeName == "subWeaponOffset") {
-        return (currentFrame == 0) ? -16
-             : (currentFrame == 2 || currentFrame == 3) ? 16
-             : 0;
-    }
-    if (typeName == "duck") {
-        return 50.0f;//32
-    }
-    return 0;
-}
-
 void Character::SubWeapon() {
     is_subweapon = true;
     if (is_jump)
@@ -348,7 +365,6 @@ void Character::Idle() {
     }
 }
 
-
 void Character::Flip() {
     glm::vec2 scale = m_Behavior->m_Transform.scale;
     m_Behavior->m_Transform.scale = glm::vec2(-1 * scale.x, scale.y);
@@ -413,11 +429,3 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
     }
     // std::cout << prevLandPosition << ',' << landPosition << std::endl;
 }
-
-bool Character::IfWhip() const {return is_whip;}
-
-int Character::GetWhipLevel() const {return m_whip_level;}
-
-std::string Character::GetDirection() const {return m_direction;}
-
-void Character::SetLevelUpWhip(bool ifLevelUp) {is_levelUpWhip = ifLevelUp;}
