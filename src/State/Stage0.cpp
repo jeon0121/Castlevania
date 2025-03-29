@@ -64,11 +64,12 @@ void Stage0::Update(App* app){
     m_Character->Keys();
     m_Character->CollideBoundary(m_Blocks);
     UpdateTorch(app);
+    // UpdateSubWeapon(app);
     UpdateScroll(mapWidth);
 }
 
 void Stage0::End(App* app){
-
+    (void) app;
 
     // //End Stage0
     // if (m_Character->m_Behavior->IfPlayingTime(8)) {

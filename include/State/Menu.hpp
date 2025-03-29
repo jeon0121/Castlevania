@@ -4,14 +4,7 @@
 #include "Util/GameObject.hpp"
 #include "Util/Image.hpp"
 #include "Object/ImageItems.hpp"
-
-enum class WeaponType {
-    None,
-    Axe,
-    HolyWater,
-    Dagger,
-    Stopwatch
-};
+#include "Object/Character.hpp"
 
 struct MenuValue {
     int time = 300;       // mm:dd

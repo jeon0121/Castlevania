@@ -7,7 +7,7 @@
 class Stage1 : public Scene{
 public:
     void Start(App*) override {};
-    void Update(App* app) override {};
+    void Update(App*) override {};
     void End(App*) override {};
 
 private:

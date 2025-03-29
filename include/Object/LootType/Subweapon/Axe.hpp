@@ -11,7 +11,8 @@ public:
 
    void Result(App* app, std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) override {
       menu->modifyWeapon(WeaponType::Axe);
-      (void) character;
+      character->SetSubWeapon(WeaponType::Axe);
+      (void) app;
       is_endResult = true;
    }
 };

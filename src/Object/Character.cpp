@@ -56,6 +56,10 @@ void Character::SetPosition(const glm::vec2& position) {
         m_Behavior->SetPosition(position);
 }
 
+void Character::SetSubWeapon(WeaponType type){
+    m_subweapon = type;
+}
+
 const glm::vec2& Character::GetPosition() const {
     return m_pos;
 }

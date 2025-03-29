@@ -11,6 +11,7 @@
 #include "Object/AnimatedItems.hpp"
 #include "Object/ImageItems.hpp"
 #include "Object/Block.hpp"
+#include "Object/Subweapon.hpp"
 
 struct CharacterValue {
     glm::vec2 position;
@@ -19,11 +20,20 @@ struct CharacterValue {
     float scale = 1.0f;
 };
 
+enum class WeaponType {
+    None,
+    Axe,
+    HolyWater,
+    Dagger,
+    Stopwatch
+};
+
 class Character : public Util::GameObject{
 public:
     explicit Character(const CharacterValue& value);
 
     void SetPosition(const glm::vec2& Position);
+    void SetSubWeapon(WeaponType type);
     const glm::vec2& GetPosition() const;
     const glm::vec2& GetLastPosition() const;
     const glm::vec2& GetSize() const;
@@ -52,6 +62,7 @@ public:
     void CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blocks);
 
     std::shared_ptr<AnimatedItems> m_Behavior;
+    std::shared_ptr<Subweapon> m_SubWeapon;
 
 private:
     std::vector<std::vector<std::string>> behaviorVector;
@@ -64,7 +75,9 @@ private:
     glm::vec2 m_size; // Character size without whip
     glm::vec2 is_collide = {0, 0};
 
+    WeaponType m_subweapon = WeaponType::None;
     int m_life = 16;
+    int m_ammo = 5;
     int m_whip_level = 1;
     float x_vel = 0;
     float y_vel = 0;

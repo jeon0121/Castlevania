@@ -32,6 +32,12 @@ set(INCLUDE_FILES
     Object/LootType/Subweapon/Dagger.hpp
     Object/LootType/Subweapon/Stopwatch.hpp
     Object/LootType/Whip/Whip.hpp
+
+    Object/Subweapon/Axe.hpp
+    Object/Subweapon/Dagger.hpp
+    Object/Subweapon/HolyWater.hpp
+    Object/Subweapon/Stopwatch.hpp
+    Object/Subweapon.hpp
     
     Object/AnimatedItems.hpp
     Object/Block.hpp
