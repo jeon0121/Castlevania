@@ -56,8 +56,20 @@ void Character::SetPosition(const glm::vec2& position) {
         m_Behavior->SetPosition(position);
 }
 
-void Character::SetSubWeapon(WeaponType type){
+void Character::SetSubWeaponType(WeaponType type) {
     m_subweapon = type;
+}
+
+void Character::SetUseWeaponFlag(bool ifuse) {
+    is_useweapon = ifuse;
+}
+
+const WeaponType& Character::GetSubWeaponType() const {
+    return m_subweapon;
+}
+
+const bool& Character::GetUseWeaponFlag() const {
+    return is_useweapon;
 }
 
 const glm::vec2& Character::GetPosition() const {
@@ -288,6 +300,9 @@ void Character::SubWeapon() {
         ChangeBehavior(9);
     else
         ChangeBehavior(10);
+
+    if (!is_useweapon)
+        is_useweapon = true;
 }
 
 void Character::Whip(){

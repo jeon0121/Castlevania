@@ -2,6 +2,10 @@ set(SRC_FILES
     App.cpp
     Object/LootType/Item/Bag.cpp
     Object/LootType/Item/Heart.cpp
+    Object/LootType/Subweapon/Axe.cpp
+    Object/LootType/Subweapon/HolyWater.cpp
+    Object/LootType/Subweapon/Dagger.cpp
+    Object/LootType/Subweapon/Stopwatch.cpp
     Object/AnimatedItems.cpp
     Object/Block.cpp
     Object/Character.cpp
@@ -31,13 +35,8 @@ set(INCLUDE_FILES
     Object/LootType/Subweapon/HolyWater.hpp
     Object/LootType/Subweapon/Dagger.hpp
     Object/LootType/Subweapon/Stopwatch.hpp
+    Object/LootType/Subweapon/IUseSubweapon.hpp
     Object/LootType/Whip/Whip.hpp
-
-    Object/Subweapon/Axe.hpp
-    Object/Subweapon/Dagger.hpp
-    Object/Subweapon/HolyWater.hpp
-    Object/Subweapon/Stopwatch.hpp
-    Object/Subweapon.hpp
     
     Object/AnimatedItems.hpp
     Object/Block.hpp

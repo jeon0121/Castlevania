@@ -3,18 +3,16 @@
 
 #include "Object/Loot.hpp"
 #include "State/Menu.hpp"
+#include "IUseSubweapon.hpp"
 
 namespace LootItem {
-class Dagger : public Loot {
+class Dagger : public Loot, public IUseSubweapon {
 public:
-   Dagger(glm::vec2 position) : Loot(position, {GA_RESOURCE_DIR "/items/weapon/dagger.png"}, 0) {}
+   Dagger(glm::vec2 position);
 
-   void Result(App* app, std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) override {
-      menu->modifyWeapon(WeaponType::Dagger);
-      character->SetSubWeapon(WeaponType::Dagger);
-      (void) app;
-      is_endResult = true;
-   }
+   void Result(App* app, std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) override;
+
+   void Use(std::string direction) override;
 };
 }
 #endif

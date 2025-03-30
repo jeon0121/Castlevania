@@ -25,3 +25,39 @@ void Scene::UpdateScroll(int mapWidth) {
         }
     }
 }
+
+void Scene::UpdateSubWeapon(App* app) {
+    if (m_Character->GetUseWeaponFlag() && m_Character->GetSubWeaponType() != WeaponType::None) {
+        if (!m_SubWeapon) {
+            SetSubweapon(app);
+        }
+        m_SubWeapon->Use(m_Character->GetDirection());
+    }
+}
+
+void Scene::SetSubweapon(App* app) {
+    glm::vec2 pos = m_Character->GetPosition();
+    WeaponType type = m_Character->GetSubWeaponType();
+    switch (type) {
+        case WeaponType::Axe:
+            m_SubWeapon = std::make_shared<LootItem::Axe>(pos);
+            break;
+        case WeaponType::Dagger:
+            m_SubWeapon = std::make_shared<LootItem::Dagger>(pos);
+            break;
+        case WeaponType::HolyWater:
+            m_SubWeapon = std::make_shared<LootItem::HolyWater>(pos);
+            break;
+        case WeaponType::Stopwatch:
+            m_SubWeapon = std::make_shared<LootItem::Stopwatch>(pos);
+            break;
+        default:
+            m_SubWeapon = nullptr;
+    }
+    if (m_SubWeapon) {
+        std::string dir = m_Character->GetDirection();
+        asLoot = std::dynamic_pointer_cast<Loot>(m_SubWeapon);
+        asLoot->m_Transform.scale = (dir == "right") ? glm::vec2(-1, 1) : glm::vec2(1, 1);
+        app->m_Root.AddChild(asLoot);
+    }
+}

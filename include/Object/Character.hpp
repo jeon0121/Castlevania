@@ -11,7 +11,6 @@
 #include "Object/AnimatedItems.hpp"
 #include "Object/ImageItems.hpp"
 #include "Object/Block.hpp"
-#include "Object/Subweapon.hpp"
 
 struct CharacterValue {
     glm::vec2 position;
@@ -33,7 +32,10 @@ public:
     explicit Character(const CharacterValue& value);
 
     void SetPosition(const glm::vec2& Position);
-    void SetSubWeapon(WeaponType type);
+    void SetSubWeaponType(WeaponType type);
+    void SetUseWeaponFlag(bool ifuse);
+    const WeaponType& GetSubWeaponType() const;
+    const bool& GetUseWeaponFlag() const;
     const glm::vec2& GetPosition() const;
     const glm::vec2& GetLastPosition() const;
     const glm::vec2& GetSize() const;
@@ -62,7 +64,6 @@ public:
     void CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blocks);
 
     std::shared_ptr<AnimatedItems> m_Behavior;
-    std::shared_ptr<Subweapon> m_SubWeapon;
 
 private:
     std::vector<std::vector<std::string>> behaviorVector;
@@ -96,7 +97,8 @@ private:
     bool is_whip = false;
     bool is_duck = false;
     bool is_jump = false;
-    bool is_subweapon = false;
+    bool is_subweapon = false; //if character animation finish
+    bool is_useweapon = false; //if subweapon finish attack
     bool change_land = false;
     bool is_levelUpWhip = false;
 };
