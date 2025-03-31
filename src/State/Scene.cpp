@@ -23,6 +23,8 @@ void Scene::UpdateScroll(int mapWidth) {
             if (torch->loot)
                 torch->loot->SetPosition(torch->loot->GetPosition() - glm::vec2(dx, 0.0f));
         }
+        if (asLoot)
+            asLoot->SetPosition(asLoot->GetPosition() - glm::vec2(dx, 0.0f));
     }
 }
 

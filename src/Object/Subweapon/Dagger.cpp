@@ -12,6 +12,6 @@ namespace Subweapon {
 
     void Dagger::Use() {
         glm::vec2 pos = GetPosition();
-        SetPosition({((GetDirection() == "right") ? pos.x+=5 : pos.x-=5), pos.y});
+        SetPosition({((GetDirection() == "right") ? pos.x+=15 : pos.x-=15), pos.y});
     }
 }
