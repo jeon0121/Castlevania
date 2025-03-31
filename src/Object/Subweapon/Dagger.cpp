@@ -1,6 +1,6 @@
-#include "Object/LootType/Subweapon/Dagger.hpp"
+#include "Object/Subweapon/Dagger.hpp"
 
-namespace LootItem {
+namespace Subweapon {
     Dagger::Dagger(glm::vec2 position) : Loot(position, {GA_RESOURCE_DIR "/items/weapon/dagger.png"}, 0) {}
 
     void Dagger::Result(App* app, std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) {
@@ -10,8 +10,8 @@ namespace LootItem {
         is_endResult = true;
     }
 
-    void Dagger::Use(std::string direction) {
+    void Dagger::Use() {
         glm::vec2 pos = GetPosition();
-        SetPosition({((direction == "right") ? pos.x+=5 : pos.x-=5), pos.y});
+        SetPosition({((GetDirection() == "right") ? pos.x+=5 : pos.x-=5), pos.y});
     }
 }

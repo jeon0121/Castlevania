@@ -11,7 +11,6 @@
 #include "Object/Torch.hpp"
 #include "Object/Loot.hpp"
 #include "Object/LootType/Loot.hpp"
-#include "Object/LootType/Subweapon/IUseSubweapon.hpp"
 #include "State/Menu.hpp"
 #include "App.hpp"
 
@@ -43,7 +42,6 @@ protected:
     std::vector<std::shared_ptr<Util::GameObject>> m_All;
     std::vector<std::shared_ptr<Block>> m_Blocks;
     std::vector<std::shared_ptr<Torch>> m_Torches;
-    std::shared_ptr<LootItem::IUseSubweapon> m_SubWeapon;
     std::shared_ptr<Loot> asLoot;
     float offsetX = 0.0f;
     int screenWidth = 1024;

@@ -6,17 +6,17 @@
 #include <iostream>
 
 namespace LootItem {
-class Heart : public Loot {
-public:
-   Heart(glm::vec2 position, LootType type);
+   class Heart : public Loot {
+   public:
+      Heart(glm::vec2 position, LootType type);
 
-   void Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks) override;
+      void Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks) override;
 
-   void Result(App* app, std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) override;
+      void Result(App* app, std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) override;
 
-private:
-   int addScore;
-   std::shared_ptr<AnimatedItems> score = nullptr;
-};
+   private:
+      int addScore;
+      std::shared_ptr<AnimatedItems> score = nullptr;
+   };
 };
 #endif

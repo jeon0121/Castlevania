@@ -1,6 +1,6 @@
-#include "Object/LootType/Subweapon/Stopwatch.hpp"
+#include "Object/Subweapon/Stopwatch.hpp"
 
-namespace LootItem {
+namespace Subweapon {
     Stopwatch::Stopwatch(glm::vec2 position) : Loot(position, {GA_RESOURCE_DIR "/items/weapon/stopwatch.png"}, 0) {}
 
     void Stopwatch::Result(App* app, std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) {
@@ -10,7 +10,7 @@ namespace LootItem {
         is_endResult = true;
     }
 
-    void Stopwatch::Use(std::string direction) {
+    void Stopwatch::Use() {
         
     }
 }

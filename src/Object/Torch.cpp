@@ -74,13 +74,13 @@ std::shared_ptr<Loot> Torch::CreateLoot(LootType itemType, glm::vec2 position) {
     switch (itemType) {
         // Sub weapon
         case LootType::Axe:
-            return std::make_shared<LootItem::Axe>(position);
+            return std::make_shared<Subweapon::Axe>(position);
         case LootType::Dagger:
-            return std::make_shared<LootItem::Dagger>(position);
+            return std::make_shared<Subweapon::Dagger>(position);
         case LootType::HolyWater:
-            return std::make_shared<LootItem::HolyWater>(position);
+            return std::make_shared<Subweapon::HolyWater>(position);
         case LootType::Stopwatch:
-            return std::make_shared<LootItem::Stopwatch>(position);
+            return std::make_shared<Subweapon::Stopwatch>(position);
 
         // Whip
         case LootType::Whip:

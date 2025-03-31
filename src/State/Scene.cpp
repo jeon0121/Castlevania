@@ -27,36 +27,40 @@ void Scene::UpdateScroll(int mapWidth) {
 }
 
 void Scene::UpdateSubWeapon(App* app) {
-    if (m_Character->GetUseWeaponFlag() && m_Character->GetSubWeaponType() != WeaponType::None) {
-        if (!m_SubWeapon) {
+    if (m_Character->GetUseWeaponFlag()) {
+        if (!m_Character->m_SubWeapon) 
             SetSubweapon(app);
+        else {
+            m_Character->m_SubWeapon->Use();
+            asLoot = std::dynamic_pointer_cast<Loot>(m_Character->m_SubWeapon);
         }
-        m_SubWeapon->Use(m_Character->GetDirection());
     }
 }
 
 void Scene::SetSubweapon(App* app) {
-    glm::vec2 pos = m_Character->GetPosition();
+    glm::vec2 pos = m_Character->GetPosition() + glm::vec2(0, 10);
     WeaponType type = m_Character->GetSubWeaponType();
     switch (type) {
         case WeaponType::Axe:
-            m_SubWeapon = std::make_shared<LootItem::Axe>(pos);
+            m_Character->m_SubWeapon = std::make_shared<Subweapon::Axe>(pos);
             break;
         case WeaponType::Dagger:
-            m_SubWeapon = std::make_shared<LootItem::Dagger>(pos);
+            m_Character->m_SubWeapon = std::make_shared<Subweapon::Dagger>(pos);
             break;
         case WeaponType::HolyWater:
-            m_SubWeapon = std::make_shared<LootItem::HolyWater>(pos);
+            m_Character->m_SubWeapon = std::make_shared<Subweapon::HolyWater>(pos);
             break;
         case WeaponType::Stopwatch:
-            m_SubWeapon = std::make_shared<LootItem::Stopwatch>(pos);
+            m_Character->m_SubWeapon = std::make_shared<Subweapon::Stopwatch>(pos);
             break;
         default:
-            m_SubWeapon = nullptr;
+            m_Character->m_SubWeapon = nullptr;
+            break;
     }
-    if (m_SubWeapon) {
+    if (m_Character->m_SubWeapon) {
         std::string dir = m_Character->GetDirection();
-        asLoot = std::dynamic_pointer_cast<Loot>(m_SubWeapon);
+        m_Character->m_SubWeapon->SetDirection(dir);
+        asLoot = std::dynamic_pointer_cast<Loot>(m_Character->m_SubWeapon);
         asLoot->m_Transform.scale = (dir == "right") ? glm::vec2(-1, 1) : glm::vec2(1, 1);
         app->m_Root.AddChild(asLoot);
     }

@@ -9,6 +9,7 @@
 #include "Util/GameObject.hpp"
 #include "Util/Animation.hpp"
 #include "Object/AnimatedItems.hpp"
+#include "Object/Subweapon/IUseSubweapon.hpp"
 #include "Object/ImageItems.hpp"
 #include "Object/Block.hpp"
 
@@ -65,6 +66,8 @@ public:
 
     std::shared_ptr<AnimatedItems> m_Behavior;
 
+    std::shared_ptr<Subweapon::IUseSubweapon> m_SubWeapon;
+    
 private:
     std::vector<std::vector<std::string>> behaviorVector;
     std::vector<std::vector<std::vector<std::string>>> whipVector;

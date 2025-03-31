@@ -1,6 +1,6 @@
-#include "Object/LootType/Subweapon/HolyWater.hpp"
+#include "Object/Subweapon/HolyWater.hpp"
 
-namespace LootItem {
+namespace Subweapon {
     HolyWater::HolyWater(glm::vec2 position) : Loot(position, {GA_RESOURCE_DIR "/items/weapon/holywater.png"}, 0) {}
 
     void HolyWater::Result(App* app, std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) {
@@ -10,7 +10,7 @@ namespace LootItem {
         is_endResult = true;
     }
 
-    void HolyWater::Use(std::string direction) {
+    void HolyWater::Use() {
         
     }
 }

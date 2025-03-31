@@ -301,7 +301,7 @@ void Character::SubWeapon() {
     else
         ChangeBehavior(10);
 
-    if (!is_useweapon)
+    if ((currentFrame == 2 || currentFrame == 3) && m_subweapon != WeaponType::None) 
         is_useweapon = true;
 }
 
@@ -378,7 +378,7 @@ void Character::Idle() {
     }
     else {
         countTime = 0;
-        change_land = is_whip = is_duck = is_jump = false;
+        change_land = is_whip = is_subweapon = is_duck = is_jump = false;
         m_size = glm::abs(m_Behavior->GetScaledSize());
         jumph = landh = m_Behavior->GetPosition().y;
     }

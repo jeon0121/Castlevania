@@ -5,17 +5,17 @@
 #include "State/Menu.hpp"
 
 namespace LootItem {
-class Bag : public Loot {
-public:
-   Bag(glm::vec2 position, LootType type);
+   class Bag : public Loot {
+   public:
+      Bag(glm::vec2 position, LootType type);
 
-   std::vector<std::string> GetImage();
+      std::vector<std::string> GetImage();
 
-   void Result(App* app, std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) override;
+      void Result(App* app, std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) override;
 
-private:
-   int addScore;
-   std::shared_ptr<AnimatedItems> score = nullptr;
-};
+   private:
+      int addScore;
+      std::shared_ptr<AnimatedItems> score = nullptr;
+   };
 };
 #endif

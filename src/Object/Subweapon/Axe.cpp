@@ -1,6 +1,6 @@
-#include "Object/LootType/Subweapon/Axe.hpp"
+#include "Object/Subweapon/Axe.hpp"
 
-namespace LootItem {
+namespace Subweapon {
     Axe::Axe(glm::vec2 position) : Loot(position, {GA_RESOURCE_DIR "/items/weapon/axe.png"}, 0) {}
 
     void Axe::Result(App* app, std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) {
@@ -10,7 +10,7 @@ namespace LootItem {
         is_endResult = true;
     }
 
-    void Axe::Use(std::string direction) {
+    void Axe::Use() {
 
     }
 }
