@@ -14,4 +14,9 @@ namespace Subweapon {
         glm::vec2 pos = GetPosition();
         SetPosition({((GetDirection() == "right") ? pos.x+=15 : pos.x-=15), pos.y});
     }
+
+    bool Dagger::IsDestroyed() {
+        // later on, check if the dagger collide with enemy
+        return false;
+    }
 }

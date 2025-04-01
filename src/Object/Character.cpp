@@ -180,8 +180,11 @@ void Character::UpdatePosition() {
         this->currentFrame = m_Behavior->GetCurrentFrameIndex();
         float offset = OffsetValues("subWeaponOffset");
         m_Behavior->SetPosition({m_pos.x + (m_direction == "right" ? offset : -offset), m_pos.y});
-        if (this->currentFrame == 3)
+        if (this->currentFrame == 3) {
             is_subweapon = false;
+            if (m_subweapon != WeaponType::None) 
+                is_useweapon = true;
+        }
     }
     m_pos += glm::vec2(x_vel, y_vel);
     x_vel = 0;
@@ -300,9 +303,6 @@ void Character::SubWeapon() {
         ChangeBehavior(9);
     else
         ChangeBehavior(10);
-
-    if ((currentFrame == 2 || currentFrame == 3) && m_subweapon != WeaponType::None) 
-        is_useweapon = true;
 }
 
 void Character::Whip(){

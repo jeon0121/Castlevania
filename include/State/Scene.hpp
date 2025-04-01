@@ -45,6 +45,7 @@ protected:
     std::shared_ptr<Loot> asLoot;
     float offsetX = 0.0f;
     int screenWidth = 1024;
+    int screenHeight = 768;
 };
 
 #endif

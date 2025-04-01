@@ -8,10 +8,9 @@ namespace Subweapon {
     public:
         virtual void Use() = 0;
         virtual ~IUseSubweapon() {}
-        void SetDirection(std::string direction) { m_direction = direction; }
-        std::string GetDirection() { return m_direction; }
-    private:
-        std::string m_direction;
+        virtual void SetDirection(std::string direction) = 0;
+        virtual std::string GetDirection() = 0;
+        virtual bool IsDestroyed() = 0;
     };
 }
 #endif

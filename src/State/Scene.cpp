@@ -35,6 +35,14 @@ void Scene::UpdateSubWeapon(App* app) {
         else {
             m_Character->m_SubWeapon->Use();
             asLoot = std::dynamic_pointer_cast<Loot>(m_Character->m_SubWeapon);
+            if (m_Character->m_SubWeapon->IsDestroyed() ||
+                asLoot->GetPosition().x < -screenWidth / 2 ||
+                asLoot->GetPosition().x > screenWidth / 2) {
+                    m_Character->m_SubWeapon = nullptr;
+                    app->m_Root.RemoveChild(asLoot);
+                    m_Character->SetUseWeaponFlag(false);
+                    
+                }
         }
     }
 }
