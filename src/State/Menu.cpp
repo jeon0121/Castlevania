@@ -79,7 +79,8 @@ void Menu::addNumber(std::string text, const glm::vec2& position){
 
 void Menu::modifyNumber(std::string text, int type){
     std::vector<std::shared_ptr<ImageItems>>& numberbar = numberImage[type];
-    for (int i = 0; i < text.length(); i++)
+    int length = text.length();
+    for (int i = 0; i < length; i++)
         numberbar[i]->SetImage(GA_RESOURCE_DIR "/fonts/number/" + std::string(1, text[i]) + ".png");
 }
 

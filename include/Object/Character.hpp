@@ -40,13 +40,18 @@ public:
     const glm::vec2& GetPosition() const;
     const glm::vec2& GetLastPosition() const;
     const glm::vec2& GetSize() const;
-    float OffsetValues(std::string typeName);
     std::string GetDirection() const;
     bool IfWhip() const;
     int GetWhipLevel() const;
+
+    void SetAmmo(int ammo);
+    int GetAmmo() const;
+    void SetHeart(int heart);
+    int GetHeart() const;
     void SetLevelUpWhip(bool ifLevelUp); // check if it's still at level-up animation
     void LevelUpWhip();
 
+    float OffsetValues(std::string typeName);
     void ChangeBehavior(int BehaviorIndex, bool if_whip = false);
 
     void UpdatePosition();

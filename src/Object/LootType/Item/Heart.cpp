@@ -7,12 +7,12 @@ Heart::Heart(glm::vec2 position, LootType type) : Loot(position, {}, 0) {
    switch(type) {
       case LootType::HeartSmall:
          SetAnimationFrames({GA_RESOURCE_DIR"/items/heart/heart-1.png"}, 0);
-         addScore = 1;
+         addAmmo = 1;
          y_vel = -0.7f;
          break;
       case LootType::HeartBig:
          SetAnimationFrames({GA_RESOURCE_DIR"/items/heart/heart-2.png"}, 0);
-         addScore = 5;
+         addAmmo = 5;
          break;
       default:
          break;
@@ -52,6 +52,9 @@ void Heart::Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks) {
 }
 
 void Heart::Result(App* app, std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) {
-   menu->modifyNumber(menu->formatTwoDigits(menu->m_value.playerAmmo + addScore), 3);
+   (void) app;
+   menu->modifyNumber(menu->formatTwoDigits(character->GetAmmo() + addAmmo), 3);
+   character->SetAmmo(character->GetAmmo() + addAmmo);
+   is_endResult = true;
 }
 }

@@ -15,7 +15,7 @@ namespace LootItem {
       void Result(App* app, std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) override;
 
    private:
-      int addScore;
+      int addAmmo;
       std::shared_ptr<AnimatedItems> score = nullptr;
    };
 };

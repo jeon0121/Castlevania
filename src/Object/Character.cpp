@@ -84,6 +84,43 @@ const glm::vec2& Character::GetSize() const {
     return m_size;
 }
 
+std::string Character::GetDirection() const {
+    return m_direction;
+}
+
+bool Character::IfWhip() const {
+    return is_whip;
+}
+
+int Character::GetWhipLevel() const {
+    return m_whip_level;
+}
+
+void Character::SetAmmo(int ammo) {
+    m_ammo = ammo;
+}
+
+int Character::GetAmmo() const {
+    return m_ammo;
+}
+
+void Character::SetHeart(int heart) {
+    m_life = heart;
+}
+
+int Character::GetHeart() const {
+    return m_life;
+}
+
+void Character::SetLevelUpWhip(bool ifLevelUp) {
+    is_levelUpWhip = ifLevelUp;
+}
+
+void Character::LevelUpWhip(){
+    m_whip_level += 1;
+    is_levelUpWhip = true;
+}
+
 float Character::OffsetValues(std::string typeName) {
     if (typeName == "whipOffset") {
         return (currentFrame == 0) ? -32
@@ -129,27 +166,6 @@ float Character::OffsetValues(std::string typeName) {
         return 50.0f;//32
     }
     return 0;
-}
-
-std::string Character::GetDirection() const {
-    return m_direction;
-}
-
-bool Character::IfWhip() const {
-    return is_whip;
-}
-
-int Character::GetWhipLevel() const {
-    return m_whip_level;
-}
-
-void Character::SetLevelUpWhip(bool ifLevelUp) {
-    is_levelUpWhip = ifLevelUp;
-}
-
-void Character::LevelUpWhip(){
-    m_whip_level += 1;
-    is_levelUpWhip = true;
 }
 
 void Character::ChangeBehavior(int BehaviorIndex, bool if_whip) {
