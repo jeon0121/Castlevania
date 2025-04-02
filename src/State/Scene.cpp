@@ -13,7 +13,7 @@ void Scene::UpdateScroll(int mapWidth) {
     if (((pos.x >= 4.5) && (dx > 0) && (offsetX < mapWidth - screenWidth)) ||
         ((pos.x <= -4.5) && (dx < 0) && (offsetX > 0))) {
         offsetX += dx;
-        m_Background->SetPosition(glm::vec2(1050, -60) - glm::vec2(offsetX, 0.0f));
+        m_Background->SetPosition(backgroundPos - glm::vec2(offsetX, 0.0f));
         m_Character->SetPosition(m_Character->GetPosition() - glm::vec2(dx, 0.0f));
         for (auto& block : m_Blocks) {
             block->SetPosition(block->GetPosition() - glm::vec2(dx, 0.0f));

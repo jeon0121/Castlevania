@@ -44,6 +44,7 @@ protected:
     float offsetX = 0.0f;
     int screenWidth = 1024;
     int screenHeight = 768;
+    glm::vec2 backgroundPos;
 };
 
 #endif
