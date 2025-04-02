@@ -8,30 +8,31 @@ void Stage0::Start(App* app){
     // background
     m_Background = std::make_shared<ImageItems>(GA_RESOURCE_DIR"/background/stage-0/castle-entrance.png");
     m_Background->m_Transform.scale = glm::vec2(1.025, 0.92);
-    m_Background->SetPosition({1050, -60});
+    m_Background->SetPosition({1050, -45});
+    backgroundPos = m_Background->GetPosition();
     m_All.push_back(m_Background);
 
     m_End = std::make_shared<ImageItems>(GA_RESOURCE_DIR"/background/stage-0/end.png");
     m_End->m_Transform.scale = glm::vec2(1.025, 0.92);
-    m_End->SetPosition({440, -60});
+    m_End->SetPosition({434.6, -45});
     m_End->SetZIndex(8);
     m_End->SetVisible(false);
     m_All.push_back(m_End);
 
     //character
     CharacterValue charactervalue;
-    charactervalue.position = glm::vec2(-315, -235.35);
+    charactervalue.position = glm::vec2(-315, -220.35);
     charactervalue.direction = "right";
     charactervalue.beIndex = 2;
     m_Character = std::make_shared<Character>(charactervalue);
     m_All.push_back(m_Character->m_Behavior);
 
     //torch
-    std::shared_ptr<Torch> torch_1 = std::make_shared<Torch>(glm::vec2(-130, -242), glm::vec2(1, 0.9), LootType::HeartBig, 2);
-    std::shared_ptr<Torch> torch_2 = std::make_shared<Torch>(glm::vec2(395, -242), glm::vec2(1, 0.9), LootType::Whip, 2);
-    std::shared_ptr<Torch> torch_3 = std::make_shared<Torch>(glm::vec2(920, -242), glm::vec2(1, 0.9), LootType::Whip, 2);
-    std::shared_ptr<Torch> torch_4 = std::make_shared<Torch>(glm::vec2(1445, -242), glm::vec2(1, 0.9), LootType::HeartBig, 2);
-    std::shared_ptr<Torch> torch_5 = std::make_shared<Torch>(glm::vec2(1965, -242), glm::vec2(1, 0.9), LootType::Dagger, 2);
+    std::shared_ptr<Torch> torch_1 = std::make_shared<Torch>(glm::vec2(-130, -227), glm::vec2(1, 0.9), LootType::HeartBig, 2);
+    std::shared_ptr<Torch> torch_2 = std::make_shared<Torch>(glm::vec2(395, -227), glm::vec2(1, 0.9), LootType::Whip, 2);
+    std::shared_ptr<Torch> torch_3 = std::make_shared<Torch>(glm::vec2(920, -227), glm::vec2(1, 0.9), LootType::Whip, 2);
+    std::shared_ptr<Torch> torch_4 = std::make_shared<Torch>(glm::vec2(1445, -227), glm::vec2(1, 0.9), LootType::HeartBig, 2);
+    std::shared_ptr<Torch> torch_5 = std::make_shared<Torch>(glm::vec2(1965, -227), glm::vec2(1, 0.9), LootType::Dagger, 2);
     m_Torches.push_back(torch_1);
     m_Torches.push_back(torch_2);
     m_Torches.push_back(torch_3);
@@ -44,10 +45,10 @@ void Stage0::Start(App* app){
     m_All.push_back(torch_5);
 
     //block
-    std::shared_ptr<Block> block_1 = std::make_shared<Block>(glm::vec2(0, -322), glm::vec2(100, 0.7));
+    std::shared_ptr<Block> block_1 = std::make_shared<Block>(glm::vec2(0, -307), glm::vec2(100, 0.7));
     std::shared_ptr<Block> block_2 = std::make_shared<Block>(glm::vec2(-545, -50), glm::vec2(0.4, 7));
-    // std::shared_ptr<Block> block_3 = std::make_shared<Block>(glm::vec2(0, -203), glm::vec2(1, 0.7));
-    // std::shared_ptr<Block> block_4 = std::make_shared<Block>(glm::vec2(190, -80), glm::vec2(1, 0.7));
+    // std::shared_ptr<Block> block_3 = std::make_shared<Block>(glm::vec2(0, -188), glm::vec2(1, 0.7));
+    // std::shared_ptr<Block> block_4 = std::make_shared<Block>(glm::vec2(190, -65), glm::vec2(1, 0.7));
     m_Blocks.push_back(block_1);
     m_Blocks.push_back(block_2);
     // m_Blocks.push_back(block_3);

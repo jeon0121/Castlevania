@@ -46,7 +46,7 @@ void Title::Start(App* app){
 
     //character
     CharacterValue charactervalue;
-    charactervalue.position = glm::vec2(480, -280);
+    charactervalue.position = glm::vec2(480, -265);
     charactervalue.beIndex = 0;
     charactervalue.scale = 0.8;
     m_Character = std::make_shared<Character>(charactervalue);
@@ -105,7 +105,7 @@ void Title::End(App* app){
         m_BatScene_2->SetVisible(true);
         m_Background->SetDrawable(std::make_unique<Util::Image>(GA_RESOURCE_DIR"/cutscene/intro/intro.png"));
         m_Background->m_Transform.scale = glm::vec2(0.65, 0.55);
-        m_Background->SetPosition({0, -100});
+        m_Background->SetPosition({0, -85});
         app->m_Menu->SetMenuVisibility(true);
     }
 

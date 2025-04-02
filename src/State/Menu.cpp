@@ -6,7 +6,7 @@ Menu::Menu(const MenuValue& values)
 {
     background = std::make_shared<ImageItems>(GA_RESOURCE_DIR "/title/key/title-key-1.png", glm::vec2(1, 1.5));
     background->SetZIndex(30);
-    background->SetPosition({0, 380});
+    background->SetPosition({5, 395});
 
     // score
     addText("score", {-390, 350});
@@ -21,21 +21,21 @@ Menu::Menu(const MenuValue& values)
     addNumber(formatTwoDigits(m_value.currentStage), {450, 350});
 
     // heart and ammo
-    addText("heart-n-life", {215, 302});
-    addNumber(formatTwoDigits(m_value.playerAmmo), {265, 317});
-    addNumber(formatTwoDigits(m_value.playerLife), {265, 285});
+    addText("heart-n-life", {215, 305});
+    addNumber(formatTwoDigits(m_value.playerAmmo), {265, 320});
+    addNumber(formatTwoDigits(m_value.playerLife), {265, 288});
 
     // player health
-    addText("player", {-390, 317});
-    addHealth(m_value.playerHeart, {-260, 314}, "player");
+    addText("player", {-390, 320});
+    addHealth(m_value.playerHeart, {-260, 318}, "player");
 
     // enemy health
-    addText("enemy", {-405, 285});
-    addHealth(m_value.enemyHeart, {-260, 280}, "enemy");
+    addText("enemy", {-405, 290});
+    addHealth(m_value.enemyHeart, {-260, 288}, "enemy");
 
     // weapon
-    addText("weapon-frame", {90, 287});
-    addWeapon(m_value.weapon, {95, 285});
+    addText("weapon-frame", {90, 290});
+    addWeapon(m_value.weapon, {95, 288});
 }
 
 std::string Menu::formatTime(int time) {
@@ -60,6 +60,7 @@ void Menu::addText(std::string text, const glm::vec2& position){
     auto characterImage = std::make_shared<ImageItems>(imagePath);
     characterImage->SetPosition({x, y});
     characterImage->SetZIndex(50);
+    characterImage->m_Transform.scale = {1, 0.88};
     textImage.push_back(characterImage);
 }
 
@@ -71,6 +72,7 @@ void Menu::addNumber(std::string text, const glm::vec2& position){
         auto characterImage = std::make_shared<ImageItems>(imagePath);
         characterImage->SetPosition({x, y});
         characterImage->SetZIndex(50);
+        characterImage->m_Transform.scale = {1, 0.88};
         textRow.push_back(characterImage);
         x += characterImage->GetScaledSize().x + 5;
     }
@@ -92,7 +94,7 @@ void Menu::addHealth(int heart, const glm::vec2& position, std::string type){
         auto characterImage = std::make_shared<ImageItems>(imagePath);
         characterImage->SetPosition({x, y});
         characterImage->SetZIndex(50);
-        characterImage->m_Transform.scale = {0.95, 0.88};
+        characterImage->m_Transform.scale = {0.95, 0.81};
         healthbar.push_back(characterImage);
         x += characterImage->GetScaledSize().x + 5;
     }
