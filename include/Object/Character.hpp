@@ -93,8 +93,8 @@ private:
     float jumph = 0;
     float landh = 0;
     float height = 0;
-    float prevLandPosition = -299.35;
-    float landPosition = -299.35;
+    float prevLandPosition;
+    float landPosition;
 
     int currentBeIndex = 2;
     int currentFrame = -1;

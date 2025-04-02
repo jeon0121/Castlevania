@@ -10,6 +10,7 @@ set(SRC_FILES
     Object/AnimatedItems.cpp
     Object/Block.cpp
     Object/Character.cpp
+    Object/ImageItems.cpp
     Object/Loot.cpp
     Object/Torch.cpp
 
@@ -17,6 +18,7 @@ set(SRC_FILES
     State/Scene.cpp
     State/Title.cpp
     State/Stage0.cpp
+    State/Stage1.cpp
 
     Utility/Time.cpp
     Utility/Position.cpp
@@ -50,6 +52,7 @@ set(INCLUDE_FILES
     State/Scene.hpp
     State/Title.hpp
     State/Stage0.hpp
+    State/Stage1.hpp
 
     Utility/Time.hpp
     Utility/Position.hpp

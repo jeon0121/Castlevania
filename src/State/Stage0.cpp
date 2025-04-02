@@ -14,7 +14,7 @@ void Stage0::Start(App* app){
 
     m_End = std::make_shared<ImageItems>(GA_RESOURCE_DIR"/background/stage-0/end.png");
     m_End->m_Transform.scale = glm::vec2(1.025, 0.92);
-    m_End->SetPosition({434.6, -45});
+    m_End->SetPosition({441.5, -44.5});
     m_End->SetZIndex(8);
     m_End->SetVisible(false);
     m_All.push_back(m_End);

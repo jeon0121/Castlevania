@@ -46,6 +46,7 @@ Character::Character(const CharacterValue& value) :
     m_Behavior->SetZIndex(7);
     m_size = glm::abs(m_Behavior->GetScaledSize());
     jumph = landh = value.position.y;
+    landPosition = prevLandPosition = value.position.y - m_size.y * 0.5;
     if (value.direction == "right")
         Flip();
 }
@@ -406,7 +407,7 @@ void Character::Flip() {
 }
 
 void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blocks) {
-    float testLanding = -300.0f;
+    float testLanding = -330.0f;
     float charTop = m_pos.y + m_size.y * 0.5f;
     float charBottom = m_pos.y - m_size.y * 0.5f;
     if (currentBeIndex == 3 && is_jump && !is_whip && (jumph - landPosition)>=25.0f)
