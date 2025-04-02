@@ -22,6 +22,13 @@ void Stage0::Start(App* app){
     m_Background->SetPosition({1050, -60});
     m_All.push_back(m_Background);
 
+    m_End = std::make_shared<ImageItems>(GA_RESOURCE_DIR"/background/stage-0/end.png");
+    m_End->m_Transform.scale = glm::vec2(1.025, 0.92);
+    m_End->SetPosition({440, -60});
+    m_End->SetZIndex(8);
+    m_End->SetVisible(false);
+    m_All.push_back(m_End);
+
     //character
     CharacterValue charactervalue;
     charactervalue.position = glm::vec2(-315, -235.35);
@@ -72,10 +79,24 @@ void Stage0::Update(App* app){
     UpdateTorch(app);
     UpdateSubWeapon(app);
     UpdateScroll(mapWidth);
+
+    if (m_Character->GetPosition().x >= 200) {
+        m_Character->m_Behavior->SetPaused();
+        m_Character->ChangeBehavior(0);
+        m_End->SetVisible(true);
+        m_stateState = StateState::END;
+    }
 }
 
 void Stage0::End(App* app){
-    (void) app;
+    m_Character->m_Behavior->Move(m_Character->m_Behavior, 1, 0, 2.08, 3);
+    m_Character-> SetPosition(m_Character->m_Behavior->GetPosition());
+
+    if (m_Character->GetPosition().x >= 500) {
+        app->RemoveAllChildren(m_All);
+        app->m_AppState = App::AppState::START;
+        app->m_GameState = App::GameState::STAGE1;
+    }
 
     // //End Stage0
     // if (m_Character->m_Behavior->IfPlayingTime(8)) {

@@ -13,6 +13,7 @@ public:
 
 private:
     int mapWidth = 3072;
+    std::shared_ptr<ImageItems> m_End;
 };
 #endif
 
