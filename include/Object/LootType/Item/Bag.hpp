@@ -15,7 +15,6 @@ namespace LootItem {
 
    private:
       int addScore;
-      std::shared_ptr<AnimatedItems> score = nullptr;
    };
 };
 #endif

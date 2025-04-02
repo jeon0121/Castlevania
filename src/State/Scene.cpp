@@ -20,8 +20,11 @@ void Scene::UpdateScroll(int mapWidth) {
         }
         for (auto& torch : m_Torches) {
             torch->SetPosition(torch->GetPosition() - glm::vec2(dx, 0.0f));
-            if (torch->loot)
+            if (torch->loot) {
                 torch->loot->SetPosition(torch->loot->GetPosition() - glm::vec2(dx, 0.0f));
+                if (torch->loot->score)
+                    torch->loot->score->SetPosition(torch->loot->score->GetPosition() - glm::vec2(dx, 0.0f));
+            }
         }
         if (asLoot)
             asLoot->SetPosition(asLoot->GetPosition() - glm::vec2(dx, 0.0f));

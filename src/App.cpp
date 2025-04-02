@@ -8,6 +8,22 @@
 
 void App::Start() {
     LOG_TRACE("Start");
+    if (!m_Menu) {
+        MenuValue menuvalue;
+        m_Menu = std::make_shared<Menu>(menuvalue);
+        m_Menu->SetMenuVisibility(false);
+        m_Root.AddChild(m_Menu);
+        m_Root.AddChild(m_Menu->background);
+        for (auto &&num : m_Menu->numberImage){
+            for (auto &&letter : num) m_Root.AddChild(letter);
+        }
+        for (auto &&txt : m_Menu->textImage){
+            m_Root.AddChild(txt);
+        }
+        for (auto &&healthbar : m_Menu->health){
+            for (auto &&h : healthbar) m_Root.AddChild(h);
+        }
+    }
     switch(m_GameState){
         case GameState::TITLE:
             m_Scene = std::make_unique<Title>();

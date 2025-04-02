@@ -3,20 +3,7 @@
 
 void Title::Start(App* app){
     // menu
-    MenuValue menuvalue;
-    app->m_Menu = std::make_shared<Menu>(menuvalue);
     app->m_Menu->SetMenuVisibility(false);
-    app->m_Root.AddChild(app->m_Menu);
-    app->m_Root.AddChild(app->m_Menu->background);
-    for (auto &&num : app->m_Menu->numberImage){
-        for (auto &&letter : num) app->m_Root.AddChild(letter);
-    }
-    for (auto &&txt : app->m_Menu->textImage){
-        app->m_Root.AddChild(txt);
-    }
-    for (auto &&healthbar : app->m_Menu->health){
-        for (auto &&h : healthbar) app->m_Root.AddChild(h);
-    }
     // background
     m_Background = std::make_shared<ImageItems>(GA_RESOURCE_DIR"/title/title-screen/title-screen.png", glm::vec2(1, 0.9));
     m_Background->SetZIndex(0);

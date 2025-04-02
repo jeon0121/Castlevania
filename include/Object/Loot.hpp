@@ -55,6 +55,7 @@ public:
 
    bool IfEnded() const;
 
+   std::shared_ptr<AnimatedItems> score = nullptr;
 protected:
    LootType type;
    float x_vel = 0;
