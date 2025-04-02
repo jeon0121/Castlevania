@@ -4,16 +4,17 @@
 void Title::Start(App* app){
     // menu
     MenuValue menuvalue;
-    m_Menu = std::make_shared<Menu>(menuvalue);
-    m_Menu->SetMenuVisibility(false);
-    m_All.push_back(m_Menu);
-    for (auto &&num : m_Menu->numberImage){
+    app->m_Menu = std::make_shared<Menu>(menuvalue);
+    app->m_Menu->SetMenuVisibility(false);
+    app->m_Root.AddChild(app->m_Menu);
+    app->m_Root.AddChild(app->m_Menu->background);
+    for (auto &&num : app->m_Menu->numberImage){
         for (auto &&letter : num) app->m_Root.AddChild(letter);
     }
-    for (auto &&txt : m_Menu->textImage){
+    for (auto &&txt : app->m_Menu->textImage){
         app->m_Root.AddChild(txt);
     }
-    for (auto &&healthbar : m_Menu->health){
+    for (auto &&healthbar : app->m_Menu->health){
         for (auto &&h : healthbar) app->m_Root.AddChild(h);
     }
     // background
@@ -90,22 +91,23 @@ void Title::Update(App* app){
         m_Key->SetLooping(true);
         m_Bat->SetPaused();
     }
-    if (m_Key->IsPlaying() && m_Key->IfPlayingTime(1.5)) {
+    if (m_Key->IsPlaying() && m_Key->IfPlayingTime(1.5))
+        m_stateState = StateState::END;
+}
+
+void Title::End(App* app){
+    if (m_Background->m_Transform.scale.x == 1) {
         m_Key->SetVisible(false);
         m_Bat->SetVisible(false);
         m_Character->m_Behavior->SetVisible(true);
         m_Boat->SetVisible(true);
         m_BatScene_1->SetVisible(true);
         m_BatScene_2->SetVisible(true);
-        m_stateState = StateState::END;
+        m_Background->SetDrawable(std::make_unique<Util::Image>(GA_RESOURCE_DIR"/cutscene/intro/intro.png"));
+        m_Background->m_Transform.scale = glm::vec2(0.65, 0.55);
+        m_Background->SetPosition({0, -100});
+        app->m_Menu->SetMenuVisibility(true);
     }
-}
-
-void Title::End(App* app){
-    m_Background->SetDrawable(std::make_unique<Util::Image>(GA_RESOURCE_DIR"/cutscene/intro/intro.png"));
-    m_Background->m_Transform.scale = glm::vec2(0.65, 0.55);
-    m_Background->SetPosition({0, -100});
-    m_Menu->SetMenuVisibility(true);
 
     //Cutscene animation
     m_Character->m_Behavior->Move(m_Character->m_Behavior, -1, 0, 2.08, 3.8);
@@ -122,6 +124,7 @@ void Title::End(App* app){
 
     // //End Title
     if (m_BatScene_1->IfPlayingTime(8)) {
+        app->m_Menu->SetMenuVisibility(false);
         app->RemoveAllChildren(m_All);
         app->m_AppState = App::AppState::START;
         app->m_GameState = App::GameState::STAGE0;

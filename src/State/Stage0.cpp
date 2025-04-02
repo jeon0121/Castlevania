@@ -3,19 +3,8 @@
 
 void Stage0::Start(App* app){
     // menu
-    MenuValue menuvalue;
-    m_Menu = std::make_shared<Menu>(menuvalue);
-    m_All.push_back(m_Menu);
-    m_All.push_back(m_Menu->background);
-    for (auto &&num : m_Menu->numberImage){
-        for (auto &&letter : num) app->m_Root.AddChild(letter);
-    }
-    for (auto &&txt : m_Menu->textImage){
-        app->m_Root.AddChild(txt);
-    }
-    for (auto &&healthbar : m_Menu->health){
-        for (auto &&h : healthbar) app->m_Root.AddChild(h);
-    }
+    app->m_Menu->SetMenuVisibility(true);
+
     // background
     m_Background = std::make_shared<ImageItems>(GA_RESOURCE_DIR"/background/stage-0/castle-entrance.png");
     m_Background->m_Transform.scale = glm::vec2(1.025, 0.92);
@@ -93,15 +82,9 @@ void Stage0::End(App* app){
     m_Character-> SetPosition(m_Character->m_Behavior->GetPosition());
 
     if (m_Character->GetPosition().x >= 500) {
+        app->m_Menu->SetMenuVisibility(false);
         app->RemoveAllChildren(m_All);
         app->m_AppState = App::AppState::START;
         app->m_GameState = App::GameState::STAGE1;
     }
-
-    // //End Stage0
-    // if (m_Character->m_Behavior->IfPlayingTime(8)) {
-    //     app->m_Root.RemoveAllChildren();
-    //     app->m_AppState = App::AppState::START;
-    //     app->m_GameState = App::GameState::STAGE1;
-    // }
 }

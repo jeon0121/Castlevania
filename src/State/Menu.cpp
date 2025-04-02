@@ -158,4 +158,5 @@ void Menu::SetMenuVisibility(const bool visible) {
         for (auto &&h : healthbar)
             h->SetVisible(visible);
     }
+    background->SetVisible(visible);
 }

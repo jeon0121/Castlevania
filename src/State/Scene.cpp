@@ -3,7 +3,7 @@
 
 void Scene::UpdateTorch(App* app) {
     for (auto torch : m_Torches) 
-        torch->Update(app, m_Character, m_Menu, m_Blocks, torch);
+        torch->Update(app, m_Character, app->m_Menu, m_Blocks, torch);
 }
 
 void Scene::UpdateScroll(int mapWidth) {

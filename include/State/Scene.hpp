@@ -11,7 +11,6 @@
 #include "Object/Torch.hpp"
 #include "Object/Loot.hpp"
 #include "Object/LootType/Loot.hpp"
-#include "State/Menu.hpp"
 #include "App.hpp"
 
 class Scene {
@@ -38,7 +37,6 @@ public:
 protected:
     std::shared_ptr<ImageItems> m_Background;
     std::shared_ptr<Character> m_Character;
-    std::shared_ptr<Menu> m_Menu;
     std::vector<std::shared_ptr<Util::GameObject>> m_All;
     std::vector<std::shared_ptr<Block>> m_Blocks;
     std::vector<std::shared_ptr<Torch>> m_Torches;

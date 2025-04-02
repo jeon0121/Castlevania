@@ -2,6 +2,7 @@
 #define APP_HPP
 #include "Util/Renderer.hpp"
 #include "pch.hpp" // IWYU pragma: export
+#include "State/Menu.hpp"
 
 class Scene;
 
@@ -37,8 +38,9 @@ public:
 
     Util::Renderer m_Root;
     AppState m_AppState = AppState::START;
-    GameState m_GameState = GameState::STAGE0; // start with stage0, so no need to wait title animation
+    GameState m_GameState = GameState::TITLE; // start with stage0, so no need to wait title animation
     std::shared_ptr<Scene> m_Scene;
+    std::shared_ptr<Menu> m_Menu;
 };
 
 #endif
