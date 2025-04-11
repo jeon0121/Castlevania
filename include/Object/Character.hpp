@@ -12,6 +12,7 @@
 #include "Object/Subweapon/IUseSubweapon.hpp"
 #include "Object/ImageItems.hpp"
 #include "Object/Block.hpp"
+#include "Object/Stair.hpp"
 
 struct CharacterValue {
     glm::vec2 position;
@@ -55,7 +56,7 @@ public:
     void ChangeBehavior(int BehaviorIndex, bool if_whip = false);
 
     void UpdatePosition();
-    void Keys();
+    void Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks);
 
     void HandleFallDuck(const std::string& direction);
     void SubWeapon();
@@ -68,6 +69,7 @@ public:
     void Flip();
 
     void CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blocks);
+    bool CollideStair(const std::vector<std::shared_ptr<Stair>>& m_Stairs);
 
     std::shared_ptr<AnimatedItems> m_Behavior;
 

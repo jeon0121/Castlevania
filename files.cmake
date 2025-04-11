@@ -12,6 +12,7 @@ set(SRC_FILES
     Object/Character.cpp
     Object/ImageItems.cpp
     Object/Loot.cpp
+    Object/Stair.cpp
     Object/Torch.cpp
 
     State/Menu.cpp
@@ -46,6 +47,7 @@ set(INCLUDE_FILES
     Object/Character.hpp
     Object/ImageItems.hpp
     Object/Loot.hpp
+    Object/Stair.hpp
     Object/Torch.hpp
 
     State/Menu.hpp

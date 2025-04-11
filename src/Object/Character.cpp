@@ -212,9 +212,9 @@ void Character::UpdatePosition() {
     SetPosition(m_pos);
 }
 
-void Character::Keys() {
+void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks) {
     if (!is_levelUpWhip) {
-        // Position::PrintCursorCoordinate();
+        Position::PrintCursorCoordinate();
 
         constexpr Util::Keycode A      = Util::Keycode::J;
         constexpr Util::Keycode B      = Util::Keycode::K;
@@ -297,6 +297,7 @@ void Character::Keys() {
 
         UpdatePosition();
     }
+    CollideBoundary(m_Blocks);
 }
 
 void Character::HandleFallDuck(const std::string& direction) {
@@ -416,7 +417,7 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
     float testLanding = -330.0f;
     float charTop = m_pos.y + m_size.y * 0.5f;
     float charBottom = m_pos.y - m_size.y * 0.5f;
-    if (currentBeIndex == 3 && is_jump && !is_whip && (jumph - landPosition)>=25.0f)
+    if (currentBeIndex == 3 && is_jump && !is_whip && (jumph - landPosition) >= 25.0f)
         charBottom += 30.0f;
     float charLeft = m_pos.x - m_size.x * 0.5f;
     float charRight = m_pos.x + m_size.x * 0.5f;
@@ -432,13 +433,10 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
         float overlapBottom = blockTop - charBottom;
         float overlapLeft = charRight - blockLeft;
         float overlapRight = blockRight - charLeft;
-        // std::cout << charRight << ", " << blockLeft<< std::endl;
         if ((charRight > blockLeft && charLeft < blockRight) &&  //overlap x
             (charTop > blockBottom && charBottom < blockTop)) {  //overlap y
-
             //determine collision base on the smallest
             float minOverlap = std::min({abs(overlapTop), abs(overlapBottom), abs(overlapLeft), abs(overlapRight)});
-
             //below (char hit head)
             if (minOverlap == overlapTop && !is_jump) {
                 SetPosition({m_pos.x, blockBottom - m_size.y * 0.5f});
@@ -464,10 +462,25 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
     }
     if (testLanding != landPosition) {
         prevLandPosition = landPosition;
-        if (testLanding < landPosition && ((landPosition - testLanding) > 120.0f || is_jump)) {
+        if (testLanding < landPosition && ((landPosition - testLanding) > 120.0f || is_jump)) 
             change_land = true;
-        }
         landPosition = testLanding;
     }
-    // std::cout << prevLandPosition << ',' << landPosition << std::endl;
+}
+
+bool Character::CollideStair(const std::vector<std::shared_ptr<Stair>>& m_Stairs) {
+    float charTop = m_pos.y + m_size.y * 0.5f;
+    float charBottom = m_pos.y - m_size.y * 0.5f;
+    float charLeft = m_pos.x - m_size.x * 0.5f;
+    float charRight = m_pos.x + m_size.x * 0.5f;
+    for (auto &stair : m_Stairs) {
+        glm::vec2 stairPos = stair->GetPosition();
+        glm::vec2 stairSize = glm::abs(stair->GetScaledSize());
+        bool overlapX = charRight > stairPos.x - stairSize.x * 0.5f &&
+                        charLeft < stairPos.x + stairSize.x * 0.5f;
+        bool overlapY = charBottom < stairPos.y + stairSize.y * 0.5f &&
+                        charTop > stairPos.y - stairSize.y * 0.5f;
+
+        return overlapX && overlapY;
+    }
 }

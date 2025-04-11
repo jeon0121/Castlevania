@@ -38,34 +38,21 @@ void Stage0::Start(App* app){
     m_Torches.push_back(torch_3);
     m_Torches.push_back(torch_4);
     m_Torches.push_back(torch_5);
-    m_All.push_back(torch_1);
-    m_All.push_back(torch_2);
-    m_All.push_back(torch_3);
-    m_All.push_back(torch_4);
-    m_All.push_back(torch_5);
+    for (auto& torch : m_Torches)
+        m_All.push_back(torch);
 
     //block
     std::shared_ptr<Block> block_1 = std::make_shared<Block>(glm::vec2(0, -307), glm::vec2(100, 0.7));
     std::shared_ptr<Block> block_2 = std::make_shared<Block>(glm::vec2(-545, -50), glm::vec2(0.4, 7));
-    // std::shared_ptr<Block> block_3 = std::make_shared<Block>(glm::vec2(0, -188), glm::vec2(1, 0.7));
-    // std::shared_ptr<Block> block_4 = std::make_shared<Block>(glm::vec2(190, -65), glm::vec2(1, 0.7));
     m_Blocks.push_back(block_1);
     m_Blocks.push_back(block_2);
-    // m_Blocks.push_back(block_3);
-    // m_Blocks.push_back(block_4);
-    // m_All.push_back(block_1);
-    // m_All.push_back(block_2);
-    // m_All.push_back(block_3);
-    // m_All.push_back(block_4);
-
 
     app->AddAllChildren(m_All);
     m_stateState = StateState::UPDATE;
 }
 
 void Stage0::Update(App* app){
-    m_Character->Keys();
-    m_Character->CollideBoundary(m_Blocks);
+    m_Character->Keys(m_Blocks);
     UpdateTorch(app);
     UpdateSubWeapon(app);
     UpdateScroll(mapWidth);

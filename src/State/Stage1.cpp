@@ -49,33 +49,29 @@ void Stage1::Start(App* app){
     std::shared_ptr<Block> block_4 = std::make_shared<Block>(glm::vec2(2888, -5), glm::vec2(5.32, 0.68));
     std::shared_ptr<Block> block_5 = std::make_shared<Block>(glm::vec2(3478, -122), glm::vec2(3.22, 0.68));
     std::shared_ptr<Block> block_6 = std::make_shared<Block>(glm::vec2(5670, -50), glm::vec2(0.4, 7));
-    std::shared_ptr<Block> block_7 = std::make_shared<Block>(glm::vec2(50, -228), glm::vec2(1, 0.7));
-    std::shared_ptr<Block> block_8 = std::make_shared<Block>(glm::vec2(200, -105), glm::vec2(1, 0.7));
     m_Blocks.push_back(block_1);
     m_Blocks.push_back(block_2);
     m_Blocks.push_back(block_3);
     m_Blocks.push_back(block_4);
     m_Blocks.push_back(block_5);
     m_Blocks.push_back(block_6);
-    m_Blocks.push_back(block_7);
-    m_Blocks.push_back(block_8);
-    m_All.push_back(block_1);
-    m_All.push_back(block_2);
-    m_All.push_back(block_3);
-    m_All.push_back(block_4);
-    m_All.push_back(block_5);
-    m_All.push_back(block_6);
-    m_All.push_back(block_7);
-    m_All.push_back(block_8);
+    for (auto& block : m_Blocks)
+        m_All.push_back(block);
 
-
+    // stair
+    std::shared_ptr<Stair> stair_1 = std::make_shared<Stair>(glm::vec2(2035, -297), glm::vec2(1.08, 0.72), "up");
+    std::shared_ptr<Stair> stair_2 = std::make_shared<Stair>(glm::vec2(2296, -69), glm::vec2(1.08, 0.72), "down");
+    m_Stairs.push_back(stair_1);
+    m_Stairs.push_back(stair_2);
+    m_All.push_back(stair_1);
+    m_All.push_back(stair_2);
+    
     app->AddAllChildren(m_All);
     m_stateState = StateState::UPDATE;
 }
 
 void Stage1::Update(App* app){
-    m_Character->Keys();
-    m_Character->CollideBoundary(m_Blocks);
+    m_Character->Keys(m_Blocks);
     UpdateTorch(app);
     UpdateSubWeapon(app);
     UpdateScroll(mapWidth);

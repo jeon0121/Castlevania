@@ -39,6 +39,7 @@ protected:
     std::shared_ptr<Character> m_Character;
     std::vector<std::shared_ptr<Util::GameObject>> m_All;
     std::vector<std::shared_ptr<Block>> m_Blocks;
+    std::vector<std::shared_ptr<Stair>> m_Stairs;
     std::vector<std::shared_ptr<Torch>> m_Torches;
     std::shared_ptr<Loot> asLoot;
     float offsetX = 0.0f;

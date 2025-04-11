@@ -18,6 +18,9 @@ void Scene::UpdateScroll(int mapWidth) {
         for (auto& block : m_Blocks) {
             block->SetPosition(block->GetPosition() - glm::vec2(dx, 0.0f));
         }
+        for (auto& stair : m_Stairs) {
+            stair->SetPosition(stair->GetPosition() - glm::vec2(dx, 0.0f));
+        }
         for (auto& torch : m_Torches) {
             torch->SetPosition(torch->GetPosition() - glm::vec2(dx, 0.0f));
             if (torch->loot) {
