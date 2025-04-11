@@ -104,13 +104,13 @@ private:
     float height = 0;
     float prevLandPosition;
     float landPosition;
+    Uint64 startHurtTime = 0;
+    Uint64 startDuckTime = 0;
 
     int currentBeIndex = 2;
     int currentFrame = -1;
     int jumptype = 0;
     int prevStairState = -1; // 0: ascending, 1: descending, 2: none
-    int countTime = 0;
-    int countHurt = 0;
     
     // some flag
     bool is_whip = false;

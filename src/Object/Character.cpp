@@ -79,7 +79,7 @@ const bool& Character::GetUseWeaponFlag() const {
 }
 
 bool Character::GetHurtFlag() {
-    return (countHurt > 0);
+    return (startHurtTime > 0);
 }
 
 const glm::vec2& Character::GetPosition() const {
@@ -104,18 +104,19 @@ void Character::Hurt() {
         Fall();
         SetPosition({ pos.x + (m_direction == "right" ? -8 : 8), pos.y });
     }
-    if (countHurt == 0) {
+    if (startHurtTime == 0) {
         Jump();
-        countHurt = 1;
+        startHurtTime = SDL_GetPerformanceCounter();
     } else {
-        ++countHurt;
-        if (countHurt > 170)
-            countHurt = 0;
-        else
-            m_Behavior->SetVisible(countHurt % 6 != 0);
+        if (Time::GetRunTimeMs(startHurtTime) > 2000.0f)
+            startHurtTime = 0;
+        else {
+            int timeCount = static_cast<int>(Time::GetRunTimeMs(startHurtTime)) / 10;
+            m_Behavior->SetVisible(timeCount % 4 != 0);
+        }
     }
     if (is_collide.y)
-        countTime = 1;
+        startDuckTime = SDL_GetPerformanceCounter();
     if (is_hurt)
         HandleFallDuck(m_direction);
 }
@@ -246,7 +247,7 @@ void Character::UpdatePosition() {
 }
 
 void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const std::vector<std::shared_ptr<Stair>>& m_Stairs) {
-    if (is_hurt || countHurt != 0) {
+    if (is_hurt || startHurtTime != 0) {
         Hurt();
     }
     if (!is_levelUpWhip && !is_hurt) {
@@ -355,24 +356,26 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const 
 }
 
 void Character::HandleFallDuck(const std::string& direction) {
-    if (!countTime && !(change_land && prevLandPosition > landPosition)) {
+    if (!startDuckTime && !(change_land && prevLandPosition > landPosition)) {
         Move(direction);
         return;
     }
     m_pos.y -= OffsetValues("duck") * 0.5;
-    if (is_hurt && countTime) {
+    if (is_hurt && startDuckTime) {
         Duck(m_direction);
-        if (++countTime >= 15) {
+        if (Time::GetRunTimeMs(startDuckTime) > 150.0f) {
             is_hurt = false;
-            countTime = 0;
+            startDuckTime = 0;
         }
     }else {
+        if (!startDuckTime)
+            startDuckTime = SDL_GetPerformanceCounter();
         if (prevLandPosition - landPosition > 150.0f)
             Duck(m_direction);
-        int limit = (prevLandPosition - landPosition > 150.0f) ? 20 : 4;
-        if (++countTime >= limit) {
+        const float limit = (prevLandPosition - landPosition > 150.0f) ? 450.0f : 150.0f;
+        if (Time::GetRunTimeMs(startDuckTime) > limit) {
             change_land = false;
-            countTime = 0;
+            startDuckTime = 0;
         }
     }
 }
@@ -568,21 +571,21 @@ void Character::Move(std::string direction){
 }
 
 void Character::Idle() {
-    if ((change_land && prevLandPosition > landPosition) || countTime) {
+    if ((change_land && prevLandPosition > landPosition) || startDuckTime) {
         m_pos.y -= OffsetValues("duck") * 0.5;
         if (prevLandPosition - landPosition > 150.0f)
             Duck(m_direction);
-        int limit = (prevLandPosition - landPosition > 150.0f) ? 20 : 4;
-        //limit = 4 prevent char from being able to jump while still in air; limit = 20 means fall duck
-        if (countTime < limit)
-            countTime++;
-        else {
-            change_land = false;
-            countTime = 0;
+        if (!startDuckTime)
+            startDuckTime = SDL_GetPerformanceCounter();
+        const float limit = (prevLandPosition - landPosition > 150.0f) ? 450.0f : 150.0f;
+        //limit = 150 prevent char from being able to jump while still in air; limit = 450 means fall duck
+        if (Time::GetRunTimeMs(startDuckTime) > limit) {
+                change_land = false;
+                startDuckTime = 0;
         }
     }
     else {
-        countTime = 0;
+        startDuckTime = 0;
         change_land = is_whip = is_subweapon = is_duck = is_jump = false;
         m_size = glm::abs(m_Behavior->GetScaledSize());
         jumph = landh = m_Behavior->GetPosition().y;
