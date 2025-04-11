@@ -350,9 +350,9 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const 
         //           << m_size.y << ", "
         //           << std::endl;
     }
-    if (!is_onStair) 
-        CollideBoundary(m_Blocks);
     UpdatePosition();
+    if (!is_onStair)
+        CollideBoundary(m_Blocks);
 }
 
 void Character::HandleFallDuck(const std::string& direction) {
