@@ -301,8 +301,11 @@ void Character::Keys() {
 
 void Character::HandleFallDuck(const std::string& direction) {
     if ((change_land && prevLandPosition > landPosition) || countTime) {
-        Duck(direction);
-        if (countTime < 10)
+        m_pos.y -= OffsetValues("duck") * 0.5;
+        if (prevLandPosition - landPosition > 150.0f)
+            Duck(m_direction);
+        int limit = (prevLandPosition - landPosition > 150.0f) ? 20 : 4;
+        if (countTime < limit)
             countTime++;
         else {
             change_land = false;
@@ -385,8 +388,11 @@ void Character::Move(std::string direction){
 void Character::Idle() {
     if ((change_land && prevLandPosition > landPosition) || countTime) {
         m_pos.y -= OffsetValues("duck") * 0.5;
-        Duck(m_direction);
-        if (countTime < 20)
+        if (prevLandPosition - landPosition > 150.0f)
+            Duck(m_direction);
+        int limit = (prevLandPosition - landPosition > 150.0f) ? 20 : 4;
+        //limit = 4 prevent char from being able to jump while still in air; limit = 20 means fall duck
+        if (countTime < limit)
             countTime++;
         else {
             change_land = false;
@@ -452,7 +458,7 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
             }
         }
         if ((charRight > blockLeft + 5.0f && charLeft < blockRight - 5.0f) && // Overlap X
-            (charTop > blockTop && blockTop > testLanding)) { // character above block & highest block detected
+            (charTop - 20.0f > blockTop && blockTop > testLanding)) { // character above block & highest block detected
             testLanding = blockTop;
         }
     }

@@ -45,22 +45,28 @@ void Stage1::Start(App* app){
     //block
     std::shared_ptr<Block> block_1 = std::make_shared<Block>(glm::vec2(0, -352), glm::vec2(100, 0.7));
     std::shared_ptr<Block> block_2 = std::make_shared<Block>(glm::vec2(-545, -50), glm::vec2(0.4, 7));
-    std::shared_ptr<Block> block_3 = std::make_shared<Block>(glm::vec2(2395, -122), glm::vec2(1.61, 0.66));
-    std::shared_ptr<Block> block_4 = std::make_shared<Block>(glm::vec2(2888, -5), glm::vec2(5.32, 0.66));
-    std::shared_ptr<Block> block_5 = std::make_shared<Block>(glm::vec2(3478, -122), glm::vec2(3.22, 0.66));
+    std::shared_ptr<Block> block_3 = std::make_shared<Block>(glm::vec2(2395, -122), glm::vec2(1.61, 0.68));
+    std::shared_ptr<Block> block_4 = std::make_shared<Block>(glm::vec2(2888, -5), glm::vec2(5.32, 0.68));
+    std::shared_ptr<Block> block_5 = std::make_shared<Block>(glm::vec2(3478, -122), glm::vec2(3.22, 0.68));
     std::shared_ptr<Block> block_6 = std::make_shared<Block>(glm::vec2(5670, -50), glm::vec2(0.4, 7));
+    std::shared_ptr<Block> block_7 = std::make_shared<Block>(glm::vec2(50, -228), glm::vec2(1, 0.7));
+    std::shared_ptr<Block> block_8 = std::make_shared<Block>(glm::vec2(200, -105), glm::vec2(1, 0.7));
     m_Blocks.push_back(block_1);
     m_Blocks.push_back(block_2);
     m_Blocks.push_back(block_3);
     m_Blocks.push_back(block_4);
     m_Blocks.push_back(block_5);
     m_Blocks.push_back(block_6);
+    m_Blocks.push_back(block_7);
+    m_Blocks.push_back(block_8);
     m_All.push_back(block_1);
     m_All.push_back(block_2);
     m_All.push_back(block_3);
     m_All.push_back(block_4);
     m_All.push_back(block_5);
     m_All.push_back(block_6);
+    m_All.push_back(block_7);
+    m_All.push_back(block_8);
 
 
     app->AddAllChildren(m_All);
