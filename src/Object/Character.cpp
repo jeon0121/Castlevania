@@ -4,7 +4,7 @@
 Character::Character(const CharacterValue& value) :
     m_direction(value.direction), currentBeIndex(value.beIndex) {
     //Image string
-    std::vector<std::string> walk, death, duck, hurt, jump, idle, intro, sub_as, sub_de, sub_du, sub_st;
+    std::vector<std::string> walk, death, duck, hurt, jump, idle, intro, sub_as, sub_de, sub_du, sub_st, ascending, descending, asc_idle, desc_idle;
 
     //ImageBehavior
     idle.emplace_back(GA_RESOURCE_DIR"/main character/idle/idle.png");
@@ -12,21 +12,23 @@ Character::Character(const CharacterValue& value) :
     hurt.emplace_back(GA_RESOURCE_DIR"/main character/hurt/hurt.png");
     jump.emplace_back(GA_RESOURCE_DIR"/main character/jump/jump.png");
     intro.emplace_back(GA_RESOURCE_DIR"/main character/intro/intro.png");
+    asc_idle.emplace_back(GA_RESOURCE_DIR"/main character/stair/ascend/ascend-1.png");
+    desc_idle.emplace_back(GA_RESOURCE_DIR"/main character/stair/descend/descend-1.png");
 
     //AnimatedBehavior
-    for (int i = 0; i < 4; ++i)
-        walk.emplace_back(GA_RESOURCE_DIR"/main character/walk/walk-" + std::to_string(i + 1) + ".png");
-
-    for (int i = 0; i < 2; ++i)
+    for (int i = 0; i < 2; ++i){
+        ascending.emplace_back(GA_RESOURCE_DIR"/main character/stair/ascend/ascend-" + std::to_string(i + 1) + ".png");
+        descending.emplace_back(GA_RESOURCE_DIR"/main character/stair/descend/descend-" + std::to_string(i + 1) + ".png");
         death.emplace_back(GA_RESOURCE_DIR"/main character/death/death-" + std::to_string(i + 1) + ".png");
-
+    }
     for (int i = 0; i < 4; ++i) {
+        walk.emplace_back(GA_RESOURCE_DIR"/main character/walk/walk-" + std::to_string(i + 1) + ".png");
         // sub_as.emplace_back(GA_RESOURCE_DIR"/main character/use_subweapon/ascending/ascending-" + std::to_string(i + 1) + ".png");
         // sub_de.emplace_back(GA_RESOURCE_DIR"/main character/use_subweapon/descending/descending-" + std::to_string(i + 1) + ".png");
         sub_du.emplace_back(GA_RESOURCE_DIR"/main character/use_subweapon/ducking/ducking-" + std::to_string(i + 1) + ".png");
         sub_st.emplace_back(GA_RESOURCE_DIR"/main character/use_subweapon/standing/standing-" + std::to_string(i + 1) + ".png");
     }
-    behaviorVector = {walk, death, idle, duck, hurt, jump, intro, sub_as, sub_de, sub_du, sub_st};
+    behaviorVector = {walk, death, idle, duck, hurt, jump, intro, sub_as, sub_de, sub_du, sub_st, ascending, descending, asc_idle, desc_idle};
 
     for (int i = 0; i < 3; i++) {
         std::vector<std::string> ascending, descending, ducking, standing;
@@ -204,17 +206,19 @@ void Character::UpdatePosition() {
         }
     }
     m_pos += glm::vec2(x_vel, y_vel);
-    x_vel = 0;
-    y_vel = std::max(y_vel - ((-2.0f <= y_vel && y_vel <= 2.0f) ? 0.3f : 1.0f), -14.5f);
-    if (m_pos.y - m_size.y * 0.5f < landPosition && !is_jump)
+    if (!is_ascending && !is_descending && !is_onStair) {
+        x_vel = 0;
+        y_vel = std::max(y_vel - ((-2.0f <= y_vel && y_vel <= 2.0f) ? 0.3f : 1.0f), -14.5f);
+    }
+    if (m_pos.y - m_size.y * 0.5f < landPosition && !is_jump && !is_onStair)
         m_pos.y = landPosition + m_size.y * 0.5f;
     is_collide = {false, false};
     SetPosition(m_pos);
 }
 
-void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks) {
+void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const std::vector<std::shared_ptr<Stair>>& m_Stairs) {
     if (!is_levelUpWhip) {
-        Position::PrintCursorCoordinate();
+        // Position::PrintCursorCoordinate();
 
         constexpr Util::Keycode A      = Util::Keycode::J;
         constexpr Util::Keycode B      = Util::Keycode::K;
@@ -228,7 +232,11 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks) {
         m_Behavior->SetPlaying();
         m_Behavior->SetLooping(true);
 
+        std::shared_ptr<Stair> stair = CollideStair(m_Stairs);
+
         /* priority order :
+         * - subweapon
+         * - ascending and descending
          * - whip
          * - duck
          * - jump
@@ -241,7 +249,14 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks) {
             Duck("");
             SubWeapon();
         }
-
+        // ascending
+        else if ((Util::Input::IsKeyPressed(UP) && ((stair != nullptr && stair->GetDirection() == "down") || is_onStair)) || is_ascending) {
+            Ascending(stair);
+        }
+        // descending
+        else if ((Util::Input::IsKeyPressed(DOWN) && ((stair != nullptr && stair->GetDirection() == "up") || is_onStair)) || is_descending) {
+            Descending(stair);
+        }
         // subweapon
         else if ((Util::Input::IsKeyPressed(UP) && Util::Input::IsKeyPressed(A) && !is_jump) || is_subweapon) {
             SubWeapon();
@@ -285,19 +300,26 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks) {
         }
         // idle
         else if (!is_jump) {
-            ChangeBehavior(2);
-            Idle();
+            if (is_onStair) {
+                if (currentStair->GetDirection() == "down") 
+                    ChangeBehavior(13);
+                else if (currentStair->GetDirection() == "up")
+                    ChangeBehavior(14);
+            }
+            else {
+                ChangeBehavior(2);
+                Idle();
+            }
         }
-
         // std::cout << m_pos.x << ", "
         //           << m_pos.y << ", "
         //           << m_size.x << ", "
         //           << m_size.y << ", "
         //           << std::endl;
-
         UpdatePosition();
     }
-    CollideBoundary(m_Blocks);
+    if (!is_onStair) 
+        CollideBoundary(m_Blocks);
 }
 
 void Character::HandleFallDuck(const std::string& direction) {
@@ -312,8 +334,131 @@ void Character::HandleFallDuck(const std::string& direction) {
             change_land = false;
             countTime = 0;
         }
-    }else
+    }
+    else
         Move(direction);
+}
+
+void Character::Ascending(std::shared_ptr<Stair>& stair) {
+    if (!is_onStair && stair && stair->GetDirection() == "down") {
+        if (std::abs(m_pos.x - stair->GetPosition().x) > 2.0f) {
+            if (m_pos.x < stair->GetPosition().x)
+                Move("right");
+            else
+                Move("left");
+            return;
+        }
+        is_onStair = true;
+        currentStair = stair;
+
+        float xOffset = (stair->GetPosition().x < stair->GetConnected()->GetPosition().x) ? 30.0f : -30.0f;
+        nextStairPos = m_pos + glm::vec2(xOffset, 30.0f);
+        std::string desiredDir = (xOffset > 0) ? "right" : "left";
+        if (m_direction != desiredDir) {
+            m_direction = desiredDir;
+            Flip();
+        }
+    }
+    if (is_onStair && !is_ascending) {
+        if (prevStairState == 1) {
+            m_direction = (m_direction == "right") ? "left" : "right";
+            currentStair = currentStair->GetConnected();
+            Flip();
+        }
+        prevStairState = 0;
+        ChangeBehavior(11);
+        is_ascending = true;
+        float xOffset = (currentStair->GetPosition().x < currentStair->GetConnected()->GetPosition().x) ? 30.0f : -30.0f;
+        nextStairPos = m_pos + glm::vec2(xOffset, 30.0f);
+        std::string desiredDir = (xOffset > 0) ? "right" : "left";
+        if (m_direction != desiredDir) {
+            m_direction = desiredDir;
+            Flip();
+        }
+    }
+    if (is_ascending) {
+        if (m_pos.y < nextStairPos.y) {
+            y_vel = 1.0f;
+            x_vel = (nextStairPos.x > m_pos.x) ? 1.1f : -1.1f;
+        }
+        else {
+            m_pos.y = nextStairPos.y;
+            x_vel = y_vel = 0.0f;
+            is_ascending = false;
+        }
+    }
+    if (currentStair == nullptr) return;
+    float targetY = currentStair->GetConnected()->GetPosition().y - currentStair->GetConnected()->GetScaledSize().y * 0.5f;
+    float charBottom = m_pos.y - m_size.y * 0.5f;
+    if (charBottom >= targetY) {
+        is_ascending = false;
+        is_onStair = false;
+        currentStair = nullptr;
+        x_vel = y_vel = 0.0f;
+        prevStairState = -1;
+        landPosition = m_pos.y - m_size.y * 0.5f;
+    }
+}
+
+void Character::Descending(std::shared_ptr<Stair>& stair) {
+    if (!is_onStair && stair && stair->GetDirection() == "up") {
+        if (std::abs(m_pos.x - stair->GetPosition().x) > 2.0f) {
+            if (m_pos.x < stair->GetPosition().x)
+                Move("right");
+            else
+                Move("left");
+            return;
+        }
+        is_onStair = true;
+        currentStair = stair;
+
+        float xOffset = (stair->GetPosition().x < stair->GetConnected()->GetPosition().x) ? 30.0f : -30.0f;
+        nextStairPos = m_pos + glm::vec2(xOffset, -30.0f);
+        std::string desiredDir = (xOffset > 0) ? "right" : "left";
+        if (m_direction != desiredDir) {
+            m_direction = desiredDir;
+            Flip();
+        }
+    }
+    if (is_onStair && !is_descending) {
+        if (prevStairState == 0) {
+            m_direction = (m_direction == "right") ? "left" : "right";
+            currentStair = currentStair->GetConnected();
+            Flip();
+        }
+        prevStairState = 1;
+        ChangeBehavior(12);
+        is_descending = true;
+        float xOffset = (currentStair->GetPosition().x < currentStair->GetConnected()->GetPosition().x) ? 30.0f : -30.0f;
+        nextStairPos = m_pos + glm::vec2(xOffset, -30.0f);
+        std::string desiredDir = (xOffset > 0) ? "right" : "left";
+        if (m_direction != desiredDir) {
+            m_direction = desiredDir;
+            Flip();
+        }
+    }
+    if (is_descending) {
+        if (m_pos.y > nextStairPos.y) {
+            y_vel = -1.0f;
+            x_vel = (nextStairPos.x > m_pos.x) ? 1.1f : -1.1f;
+        }
+        else {
+            m_pos.y = nextStairPos.y;
+            x_vel = y_vel = 0.0f;
+            is_descending = false;
+        }
+    }
+    if (currentStair == nullptr) return;
+    float targetY = currentStair->GetConnected()->GetPosition().y - currentStair->GetConnected()->GetScaledSize().y * 0.5f;
+    float charBottom = m_pos.y - m_size.y * 0.5f;
+    if (charBottom <= targetY) {
+        is_descending = false;
+        is_onStair = false;
+        currentStair = nullptr;
+        x_vel = y_vel = 0.0f;
+        prevStairState = -1;
+        landPosition = m_pos.y - m_size.y * 0.5f;
+    }
 }
 
 void Character::SubWeapon() {
@@ -335,10 +480,6 @@ void Character::Whip(){
         ChangeBehavior(2, true);
     else
         ChangeBehavior(3, true);
-    // m_size = glm::abs(m_Behavior->GetScaledSize());
-    // float whipWidth = OffsetValues("whipWidth");
-    // m_size.x -= whipWidth;
-    // m_pos.x += (m_direction == "right") ? (-1 * whipWidth * 0.5f) : (whipWidth * 0.5f);
 }
 
 void Character::Duck(std::string direction){
@@ -360,18 +501,16 @@ void Character::Jump(){
 }
 
 void Character::Fall(){
-    if (!is_whip){
+    if (!is_whip)
         ChangeBehavior(height > 80.0f ? 3 : 2);
-    }
     is_jump = false;
-    if (is_collide.y){
+    if (is_collide.y)
         y_vel = 0;
-    }else{
-        if (jumptype == 1){
+    else {
+        if (jumptype == 1)
             x_vel = -4.5f;
-        }else if (jumptype == 2){
+        else if (jumptype == 2)
             x_vel = 4.5f;
-        }
         is_jump = true;
     }
 }
@@ -468,7 +607,7 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
     }
 }
 
-bool Character::CollideStair(const std::vector<std::shared_ptr<Stair>>& m_Stairs) {
+std::shared_ptr<Stair> Character::CollideStair(const std::vector<std::shared_ptr<Stair>>& m_Stairs) {
     float charTop = m_pos.y + m_size.y * 0.5f;
     float charBottom = m_pos.y - m_size.y * 0.5f;
     float charLeft = m_pos.x - m_size.x * 0.5f;
@@ -476,11 +615,15 @@ bool Character::CollideStair(const std::vector<std::shared_ptr<Stair>>& m_Stairs
     for (auto &stair : m_Stairs) {
         glm::vec2 stairPos = stair->GetPosition();
         glm::vec2 stairSize = glm::abs(stair->GetScaledSize());
-        bool overlapX = charRight > stairPos.x - stairSize.x * 0.5f &&
-                        charLeft < stairPos.x + stairSize.x * 0.5f;
-        bool overlapY = charBottom < stairPos.y + stairSize.y * 0.5f &&
-                        charTop > stairPos.y - stairSize.y * 0.5f;
+        float stairTop = stairPos.y + stairSize.y * 0.5f;
+        float stairBottom = stairPos.y - stairSize.y * 0.5f;
+        float stairLeft = stairPos.x - stairSize.x * 0.5f;
+        float stairRight = stairPos.x + stairSize.x * 0.5f;
 
-        return overlapX && overlapY;
+        if ((charRight > stairLeft && charLeft < stairRight) &&  //overlap x
+            (charTop > stairBottom && charBottom < stairTop)) {  //overlap y
+            return stair;
+        }
     }
+    return nullptr;
 }

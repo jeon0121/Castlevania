@@ -59,19 +59,16 @@ void Stage1::Start(App* app){
         m_All.push_back(block);
 
     // stair
-    std::shared_ptr<Stair> stair_1 = std::make_shared<Stair>(glm::vec2(2035, -297), glm::vec2(1.08, 0.72), "up");
-    std::shared_ptr<Stair> stair_2 = std::make_shared<Stair>(glm::vec2(2296, -69), glm::vec2(1.08, 0.72), "down");
-    m_Stairs.push_back(stair_1);
-    m_Stairs.push_back(stair_2);
-    m_All.push_back(stair_1);
-    m_All.push_back(stair_2);
+    auto stair1 = Stair::CreateStair(glm::vec2(2035, -297), glm::vec2(2296, -69));
+    m_Stairs.insert(m_Stairs.end(), stair1.begin(), stair1.end());
+    m_All.insert(m_All.end(), stair1.begin(), stair1.end());
     
     app->AddAllChildren(m_All);
     m_stateState = StateState::UPDATE;
 }
 
 void Stage1::Update(App* app){
-    m_Character->Keys(m_Blocks);
+    m_Character->Keys(m_Blocks, m_Stairs);
     UpdateTorch(app);
     UpdateSubWeapon(app);
     UpdateScroll(mapWidth);

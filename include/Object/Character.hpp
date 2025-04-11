@@ -56,9 +56,11 @@ public:
     void ChangeBehavior(int BehaviorIndex, bool if_whip = false);
 
     void UpdatePosition();
-    void Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks);
+    void Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const std::vector<std::shared_ptr<Stair>>& m_Stairs);
 
     void HandleFallDuck(const std::string& direction);
+    void Ascending(std::shared_ptr<Stair>& stair);
+    void Descending(std::shared_ptr<Stair>& stair);
     void SubWeapon();
     void Whip();
     void Duck(std::string direction);
@@ -69,7 +71,7 @@ public:
     void Flip();
 
     void CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blocks);
-    bool CollideStair(const std::vector<std::shared_ptr<Stair>>& m_Stairs);
+    std::shared_ptr<Stair> CollideStair(const std::vector<std::shared_ptr<Stair>>& m_Stairs);
 
     std::shared_ptr<AnimatedItems> m_Behavior;
 
@@ -84,8 +86,10 @@ private:
     glm::vec2 lastPos;
     glm::vec2 m_pos;  // Actual character position (ignores whip size)
     glm::vec2 m_size; // Character size without whip
+    glm::vec2 nextStairPos;
     glm::vec2 is_collide = {0, 0};
 
+    std::shared_ptr<Stair> currentStair;
     WeaponType m_subweapon = WeaponType::None;
     int m_life = 16;
     int m_ammo = 5;
@@ -101,6 +105,7 @@ private:
     int currentBeIndex = 2;
     int currentFrame = -1;
     int jumptype = 0;
+    int prevStairState = -1; // 0: ascending, 1: descending, 2: none
     int countTime = 0;
     
     // some flag
@@ -109,8 +114,11 @@ private:
     bool is_jump = false;
     bool is_subweapon = false; //if character animation finish
     bool is_useweapon = false; //if subweapon finish attack
-    bool change_land = false;
+    bool is_ascending = false;
+    bool is_descending = false;
+    bool is_onStair = false;
     bool is_levelUpWhip = false;
+    bool change_land = false;
 };
 
 #endif

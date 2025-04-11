@@ -52,7 +52,7 @@ void Stage0::Start(App* app){
 }
 
 void Stage0::Update(App* app){
-    m_Character->Keys(m_Blocks);
+    m_Character->Keys(m_Blocks, m_Stairs);
     UpdateTorch(app);
     UpdateSubWeapon(app);
     UpdateScroll(mapWidth);
