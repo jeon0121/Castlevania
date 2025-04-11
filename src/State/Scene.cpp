@@ -29,6 +29,10 @@ void Scene::UpdateScroll(int mapWidth) {
                     torch->loot->score->SetPosition(torch->loot->score->GetPosition() - glm::vec2(dx, 0.0f));
             }
         }
+        for (auto& enemy : m_EnemiesManager->m_Enemies) {
+            if (enemy)
+                enemy->SetPosition(enemy->GetPosition() - glm::vec2(dx, 0.0f));
+        }
         if (asLoot)
             asLoot->SetPosition(asLoot->GetPosition() - glm::vec2(dx, 0.0f));
     }

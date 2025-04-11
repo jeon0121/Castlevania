@@ -36,8 +36,10 @@ public:
     void SetPosition(const glm::vec2& Position);
     void SetSubWeaponType(WeaponType type);
     void SetUseWeaponFlag(bool ifuse);
+    void SetHurtFlag(bool ifhurt);
     const WeaponType& GetSubWeaponType() const;
     const bool& GetUseWeaponFlag() const;
+    bool GetHurtFlag();
     const glm::vec2& GetPosition() const;
     const glm::vec2& GetLastPosition() const;
     const glm::vec2& GetSize() const;
@@ -69,6 +71,7 @@ public:
     void Move(std::string direction);
     void Idle();
     void Flip();
+    void Hurt();
 
     void CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blocks);
     std::shared_ptr<Stair> CollideStair(const std::vector<std::shared_ptr<Stair>>& m_Stairs);
@@ -107,6 +110,7 @@ private:
     int jumptype = 0;
     int prevStairState = -1; // 0: ascending, 1: descending, 2: none
     int countTime = 0;
+    int countHurt = 0;
     
     // some flag
     bool is_whip = false;
@@ -119,6 +123,7 @@ private:
     bool is_onStair = false;
     bool is_levelUpWhip = false;
     bool change_land = false;
+    bool is_hurt = false;
 };
 
 #endif

@@ -1,5 +1,6 @@
 #include "Object/Character.hpp"
 #include "Utility/Position.hpp"
+#include "Utility/Time.hpp"
 
 Character::Character(const CharacterValue& value) :
     m_direction(value.direction), currentBeIndex(value.beIndex) {
@@ -67,12 +68,18 @@ void Character::SetUseWeaponFlag(bool ifuse) {
     is_useweapon = ifuse;
 }
 
+void Character::SetHurtFlag(bool ifhurt) {is_hurt = ifhurt;}
+
 const WeaponType& Character::GetSubWeaponType() const {
     return m_subweapon;
 }
 
 const bool& Character::GetUseWeaponFlag() const {
     return is_useweapon;
+}
+
+bool Character::GetHurtFlag() {
+    return (countHurt > 0);
 }
 
 const glm::vec2& Character::GetPosition() const {
@@ -89,6 +96,28 @@ const glm::vec2& Character::GetSize() const {
 
 std::string Character::GetDirection() const {
     return m_direction;
+}
+
+void Character::Hurt() {
+    auto pos = m_Behavior->GetPosition();
+    if (is_jump && is_hurt) {
+        Fall();
+        SetPosition({ pos.x + (m_direction == "right" ? -8 : 8), pos.y });
+    }
+    if (countHurt == 0) {
+        Jump();
+        countHurt = 1;
+    } else {
+        ++countHurt;
+        if (countHurt > 170)
+            countHurt = 0;
+        else
+            m_Behavior->SetVisible(countHurt % 6 != 0);
+    }
+    if (is_collide.y)
+        countTime = 1;
+    if (is_hurt)
+        HandleFallDuck(m_direction);
 }
 
 bool Character::IfWhip() const {
@@ -217,7 +246,10 @@ void Character::UpdatePosition() {
 }
 
 void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const std::vector<std::shared_ptr<Stair>>& m_Stairs) {
-    if (!is_levelUpWhip) {
+    if (is_hurt || countHurt != 0) {
+        Hurt();
+    }
+    if (!is_levelUpWhip && !is_hurt) {
         // Position::PrintCursorCoordinate();
 
         constexpr Util::Keycode A      = Util::Keycode::J;
@@ -258,7 +290,7 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const 
             Descending(stair);
         }
         // subweapon
-        else if ((Util::Input::IsKeyPressed(UP) && Util::Input::IsKeyPressed(A) && !is_jump) || is_subweapon) {
+        else if (((Util::Input::IsKeyPressed(UP) && Util::Input::IsKeyPressed(A) && !is_jump) || is_subweapon) && m_subweapon != WeaponType::None) {
             SubWeapon();
         }
         // duck whip
@@ -316,27 +348,33 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const 
         //           << m_size.x << ", "
         //           << m_size.y << ", "
         //           << std::endl;
-        UpdatePosition();
     }
     if (!is_onStair) 
         CollideBoundary(m_Blocks);
+    UpdatePosition();
 }
 
 void Character::HandleFallDuck(const std::string& direction) {
-    if ((change_land && prevLandPosition > landPosition) || countTime) {
-        m_pos.y -= OffsetValues("duck") * 0.5;
+    if (!countTime && !(change_land && prevLandPosition > landPosition)) {
+        Move(direction);
+        return;
+    }
+    m_pos.y -= OffsetValues("duck") * 0.5;
+    if (is_hurt && countTime) {
+        Duck(m_direction);
+        if (++countTime >= 15) {
+            is_hurt = false;
+            countTime = 0;
+        }
+    }else {
         if (prevLandPosition - landPosition > 150.0f)
             Duck(m_direction);
         int limit = (prevLandPosition - landPosition > 150.0f) ? 20 : 4;
-        if (countTime < limit)
-            countTime++;
-        else {
+        if (++countTime >= limit) {
             change_land = false;
             countTime = 0;
         }
     }
-    else
-        Move(direction);
 }
 
 void Character::Ascending(std::shared_ptr<Stair>& stair) {
@@ -497,11 +535,15 @@ void Character::Duck(std::string direction){
 void Character::Jump(){
     if (!is_jump)
         y_vel = 14.5f;
+    if (is_hurt && is_jump)
+        y_vel += 14.5f;
     is_jump = true;
 }
 
 void Character::Fall(){
-    if (!is_whip)
+    if(is_hurt)
+        ChangeBehavior(4);
+    else if (!is_whip)
         ChangeBehavior(height > 80.0f ? 3 : 2);
     is_jump = false;
     if (is_collide.y)

@@ -1,0 +1,101 @@
+#include "Object/Enemy.hpp"
+
+Enemy::Enemy(glm::vec2 position, std::string direction, std::vector<std::string> animationPath, int interval) : AnimatedItems(animationPath, interval) {
+    this->direction = direction;
+    SetPosition(position);
+    SetZIndex(7);
+    for (int i = 0; i < 4; ++i) {
+        deathImages.emplace_back(GA_RESOURCE_DIR"/items/fire/torch/torchDeath-" + std::to_string(i + 1) + ".png");
+    }
+}
+
+void Enemy::Death() {
+    if (IfAnimationStart())
+        SetAnimationFrames(deathImages, 120);
+    SetPlaying();
+    if (IfAnimationEnds()) {
+        SetPaused();
+        SetVisible(false);
+    }
+}
+
+void Enemy::Flip() {
+    glm::vec2 scale = m_Transform.scale;
+    m_Transform.scale = glm::vec2(-1 * scale.x, scale.y);
+}
+
+void Enemy::UpdatePosition() {
+    glm::vec2 enemyPos = GetPosition();
+    glm::vec2 enemySize = glm::abs(GetScaledSize());
+    enemyTop = enemyPos.y + enemySize.y * 0.5f;
+    enemyBottom = enemyPos.y - enemySize.y * 0.5f;
+    enemyLeft = enemyPos.x - enemySize.x * 0.5f;
+    enemyRight = enemyPos.x + enemySize.x * 0.5f;
+}
+
+bool Enemy::CollideDetection(std::shared_ptr<Character> &character) {
+    int frameIndex = character->m_Behavior->GetCurrentFrameIndex();
+    int whipLevel = character->GetWhipLevel();
+    UpdatePosition();
+    glm::vec2 charPos = character->GetPosition();
+    glm::vec2 charSize = character->GetSize();
+    float charLeft = charPos.x - charSize.x * 0.5f;
+    float charRight = charPos.x + charSize.x * 0.5f;
+
+    if (character->IfWhip() && !is_dead) {
+        bool isNormalWhip = (whipLevel != 3 && (frameIndex == 2 || frameIndex == 3));
+        bool isLv3Whip = (whipLevel == 3 && frameIndex >= 8 && frameIndex <= 15);
+        if (isNormalWhip || isLv3Whip) {
+            float whipWidth = (whipLevel == 3) ? abs(character->OffsetValues("whipWidth_lv3")) : abs(character->OffsetValues("whipWidth"));
+            float whipLeft = (character->GetDirection() == "left") ? charLeft - whipWidth : charRight;
+            float whipRight = (character->GetDirection() == "left") ? charLeft : charRight + whipWidth;
+
+            bool overlapX = (whipLeft > enemyLeft && whipLeft < enemyRight) ||
+                            (whipRight > enemyLeft && whipRight < enemyRight) ||
+                            (whipLeft < enemyLeft && whipRight > enemyRight);
+            bool overlapY = enemyTop > charPos.y && enemyBottom < charPos.y;
+
+            if (overlapX && overlapY) {
+                SetPaused();
+                is_dead = true;
+            }
+        }
+    }
+    else {
+        if (!character->GetHurtFlag() && !is_dead && !is_hidden) {
+            bool overlapX = (charLeft > enemyLeft && charLeft < enemyRight) ||
+                                (charRight > enemyLeft && charRight < enemyRight) ||
+                                (charLeft < enemyLeft && charRight > enemyRight);
+            bool overlapY = enemyTop > charPos.y && enemyBottom < charPos.y;
+            if (overlapX && overlapY)
+                character->SetHurtFlag(true);
+        }
+    }
+    return is_dead;
+}
+
+void Enemy::InWindowDetection(int screenWidth) {
+    if (!is_dead) {
+        glm::vec2 pos = GetPosition();
+        bool outOfWindow = (pos.x < screenWidth * -0.5 || pos.x > screenWidth * 0.5);
+        if (is_hidden) {
+            SetVisible(false);
+            return;
+        }
+        if (outOfWindow) {
+            if (hasEnteredWindow) {
+                is_hidden = true;
+                SetVisible(false);
+            }else {
+                SetVisible(true);
+            }
+        }else {
+            hasEnteredWindow = true;
+            SetVisible(true);
+        }
+    }
+}
+
+bool Enemy::CheckReset() {
+    return (is_hidden || is_dead);
+}

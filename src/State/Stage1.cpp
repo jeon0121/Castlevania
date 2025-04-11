@@ -20,6 +20,9 @@ void Stage1::Start(App* app){
     m_Character = std::make_shared<Character>(charactervalue);
     m_All.push_back(m_Character->m_Behavior);
 
+    //EnemiesManager
+    m_EnemiesManager = std::make_shared<EnemiesManager>(app);
+
     //torch
     std::shared_ptr<Torch> torch_1 = std::make_shared<Torch>(glm::vec2(-392, -240), glm::vec2(1, 0.9), LootType::PurpleBag, 1);
     std::shared_ptr<Torch> torch_2 = std::make_shared<Torch>(glm::vec2(-130, -127), glm::vec2(1, 0.9), LootType::HeartSmall, 1);
@@ -69,6 +72,7 @@ void Stage1::Start(App* app){
 
 void Stage1::Update(App* app){
     m_Character->Keys(m_Blocks, m_Stairs);
+    m_EnemiesManager->Update(screenWidth, m_Character);
     UpdateTorch(app);
     UpdateSubWeapon(app);
     UpdateScroll(mapWidth);

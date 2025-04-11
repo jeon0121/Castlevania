@@ -11,6 +11,7 @@
 #include "Object/Torch.hpp"
 #include "Object/Loot.hpp"
 #include "Object/LootType/Loot.hpp"
+#include "Object/EnemiesManager.hpp"
 #include "App.hpp"
 
 class Scene {
@@ -42,6 +43,7 @@ protected:
     std::vector<std::shared_ptr<Stair>> m_Stairs;
     std::vector<std::shared_ptr<Torch>> m_Torches;
     std::shared_ptr<Loot> asLoot;
+    std::shared_ptr<EnemiesManager> m_EnemiesManager;
     float offsetX = 0.0f;
     int screenWidth = 1024;
     int screenHeight = 768;

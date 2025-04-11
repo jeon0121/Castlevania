@@ -1,5 +1,6 @@
 set(SRC_FILES
     App.cpp
+    Object/Enemies/Zombie.cpp
     Object/LootType/Item/Bag.cpp
     Object/LootType/Item/Heart.cpp
     Object/Subweapon/Axe.cpp
@@ -10,6 +11,8 @@ set(SRC_FILES
     Object/AnimatedItems.cpp
     Object/Block.cpp
     Object/Character.cpp
+    Object/EnemiesManager.cpp
+    Object/Enemy.cpp
     Object/ImageItems.cpp
     Object/Loot.cpp
     Object/Stair.cpp
@@ -28,7 +31,8 @@ set(SRC_FILES
 set(INCLUDE_FILES
     App.hpp
     State.hpp
-    
+
+    Object/Enemies/Zombie.hpp
     Object/LootType/Loot.hpp
     Object/LootType/Item/Bag.hpp
     Object/LootType/Item/Chicken.hpp
@@ -45,6 +49,8 @@ set(INCLUDE_FILES
     Object/AnimatedItems.hpp
     Object/Block.hpp
     Object/Character.hpp
+    Object/EnemiesManager.hpp
+    Object/Enemy.hpp
     Object/ImageItems.hpp
     Object/Loot.hpp
     Object/Stair.hpp
