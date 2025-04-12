@@ -24,8 +24,8 @@ Character::Character(const CharacterValue& value) :
     }
     for (int i = 0; i < 4; ++i) {
         walk.emplace_back(GA_RESOURCE_DIR"/main character/walk/walk-" + std::to_string(i + 1) + ".png");
-        // sub_as.emplace_back(GA_RESOURCE_DIR"/main character/use_subweapon/ascending/ascending-" + std::to_string(i + 1) + ".png");
-        // sub_de.emplace_back(GA_RESOURCE_DIR"/main character/use_subweapon/descending/descending-" + std::to_string(i + 1) + ".png");
+        sub_as.emplace_back(GA_RESOURCE_DIR"/main character/use_subweapon/ascending/ascending-" + std::to_string(i + 1) + ".png");
+        sub_de.emplace_back(GA_RESOURCE_DIR"/main character/use_subweapon/descending/descending-" + std::to_string(i + 1) + ".png");
         sub_du.emplace_back(GA_RESOURCE_DIR"/main character/use_subweapon/ducking/ducking-" + std::to_string(i + 1) + ".png");
         sub_st.emplace_back(GA_RESOURCE_DIR"/main character/use_subweapon/standing/standing-" + std::to_string(i + 1) + ".png");
     }
@@ -35,8 +35,8 @@ Character::Character(const CharacterValue& value) :
         std::vector<std::string> ascending, descending, ducking, standing;
         std::string basePath = GA_RESOURCE_DIR "/main character/whip/level-" + std::to_string(i + 1) + "/";
         for (int j = 0; j < ((i == 2) ? 20 : 5); ++j) {
-            // ascending.emplace_back(basePath + "ascending/ascending-" + std::to_string(j + 1) + ".png");
-            // descending.emplace_back(basePath + "descending/descending-" + std::to_string(j + 1) + ".png");
+            ascending.emplace_back(basePath + "ascending/ascending-" + std::to_string(j + 1) + ".png");
+            descending.emplace_back(basePath + "descending/descending-" + std::to_string(j + 1) + ".png");
             ducking.emplace_back(basePath + "ducking/ducking-" + std::to_string(j + 1) + ".png");
             standing.emplace_back(basePath + "standing/standing-" + std::to_string(j + 1) + ".png");
         }
@@ -169,6 +169,18 @@ float Character::OffsetValues(std::string typeName) {
              : (currentFrame == 4) ? 0
              : 0;
     }
+    if (typeName == "whipHeightAscending") {
+        return (currentFrame == 0) ? -4 : 0;
+    }
+    if (typeName == "whipHeightDescending") {
+        return (currentFrame <= 4 && currentFrame >= 2) ? 2 : 0;
+    }
+    if (typeName == "whipHeightAscending_lv3") {
+        return (currentFrame <= 3) ? -4 : 0;
+    }
+    if (typeName == "whipHeightDescending_lv3") {
+        return 0;
+    }
     if (typeName == "whipOffset_lv3") {
         return (currentFrame <= 3) ? -32
              : (currentFrame <= 7 && currentFrame >= 4) ? -32
@@ -225,7 +237,15 @@ void Character::UpdatePosition() {
     if (is_whip) {
         this->currentFrame = m_Behavior->GetCurrentFrameIndex();
         int offset = (m_whip_level == 3) ? OffsetValues("whipOffset_lv3") : OffsetValues("whipOffset");
-        int offsetHeight = (m_whip_level == 3 && !is_duck) ? OffsetValues("whipHeight_lv3") : 0;
+        int offsetHeight = 0;
+        if (is_onStair) {
+            if (prevStairState == 0)
+                offsetHeight = (m_whip_level == 3) ? OffsetValues("whipHeightAscending_lv3") : OffsetValues("whipHeightAscending");
+            else if (prevStairState == 1)
+                offsetHeight = (m_whip_level == 3) ? OffsetValues("whipHeightDescending_lv3") : OffsetValues("whipHeightDescending");
+        }
+        else 
+            offsetHeight = (m_whip_level == 3 && !is_duck) ? OffsetValues("whipHeight_lv3") : 0;
         m_Behavior->SetPosition({m_pos.x + (m_direction == "right" ? offset : -offset), m_pos.y + offsetHeight});
         if (this->currentFrame == 4 * (m_whip_level == 3 ? 4 : 1))
             is_whip = false;
@@ -283,8 +303,12 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const 
          * - idle
         */
 
+        // whip on stair
+        if ((Util::Input::IsKeyDown(A) || is_whip) && (is_onStair && (!is_ascending && !is_descending))) {
+            Whip();
+        }
         // ascending
-        if ((Util::Input::IsKeyPressed(UP) && ((stair != nullptr && stair->GetDirection() == "down") || is_onStair)) || is_ascending) {
+        else if ((Util::Input::IsKeyPressed(UP) && ((stair != nullptr && stair->GetDirection() == "down") || is_onStair)) || is_ascending) {
             Ascending(stair);
         }
         // descending
@@ -525,7 +549,9 @@ void Character::Whip(){
     is_whip = true;
     if (is_jump)
         Fall();
-    if (is_duck)
+    if (is_onStair) 
+        ChangeBehavior(prevStairState, true);
+    else if (is_duck)
         ChangeBehavior(2, true);
     else
         ChangeBehavior(3, true);

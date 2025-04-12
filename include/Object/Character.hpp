@@ -110,7 +110,7 @@ private:
     int currentBeIndex = 2;
     int currentFrame = -1;
     int jumptype = 0;
-    int prevStairState = -1; // 0: ascending, 1: descending, 2: none
+    int prevStairState = -1; // -1: none, 0: ascending, 1: descending
     
     // some flag
     bool is_whip = false;
