@@ -100,15 +100,15 @@ std::string Character::GetDirection() const {
 
 void Character::Hurt() {
     auto pos = m_Behavior->GetPosition();
-    if (is_jump && is_hurt) {
+    if (is_jump && is_hurt && !is_onStair) {
         Fall();
         SetPosition({ pos.x + (m_direction == "right" ? -8 : 8), pos.y });
     }
     if (startHurtTime == 0) {
-        Jump();
+        if (!is_onStair) Jump();
         startHurtTime = SDL_GetPerformanceCounter();
     } else {
-        if (Time::GetRunTimeMs(startHurtTime) > 2000.0f)
+        if (Time::GetRunTimeMs(startHurtTime) > 2000.0f) 
             startHurtTime = 0;
         else {
             int timeCount = static_cast<int>(Time::GetRunTimeMs(startHurtTime)) / 10;
@@ -117,8 +117,14 @@ void Character::Hurt() {
     }
     if (is_collide.y)
         startDuckTime = SDL_GetPerformanceCounter();
-    if (is_hurt)
-        HandleFallDuck(m_direction);
+    if (is_hurt) {
+        if (is_onStair) {
+            if (Time::GetRunTimeMs(startHurtTime) > 2000.0f) 
+                is_hurt = false;
+        }
+        else
+            HandleFallDuck(m_direction);
+    }
 }
 
 bool Character::IfWhip() const {
