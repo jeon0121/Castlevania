@@ -256,7 +256,7 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const 
     if (is_hurt || startHurtTime != 0) {
         Hurt();
     }
-    if (!is_levelUpWhip && !is_hurt) {
+    if (!is_levelUpWhip) {
         // Position::PrintCursorCoordinate();
 
         constexpr Util::Keycode A      = Util::Keycode::J;
@@ -283,78 +283,80 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const 
          * - idle
         */
 
-        // duck subweapon
-        if (((Util::Input::IsKeyPressed(UP) && Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyDown(A)) || (is_subweapon && is_duck)) && !is_jump) {
-            Duck("");
-            SubWeapon();
-        }
         // ascending
-        else if ((Util::Input::IsKeyPressed(UP) && ((stair != nullptr && stair->GetDirection() == "down") || is_onStair)) || is_ascending) {
+        if ((Util::Input::IsKeyPressed(UP) && ((stair != nullptr && stair->GetDirection() == "down") || is_onStair)) || is_ascending) {
             Ascending(stair);
         }
         // descending
         else if ((Util::Input::IsKeyPressed(DOWN) && ((stair != nullptr && stair->GetDirection() == "up") || is_onStair)) || is_descending) {
             Descending(stair);
         }
-        // subweapon
-        else if (((Util::Input::IsKeyPressed(UP) && Util::Input::IsKeyPressed(A) && !is_jump) || is_subweapon) && m_subweapon != WeaponType::None) {
-            SubWeapon();
-        }
-        // duck whip
-        else if (((Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyDown(A)) || (is_whip && is_duck)) && !is_jump){
-            Duck("");
-            Whip();
-        }
-        // whip
-        else if (Util::Input::IsKeyDown(A) || is_whip)
-            Whip();
-
-        // duck
-        else if (Util::Input::IsKeyPressed(DOWN) && !is_jump)
-            Duck(Util::Input::IsKeyPressed(LEFT) ? "left" : (Util::Input::IsKeyPressed(RIGHT) ? "right" : ""));
-
-        // jump
-        else if (Util::Input::IsKeyDown(B) && !is_jump && !change_land) {
-            Jump();
-            jumptype = (Util::Input::IsKeyPressed(LEFT)) ? 1 :
-                       (Util::Input::IsKeyPressed(RIGHT)) ? 2 : 0;
-        }
-        // fall
-        else if (is_jump)
-            Fall();
-
-        // when pressing both key, character will idle
-        else if (Util::Input::IsKeyPressed(LEFT) && Util::Input::IsKeyPressed(RIGHT))
-            Idle();
-
-        // left
-        else if (Util::Input::IsKeyPressed(LEFT) && !is_duck) {
-            HandleFallDuck("left");
-            Idle();
-        }
-        // right
-        else if (Util::Input::IsKeyPressed(RIGHT) && !is_duck) {
-            HandleFallDuck("right");
-            Idle();
-        }
-        // idle
-        else if (!is_jump) {
-            if (is_onStair) {
-                if (currentStair->GetDirection() == "down") 
-                    ChangeBehavior(13);
-                else if (currentStair->GetDirection() == "up")
-                    ChangeBehavior(14);
+        else if (!is_hurt) {
+            // duck subweapon
+            if (((Util::Input::IsKeyPressed(UP) && Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyDown(A)) || (is_subweapon && is_duck)) && !is_jump) {
+                Duck("");
+                SubWeapon();
             }
-            else {
-                ChangeBehavior(2);
+            // subweapon
+            else if (((Util::Input::IsKeyPressed(UP) && Util::Input::IsKeyPressed(A) && !is_jump) || is_subweapon) && m_subweapon != WeaponType::None) {
+                SubWeapon();
+            }
+            // duck whip
+            else if (((Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyDown(A)) || (is_whip && is_duck)) && !is_jump){
+                Duck("");
+                Whip();
+            }
+            // whip
+            else if (Util::Input::IsKeyDown(A) || is_whip)
+                Whip();
+
+            // duck
+            else if (Util::Input::IsKeyPressed(DOWN) && !is_jump)
+                Duck(Util::Input::IsKeyPressed(LEFT) ? "left" : (Util::Input::IsKeyPressed(RIGHT) ? "right" : ""));
+
+            // jump
+            else if (Util::Input::IsKeyDown(B) && !is_jump && !change_land && !is_onStair) {
+                Jump();
+                jumptype = (Util::Input::IsKeyPressed(LEFT)) ? 1 :
+                           (Util::Input::IsKeyPressed(RIGHT)) ? 2 : 0;
+            }
+            // fall
+            else if (is_jump)
+                Fall();
+
+            // when pressing both key, character will idle
+            else if (Util::Input::IsKeyPressed(LEFT) && Util::Input::IsKeyPressed(RIGHT))
+                Idle();
+
+            // left
+            else if (Util::Input::IsKeyPressed(LEFT) && !is_duck && !is_onStair) {
+                HandleFallDuck("left");
                 Idle();
             }
+            // right
+            else if (Util::Input::IsKeyPressed(RIGHT) && !is_duck && !is_onStair) {
+                HandleFallDuck("right");
+                Idle();
+            }
+            // idle
+            else if (!is_jump) {
+                if (is_onStair) {
+                    if (currentStair->GetDirection() == "down") 
+                        ChangeBehavior(13);
+                    else if (currentStair->GetDirection() == "up")
+                        ChangeBehavior(14);
+                }
+                else {
+                    ChangeBehavior(2);
+                    Idle();
+                }
+            }
+            // std::cout << m_pos.x << ", "
+            //           << m_pos.y << ", "
+            //           << m_size.x << ", "
+            //           << m_size.y << ", "
+            //           << std::endl;
         }
-        // std::cout << m_pos.x << ", "
-        //           << m_pos.y << ", "
-        //           << m_size.x << ", "
-        //           << m_size.y << ", "
-        //           << std::endl;
     }
     UpdatePosition();
     if (!is_onStair)
@@ -367,7 +369,7 @@ void Character::HandleFallDuck(const std::string& direction) {
         return;
     }
     m_pos.y -= OffsetValues("duck") * 0.5;
-    if (is_hurt && startDuckTime) {
+    if (is_hurt && startDuckTime && !is_onStair) {
         Duck(m_direction);
         if (Time::GetRunTimeMs(startDuckTime) > 150.0f) {
             is_hurt = false;
@@ -388,7 +390,7 @@ void Character::HandleFallDuck(const std::string& direction) {
 
 void Character::Ascending(std::shared_ptr<Stair>& stair) {
     if (!is_onStair && stair && stair->GetDirection() == "down") {
-        if (std::abs(m_pos.x - stair->GetPosition().x) > 2.0f) {
+        if (std::abs(m_pos.x - stair->GetPosition().x) > 4.0f) {
             if (m_pos.x < stair->GetPosition().x)
                 Move("right");
             else
@@ -449,7 +451,7 @@ void Character::Ascending(std::shared_ptr<Stair>& stair) {
 
 void Character::Descending(std::shared_ptr<Stair>& stair) {
     if (!is_onStair && stair && stair->GetDirection() == "up") {
-        if (std::abs(m_pos.x - stair->GetPosition().x) > 2.0f) {
+        if (std::abs(m_pos.x - stair->GetPosition().x) > 4.0f) {
             if (m_pos.x < stair->GetPosition().x)
                 Move("right");
             else
