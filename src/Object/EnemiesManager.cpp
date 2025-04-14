@@ -15,25 +15,26 @@ EnemiesManager::EnemiesManager(App *app) {
 
 }
 
-void EnemiesManager::Update(int screenWidth, std::shared_ptr<Character> &character) {
+void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Character> &character) {
     for (auto &enemy : m_Enemies) {
         enemy->InWindowDetection(screenWidth);
         if (enemy->CollideDetection(character)) {
             enemy->Death();
         }
     }
-    ManageZombies();
+    ManageZombies(offsetX);
 }
 
-void EnemiesManager::ManageZombies() {
+void EnemiesManager::ManageZombies(float offsetX) {
     bool reset = true;
     constexpr float delay = 2000.0f;
     for (auto &zombie : m_Zombies) {
-        zombie->MoveBehav();
-        if (!zombie->CheckReset())
+        if (!zombie->CheckReset()) {
+            zombie->MoveBehav();
             reset = false;
+        }
     }
-    if (reset) {
+    if (reset && (offsetX < 1215 || offsetX > 4030)) {
         if (resetStartTime == 0) {
             resetStartTime = SDL_GetPerformanceCounter();
         }

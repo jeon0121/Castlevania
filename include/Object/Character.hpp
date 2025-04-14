@@ -34,9 +34,10 @@ public:
     explicit Character(const CharacterValue& value);
 
     void SetPosition(const glm::vec2& Position);
+    void SetDirection(const std::string& Direction);
     void SetSubWeaponType(WeaponType type);
     void SetUseWeaponFlag(bool ifuse);
-    void SetHurtFlag(bool ifhurt);
+    void SetHurtFlag(bool ifhurt, bool ifNeedSlip);
     const WeaponType& GetSubWeaponType() const;
     const bool& GetUseWeaponFlag() const;
     bool GetHurtFlag();
@@ -124,6 +125,7 @@ private:
     bool is_levelUpWhip = false;
     bool change_land = false;
     bool is_hurt = false;
+    bool ifNeedSlip = false;//if char need slip when collide with enemy
 };
 
 #endif

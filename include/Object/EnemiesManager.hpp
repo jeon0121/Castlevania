@@ -9,9 +9,9 @@ class EnemiesManager {
     public:
         EnemiesManager(App *app);
 
-        void Update(int screenWidth, std::shared_ptr<Character> &character);
+        void Update(float offsetX, int screenWidth, std::shared_ptr<Character> &character);
 
-        void ManageZombies();
+        void ManageZombies(float offsetX);
 
         std::vector<std::shared_ptr<Enemy>> m_Enemies;
     private:

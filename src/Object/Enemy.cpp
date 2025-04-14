@@ -67,8 +67,15 @@ bool Enemy::CollideDetection(std::shared_ptr<Character> &character) {
                                 (charRight > enemyLeft && charRight < enemyRight) ||
                                 (charLeft < enemyLeft && charRight > enemyRight);
             bool overlapY = enemyTop > charPos.y && enemyBottom < charPos.y;
-            if (overlapX && overlapY)
-                character->SetHurtFlag(true);
+            if (overlapX && overlapY) {
+                bool ifNeedSlip = false;
+                if (direction == character->GetDirection() &&
+                    ((direction == "right" && character->GetPosition().x > GetPosition().x) ||
+                     (direction == "left" && character->GetPosition().x < GetPosition().x))) {
+                    ifNeedSlip = true;
+                }
+                character->SetHurtFlag(true, ifNeedSlip);
+            }
         }
     }
     return is_dead;

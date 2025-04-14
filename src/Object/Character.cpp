@@ -60,6 +60,10 @@ void Character::SetPosition(const glm::vec2& position) {
         m_Behavior->SetPosition(position);
 }
 
+void Character::SetDirection(const std::string& Direction) {
+    m_direction = Direction;
+}
+
 void Character::SetSubWeaponType(WeaponType type) {
     m_subweapon = type;
 }
@@ -68,7 +72,10 @@ void Character::SetUseWeaponFlag(bool ifuse) {
     is_useweapon = ifuse;
 }
 
-void Character::SetHurtFlag(bool ifhurt) {is_hurt = ifhurt;}
+void Character::SetHurtFlag(bool ifhurt, bool ifNeedSlip) {
+    is_hurt = ifhurt;
+    this->ifNeedSlip = ifNeedSlip;
+}
 
 const WeaponType& Character::GetSubWeaponType() const {
     return m_subweapon;
@@ -102,10 +109,15 @@ void Character::Hurt() {
     auto pos = m_Behavior->GetPosition();
     if (is_jump && is_hurt && !is_onStair) {
         Fall();
-        SetPosition({ pos.x + (m_direction == "right" ? -8 : 8), pos.y });
+        x_vel = ((m_direction == "right") ? -4.5f : 4.5f);
     }
     if (startHurtTime == 0) {
-        if (!is_onStair) Jump();
+        if (ifNeedSlip) {
+            m_direction = (m_direction == "right") ? "left" : "right";
+            Flip();
+        }
+        if (!is_onStair) 
+            Jump();
         startHurtTime = SDL_GetPerformanceCounter();
     } else {
         if (Time::GetRunTimeMs(startHurtTime) > 2000.0f) 
@@ -117,7 +129,7 @@ void Character::Hurt() {
     }
     if (is_collide.y)
         startDuckTime = SDL_GetPerformanceCounter();
-    if (is_hurt) {
+    if (startDuckTime) {
         if (is_onStair) {
             if (Time::GetRunTimeMs(startHurtTime) > 2000.0f) 
                 is_hurt = false;
@@ -322,7 +334,7 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const 
                 SubWeapon();
             }
             // subweapon
-            else if (((Util::Input::IsKeyPressed(UP) && Util::Input::IsKeyPressed(A) && !is_jump) || is_subweapon) && m_subweapon != WeaponType::None) {
+            else if (((Util::Input::IsKeyPressed(UP) && Util::Input::IsKeyPressed(A) && !is_jump) || is_subweapon) && m_subweapon != WeaponType::None && !is_useweapon && m_ammo > 0) {
                 SubWeapon();
             }
             // duck whip
