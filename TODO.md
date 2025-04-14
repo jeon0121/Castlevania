@@ -1,5 +1,5 @@
 - Character
-  - [] when falling from block, character can jump although it haven't landed
-  - [] when jump and touch the bottom part of block, character would landed duck
+  - [x] when falling from block, character can jump although it haven't landed
+  - [x] when jump and touch the bottom part of block, character would landed duck
 - Title
   - [] when character enter the castle (title::end), at windows 11, the character didn't reach the door

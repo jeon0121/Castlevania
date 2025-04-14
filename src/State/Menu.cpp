@@ -79,11 +79,13 @@ void Menu::addNumber(std::string text, const glm::vec2& position){
     numberImage.push_back(textRow);
 }
 
-void Menu::modifyNumber(std::string text, int type){
+void Menu::modifyNumber(std::string text, int type, int number){
     std::vector<std::shared_ptr<ImageItems>>& numberbar = numberImage[type];
     int length = text.length();
     for (int i = 0; i < length; i++)
         numberbar[i]->SetImage(GA_RESOURCE_DIR "/fonts/number/" + std::string(1, text[i]) + ".png");
+    if (number)
+        m_value.score = number;
 }
 
 void Menu::addHealth(int heart, const glm::vec2& position, std::string type){

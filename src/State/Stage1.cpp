@@ -13,11 +13,15 @@ void Stage1::Start(App* app){
     m_All.push_back(m_Background);
 
     //character
-    CharacterValue charactervalue;
-    charactervalue.position = glm::vec2(-315, -265.35);
-    charactervalue.direction = "right";
-    charactervalue.beIndex = 2;
-    m_Character = std::make_shared<Character>(charactervalue);
+    if (!app->m_Character) {
+        CharacterValue charactervalue;
+        charactervalue.position = glm::vec2(-315, -265.35);
+        charactervalue.direction = "right";
+        charactervalue.beIndex = 2;
+        app->m_Character = std::make_shared<Character>(charactervalue);
+    }else
+        app->m_Character->SetPosition({-315, -265.35});
+    this->m_Character = app->m_Character;
     m_All.push_back(m_Character->m_Behavior);
 
     //EnemiesManager
@@ -72,7 +76,7 @@ void Stage1::Start(App* app){
 
 void Stage1::Update(App* app){
     m_Character->Keys(m_Blocks, m_Stairs);
-    m_EnemiesManager->Update(screenWidth, m_Character);
+    m_EnemiesManager->Update(offsetX, screenWidth, m_Character);
     UpdateTorch(app);
     UpdateSubWeapon(app);
     UpdateScroll(mapWidth);

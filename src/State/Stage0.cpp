@@ -20,11 +20,20 @@ void Stage0::Start(App* app){
     m_All.push_back(m_End);
 
     //character
-    CharacterValue charactervalue;
-    charactervalue.position = glm::vec2(-315, -220.35);
-    charactervalue.direction = "right";
-    charactervalue.beIndex = 2;
-    m_Character = std::make_shared<Character>(charactervalue);
+    if (!app->m_Character) {
+        CharacterValue charactervalue;
+        charactervalue.position = glm::vec2(-315, -220.35);
+        charactervalue.direction = "right";
+        charactervalue.beIndex = 2;
+        app->m_Character = std::make_shared<Character>(charactervalue);
+    }else {
+        app->m_Character->SetPosition({-315, -220.35});
+        app->m_Character->m_Behavior->m_Transform.scale = glm::vec2(1.0f, 1.0f);
+        app->m_Character->SetDirection("right");
+        app->m_Character->Flip();
+        app->m_Character->SetZIndex(2);
+    }
+    this->m_Character = app->m_Character;
     m_All.push_back(m_Character->m_Behavior);
 
     //torch
@@ -58,16 +67,17 @@ void Stage0::Update(App* app){
     UpdateScroll(mapWidth);
 
     if (m_Character->GetPosition().x >= 200) {
-        m_Character->m_Behavior->SetPaused();
         m_Character->ChangeBehavior(0);
+        m_Character->m_Behavior->SetPlaying();
+        m_Character->m_Behavior->SetLooping(true);
         m_End->SetVisible(true);
         m_stateState = StateState::END;
     }
 }
 
 void Stage0::End(App* app){
-    m_Character->m_Behavior->Move(m_Character->m_Behavior, 1, 0, 2.08, 3);
-    m_Character-> SetPosition(m_Character->m_Behavior->GetPosition());
+    glm::vec2 pos = m_Character->GetPosition();
+    m_Character-> SetPosition(glm::vec2(pos.x+1.5f, pos.y));
 
     if (m_Character->GetPosition().x >= 500) {
         app->m_Menu->SetMenuVisibility(false);

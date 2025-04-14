@@ -41,6 +41,7 @@ public:
     GameState m_GameState = GameState::STAGE1;
     std::shared_ptr<Scene> m_Scene;
     std::shared_ptr<Menu> m_Menu;
+    std::shared_ptr<Character> m_Character;
 };
 
 #endif

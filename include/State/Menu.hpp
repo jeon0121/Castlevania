@@ -36,7 +36,7 @@ public:
 
     void addNumber(std::string text, const glm::vec2& position);
 
-    void modifyNumber(std::string text, int type);
+    void modifyNumber(std::string text, int type, int number=0);
 
     void addHealth(int heart, const glm::vec2& position, std::string type);
 

@@ -36,7 +36,8 @@ void Title::Start(App* app){
     charactervalue.position = glm::vec2(480, -265);
     charactervalue.beIndex = 0;
     charactervalue.scale = 0.8;
-    m_Character = std::make_shared<Character>(charactervalue);
+    app->m_Character = std::make_shared<Character>(charactervalue);
+    this->m_Character = app->m_Character;
     m_Character->m_Behavior->SetVisible(false);
     m_All.push_back(m_Character->m_Behavior);
 
