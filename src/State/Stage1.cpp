@@ -19,7 +19,8 @@ void Stage1::Start(App* app){
         charactervalue.direction = "right";
         charactervalue.beIndex = 2;
         app->m_Character = std::make_shared<Character>(charactervalue);
-    }else
+    }
+    else
         app->m_Character->SetPosition({-315, -265.35});
     this->m_Character = app->m_Character;
     m_All.push_back(m_Character->m_Behavior);
@@ -28,47 +29,49 @@ void Stage1::Start(App* app){
     m_EnemiesManager = std::make_shared<EnemiesManager>(app);
 
     //torch
-    std::shared_ptr<Torch> torch_1 = std::make_shared<Torch>(glm::vec2(-392, -240), glm::vec2(1, 0.9), LootType::PurpleBag, 1);
-    std::shared_ptr<Torch> torch_2 = std::make_shared<Torch>(glm::vec2(-130, -127), glm::vec2(1, 0.9), LootType::HeartSmall, 1);
-    std::shared_ptr<Torch> torch_3 = std::make_shared<Torch>(glm::vec2(132, -240), glm::vec2(1, 0.9), LootType::HeartSmall, 1);
-    std::shared_ptr<Torch> torch_4 = std::make_shared<Torch>(glm::vec2(394, -127), glm::vec2(1, 0.9), LootType::RedBag, 1);
-    std::shared_ptr<Torch> torch_5 = std::make_shared<Torch>(glm::vec2(656, -240), glm::vec2(1, 0.9), LootType::HeartSmall, 1);
-    std::shared_ptr<Torch> torch_6 = std::make_shared<Torch>(glm::vec2(918, -127), glm::vec2(1, 0.9), LootType::RedBag, 1);
-    std::shared_ptr<Torch> torch_7 = std::make_shared<Torch>(glm::vec2(1180, -240), glm::vec2(1, 0.9), LootType::HeartSmall, 1);
-    std::shared_ptr<Torch> torch_8 = std::make_shared<Torch>(glm::vec2(1442, -127), glm::vec2(1, 0.9), LootType::HeartSmall, 1);
-    std::shared_ptr<Torch> torch_9 = std::make_shared<Torch>(glm::vec2(1704, -240), glm::vec2(1, 0.9), LootType::HeartSmall, 1);
-    m_Torches.push_back(torch_1);
-    m_Torches.push_back(torch_2);
-    m_Torches.push_back(torch_3);
-    m_Torches.push_back(torch_4);
-    m_Torches.push_back(torch_5);
-    m_Torches.push_back(torch_6);
-    m_Torches.push_back(torch_7);
-    m_Torches.push_back(torch_8);
-    m_Torches.push_back(torch_9);
-    for (auto& torch : m_Torches)
+    std::vector<TorchData> torchs = {
+        { { -392, -240 }, {1, 0.9}, LootType::PurpleBag,  1},
+        { { -130, -127 }, {1, 0.9}, LootType::HeartSmall, 1},
+        { { 132,  -240 }, {1, 0.9}, LootType::HeartSmall, 1},
+        { { 394,  -127 }, {1, 0.9}, LootType::RedBag,     1},
+        { { 656,  -240 }, {1, 0.9}, LootType::HeartSmall, 1},
+        { { 918,  -127 }, {1, 0.9}, LootType::RedBag,     1},
+        { { 1180, -240 }, {1, 0.9}, LootType::HeartSmall, 1},
+        { { 1442, -127 }, {1, 0.9}, LootType::HeartSmall, 1},
+        { { 1704, -240 }, {1, 0.9}, LootType::HeartSmall, 1}
+    };
+    for (auto& t : torchs) {
+        auto torch = std::make_shared<Torch>(t.pos, t.scale, t.loot, t.type);
+        m_Torches.push_back(torch);
         m_All.push_back(torch);
+    }
 
-    //block
-    std::shared_ptr<Block> block_1 = std::make_shared<Block>(glm::vec2(0, -352), glm::vec2(100, 0.7));
-    std::shared_ptr<Block> block_2 = std::make_shared<Block>(glm::vec2(-545, -50), glm::vec2(0.4, 7));
-    std::shared_ptr<Block> block_3 = std::make_shared<Block>(glm::vec2(2395, -122), glm::vec2(1.61, 0.68));
-    std::shared_ptr<Block> block_4 = std::make_shared<Block>(glm::vec2(2888, -5), glm::vec2(5.32, 0.68));
-    std::shared_ptr<Block> block_5 = std::make_shared<Block>(glm::vec2(3478, -122), glm::vec2(3.22, 0.68));
-    std::shared_ptr<Block> block_6 = std::make_shared<Block>(glm::vec2(5670, -50), glm::vec2(0.4, 7));
-    m_Blocks.push_back(block_1);
-    m_Blocks.push_back(block_2);
-    m_Blocks.push_back(block_3);
-    m_Blocks.push_back(block_4);
-    m_Blocks.push_back(block_5);
-    m_Blocks.push_back(block_6);
-    for (auto& block : m_Blocks)
-        m_All.push_back(block);
+    // block
+    std::vector<BlockData> blocks = {
+        { { 0,    -352 }, { 100,  0.7  } },
+        { { -545, -50  }, { 0.4,  7    } },
+        { { 2395, -122 }, { 1.61, 0.68 } },
+        { { 2888, -5   }, { 5.32, 0.68 } },
+        { { 3478, -122 }, { 3.22, 0.68 } },
+        { { 5670, -50  }, { 0.4,  7    } }
+    };
+    for (auto& b : blocks) {
+        auto block = std::make_shared<Block>(b.pos, b.scale);
+        m_Blocks.push_back(block);
+    }
 
     // stair
-    auto stair1 = Stair::CreateStair(glm::vec2(2035, -297), glm::vec2(2296, -69));
-    m_Stairs.insert(m_Stairs.end(), stair1.begin(), stair1.end());
-    m_All.insert(m_All.end(), stair1.begin(), stair1.end());
+    std::vector<StairData> stairs = {
+        { { 2035, -297 }, { 2296, -69 } },
+        { { 2420, -69  }, { 2560, 50  } },
+        { { 3220, 50   }, { 3350, -69 } },
+        { { 4790, -297 }, { 5180, 50  } }
+    };
+    for (auto& s : stairs) {
+        auto stair = Stair::CreateStair(s.pos1, s.pos2);
+        m_Stairs.insert(m_Stairs.end(), stair.begin(), stair.end());
+        m_All.insert(m_All.end(), stair.begin(), stair.end());
+    }
     
     app->AddAllChildren(m_All);
     m_stateState = StateState::UPDATE;

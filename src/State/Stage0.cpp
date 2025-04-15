@@ -36,25 +36,29 @@ void Stage0::Start(App* app){
     this->m_Character = app->m_Character;
     m_All.push_back(m_Character->m_Behavior);
 
-    //torch
-    std::shared_ptr<Torch> torch_1 = std::make_shared<Torch>(glm::vec2(-130, -227), glm::vec2(1, 0.9), LootType::HeartBig, 2);
-    std::shared_ptr<Torch> torch_2 = std::make_shared<Torch>(glm::vec2(395, -227), glm::vec2(1, 0.9), LootType::Whip, 2);
-    std::shared_ptr<Torch> torch_3 = std::make_shared<Torch>(glm::vec2(920, -227), glm::vec2(1, 0.9), LootType::Whip, 2);
-    std::shared_ptr<Torch> torch_4 = std::make_shared<Torch>(glm::vec2(1445, -227), glm::vec2(1, 0.9), LootType::HeartBig, 2);
-    std::shared_ptr<Torch> torch_5 = std::make_shared<Torch>(glm::vec2(1965, -227), glm::vec2(1, 0.9), LootType::Dagger, 2);
-    m_Torches.push_back(torch_1);
-    m_Torches.push_back(torch_2);
-    m_Torches.push_back(torch_3);
-    m_Torches.push_back(torch_4);
-    m_Torches.push_back(torch_5);
-    for (auto& torch : m_Torches)
+    // torch
+    std::vector<TorchData> torchs = {
+        { {-130, -227}, {1, 0.9}, LootType::HeartBig, 2 },
+        { {395,  -227}, {1, 0.9}, LootType::Whip,     2 },
+        { {920,  -227}, {1, 0.9}, LootType::HeartBig, 2 },
+        { {1445, -227}, {1, 0.9}, LootType::Dagger,   2 },
+        { {1965, -227}, {1, 0.9}, LootType::HeartBig, 2 },
+    };
+    for (auto& t : torchs) {
+        auto torch = std::make_shared<Torch>(t.pos, t.scale, t.loot, t.type);
+        m_Torches.push_back(torch);
         m_All.push_back(torch);
+    }
 
-    //block
-    std::shared_ptr<Block> block_1 = std::make_shared<Block>(glm::vec2(0, -307), glm::vec2(100, 0.7));
-    std::shared_ptr<Block> block_2 = std::make_shared<Block>(glm::vec2(-545, -50), glm::vec2(0.4, 7));
-    m_Blocks.push_back(block_1);
-    m_Blocks.push_back(block_2);
+    // block
+    std::vector<std::pair<glm::vec2, glm::vec2>> blocks = {
+        { {0,    -307}, {100, 0.7} },
+        { {-545, -50 }, {0.4, 7  } }
+    };
+    for (auto& b : blocks) {
+        auto block = std::make_shared<Block>(b.first, b.second);
+        m_Blocks.push_back(block);
+    }
 
     app->AddAllChildren(m_All);
     m_stateState = StateState::UPDATE;

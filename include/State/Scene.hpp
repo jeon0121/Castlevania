@@ -21,6 +21,21 @@ public:
         UPDATE,
         END,
     };
+    struct TorchData {
+        glm::vec2 pos;
+        glm::vec2 scale;
+        LootType loot;
+        int type;
+    };
+    struct BlockData {
+        glm::vec2 pos;
+        glm::vec2 scale;
+    };
+    struct StairData {
+        glm::vec2 pos1;
+        glm::vec2 pos2;
+    };
+
     virtual void Start(App* app) = 0;
     virtual void Update(App* app) = 0;
     virtual void End(App* app) = 0;
