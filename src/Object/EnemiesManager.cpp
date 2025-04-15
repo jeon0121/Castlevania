@@ -5,17 +5,24 @@ EnemiesManager::EnemiesManager(App *app) {
     std::shared_ptr<Zombie> zombie_1 = std::make_shared<Zombie>(glm::vec2(520, -265.35), "left");
     std::shared_ptr<Zombie> zombie_2 = std::make_shared<Zombie>(glm::vec2(640, -265.35), "left");
     std::shared_ptr<Zombie> zombie_3 = std::make_shared<Zombie>(glm::vec2(760, -265.35), "left");
+    std::shared_ptr<Leopard> leopard_1 = std::make_shared<Leopard>(glm::vec2(2355, -69), "left");
     m_Zombies.push_back(zombie_1);
     m_Zombies.push_back(zombie_2);
     m_Zombies.push_back(zombie_3);
+    m_Leopards.push_back(leopard_1);
     for (auto &zombie : m_Zombies) {
         m_Enemies.push_back(zombie);
         app->m_Root.AddChild(zombie);
     }
-
+    for (auto &leopard : m_Leopards) {
+        m_Enemies.push_back(leopard);
+        app->m_Root.AddChild(leopard);
+    }
+    for (auto &enemy : m_Enemies) 
+        enemy->SetZIndex(7);
 }
 
-void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Character> &character) {
+void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks) {
     for (auto &enemy : m_Enemies) {
         enemy->InWindowDetection(screenWidth);
         if (enemy->CollideDetection(character)) {
@@ -23,6 +30,7 @@ void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Char
         }
     }
     ManageZombies(offsetX, character);
+    ManageLeopard(offsetX, character, blocks, screenWidth);
 }
 
 void EnemiesManager::ManageZombies(float offsetX, std::shared_ptr<Character> &character) {
@@ -72,7 +80,14 @@ void EnemiesManager::ManageZombies(float offsetX, std::shared_ptr<Character> &ch
     }
 }
 
-void EnemiesManager::ManageLeopard(float offsetX) {
-    // Implement the logic for managing leopards here
-    // This is a placeholder for the leopard management logic
+void EnemiesManager::ManageLeopard(float offsetX, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, int screenWidth) {
+    for (auto &leopard : m_Leopards) {
+        if (!leopard->CheckReset()) {
+            leopard->MoveBehav(character, blocks);
+        }
+        // else if (0 < leopard->GetInitialPos().x - offsetX && leopard->GetInitialPos().x - offsetX < screenWidth) {
+        //     leopard->SetReset();
+        //     leopard->SetDirection((leopard->GetPosition().x > 0) ? "left" : "right");
+        // }
+    }
 }

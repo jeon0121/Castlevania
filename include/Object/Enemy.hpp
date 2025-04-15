@@ -9,12 +9,12 @@ class Enemy : public AnimatedItems {
     public:
         Enemy(glm::vec2 position, std::string direction, std::vector<std::string> animationPath, int interval);
 
-        virtual void MoveBehav() = 0;
+        virtual void MoveBehav() {}
 
         virtual void MoveBehav(std::shared_ptr<Character> &character) {
             (void) character;
         }
-        
+
         virtual void MoveBehav(std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks) {
             (void) character;
             (void) blocks;

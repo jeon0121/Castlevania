@@ -34,6 +34,8 @@ public:
     void SetSubweapon(App* app);
 
     StateState m_stateState = StateState::START;
+    int screenWidth = 1024;
+    int screenHeight = 768;
 
 protected:
     std::shared_ptr<ImageItems> m_Background;
@@ -45,8 +47,6 @@ protected:
     std::shared_ptr<Loot> asLoot;
     std::shared_ptr<EnemiesManager> m_EnemiesManager;
     float offsetX = 0.0f;
-    int screenWidth = 1024;
-    int screenHeight = 768;
     glm::vec2 backgroundPos;
 };
 

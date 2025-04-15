@@ -11,12 +11,20 @@ public:
     void MoveBehav(std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks) override;
     void SetReset() override;
     void SetDirection(std::string direction);
+    void Walk();
+    void Jump();
+    glm::vec2 GetInitialPos();
 private:
     std::vector<std::string> idleImages;
     std::vector<std::string> walkImages;
     std::vector<std::string> jumpImages;
+    glm::vec2 initialPos;
 
     std::string state = "idle";
+    bool is_walk = false;
+    bool is_jump = false;
+
+    float y_vel = 0.0f;
 };
 
 #endif
