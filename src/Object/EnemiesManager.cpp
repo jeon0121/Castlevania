@@ -22,10 +22,10 @@ void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Char
             enemy->Death();
         }
     }
-    ManageZombies(offsetX);
+    ManageZombies(offsetX, character);
 }
 
-void EnemiesManager::ManageZombies(float offsetX) {
+void EnemiesManager::ManageZombies(float offsetX, std::shared_ptr<Character> &character) {
     bool reset = true;
     constexpr float delay = 2000.0f;
     for (auto &zombie : m_Zombies) {
@@ -39,17 +39,29 @@ void EnemiesManager::ManageZombies(float offsetX) {
             resetStartTime = SDL_GetPerformanceCounter();
         }
         if (Time::GetRunTimeMs(resetStartTime) > delay) {
-            int r = std::rand() % 3;
-            m_Zombies[0]->SetPosition({520, -265.35});
-            if (r == 0) {
+            if (character->GetPosition().x > 0) {
+                m_Zombies[0]->SetPosition({-520, -265.35});
+                m_Zombies[1]->SetPosition({-640, -265.35});
+                m_Zombies[2]->SetPosition({-760, -265.35});
+            }
+            else if (character->GetPosition().x < 0) {
+                m_Zombies[0]->SetPosition({520, -265.35});
                 m_Zombies[1]->SetPosition({640, -265.35});
                 m_Zombies[2]->SetPosition({760, -265.35});
-            }else if (r == 1) {
-                m_Zombies[1]->SetPosition({640, -265.35});
-                m_Zombies[2]->SetPosition({-520, -265.35});
-            }else {
-                m_Zombies[1]->SetPosition({-520, -265.35});
-                m_Zombies[2]->SetPosition({-640, -265.35});
+            }
+            else {
+                int r = std::rand() % 3;
+                m_Zombies[0]->SetPosition({520, -265.35});
+                if (r == 0) {
+                    m_Zombies[1]->SetPosition({640, -265.35});
+                    m_Zombies[2]->SetPosition({760, -265.35});
+                } else if (r == 1) {
+                    m_Zombies[1]->SetPosition({640, -265.35});
+                    m_Zombies[2]->SetPosition({-520, -265.35});
+                } else {
+                    m_Zombies[1]->SetPosition({-520, -265.35});
+                    m_Zombies[2]->SetPosition({-640, -265.35});
+                }
             }
             for (auto &zombie : m_Zombies) {
                 zombie->SetReset();
@@ -58,4 +70,9 @@ void EnemiesManager::ManageZombies(float offsetX) {
             resetStartTime = 0;
         }
     }
+}
+
+void EnemiesManager::ManageLeopard(float offsetX) {
+    // Implement the logic for managing leopards here
+    // This is a placeholder for the leopard management logic
 }

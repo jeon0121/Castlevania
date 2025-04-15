@@ -11,7 +11,9 @@ class EnemiesManager {
 
         void Update(float offsetX, int screenWidth, std::shared_ptr<Character> &character);
 
-        void ManageZombies(float offsetX);
+        void ManageZombies(float offsetX, std::shared_ptr<Character> &character);
+
+        void ManageLeopard(float offsetX);
 
         std::vector<std::shared_ptr<Enemy>> m_Enemies;
     private:
@@ -19,4 +21,4 @@ class EnemiesManager {
         std::vector<std::shared_ptr<Zombie>> m_Zombies;
 };
 
-#endif;
+#endif

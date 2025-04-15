@@ -83,5 +83,5 @@ void Stage1::Update(App* app){
 }
 
 void Stage1::End(App* app){
-
+    (void) app;
 }

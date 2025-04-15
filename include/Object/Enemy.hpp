@@ -3,12 +3,22 @@
 
 #include "Object/AnimatedItems.hpp"
 #include "Object/Character.hpp"
+#include "Object/Block.hpp"
 
 class Enemy : public AnimatedItems {
     public:
         Enemy(glm::vec2 position, std::string direction, std::vector<std::string> animationPath, int interval);
 
         virtual void MoveBehav() = 0;
+
+        virtual void MoveBehav(std::shared_ptr<Character> &character) {
+            (void) character;
+        }
+        
+        virtual void MoveBehav(std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks) {
+            (void) character;
+            (void) blocks;
+        }
 
         virtual void SetReset() = 0;
 
@@ -22,7 +32,7 @@ class Enemy : public AnimatedItems {
 
         void InWindowDetection(int screenWidth);
 
-        bool CheckReset();
+        virtual bool CheckReset();
 
     protected:
         std::string direction;

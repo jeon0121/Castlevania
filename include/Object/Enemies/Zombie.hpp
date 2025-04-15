@@ -13,4 +13,4 @@ private:
     std::vector<std::string> zomImages;
 };
 
-#endif;
+#endif
