@@ -20,6 +20,8 @@ public:
 
     void SetPaused();
 
+    void SetInterval(int interval);
+
     int GetCurrentFrameIndex();
 
     void SetCurrentFrame(std::size_t index);

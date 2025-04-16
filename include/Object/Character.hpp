@@ -73,6 +73,7 @@ public:
     void Idle();
     void Flip();
     void Hurt();
+    void Dead();
 
     void CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blocks);
     std::shared_ptr<Stair> CollideStair(const std::vector<std::shared_ptr<Stair>>& m_Stairs);
@@ -125,6 +126,7 @@ private:
     bool is_levelUpWhip = false;
     bool change_land = false;
     bool is_hurt = false;
+    bool is_dead = false;
     bool ifNeedSlip = false;//if char need slip when collide with enemy
 };
 

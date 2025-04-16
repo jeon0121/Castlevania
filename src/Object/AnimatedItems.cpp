@@ -34,6 +34,11 @@ void AnimatedItems::SetPaused() {
    ifStart = true;
 }
 
+void AnimatedItems::SetInterval(int interval) {
+   auto animation = std::dynamic_pointer_cast<Util::Animation>(m_Drawable);
+   animation->SetInterval(interval);
+}
+
 int AnimatedItems::GetCurrentFrameIndex(){
    auto animation = std::dynamic_pointer_cast<Util::Animation>(m_Drawable);
    return animation->GetCurrentFrameIndex();

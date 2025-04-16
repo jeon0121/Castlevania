@@ -10,7 +10,10 @@ namespace Subweapon {
         virtual ~IUseSubweapon() {}
         virtual void SetDirection(std::string direction) = 0;
         virtual std::string GetDirection() = 0;
+        void SetDestroyed(bool ifDestroy) {if_destroyed = ifDestroy;}
         virtual bool IsDestroyed() = 0;
+    protected:
+        bool if_destroyed = false;
     };
 }
 #endif

@@ -26,10 +26,10 @@ EnemiesManager::EnemiesManager(App *app) {
         enemy->SetZIndex(7);
 }
 
-void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks) {
+void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, std::shared_ptr<Menu> &menu) {
     for (auto &enemy : m_Enemies) {
         enemy->InWindowDetection(screenWidth);
-        if (enemy->CollideDetection(character)) {
+        if (enemy->CollideDetection(character, menu)) {
             enemy->Death();
         }
     }
