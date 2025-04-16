@@ -10,6 +10,7 @@ Zombie::Zombie(glm::vec2 position, std::string direction): Enemy(position, direc
         Flip();
     SetPlaying();
     SetLooping(true);
+    countHurt = 2;
 }
 
 void Zombie::MoveBehav() {

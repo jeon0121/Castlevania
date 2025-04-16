@@ -4,6 +4,7 @@
 #include "Object/AnimatedItems.hpp"
 #include "Object/Character.hpp"
 #include "Object/Block.hpp"
+#include "State/Menu.hpp"
 
 class Enemy : public AnimatedItems {
     public:
@@ -28,7 +29,7 @@ class Enemy : public AnimatedItems {
 
         void UpdatePosition();
 
-        bool CollideDetection(std::shared_ptr<Character> &character);
+        bool CollideDetection(std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu);
 
         virtual void InWindowDetection(int screenWidth);
 
@@ -40,8 +41,8 @@ class Enemy : public AnimatedItems {
         bool is_dead = false;
         bool is_hidden = false;
         bool hasEnteredWindow = false;
-    private:
         int countHurt = 0;
+    private:
         float enemyTop;
         float enemyBottom;
         float enemyLeft;

@@ -1,4 +1,5 @@
 #include "Object/Enemy.hpp"
+#include "Object/Loot.hpp"
 
 Enemy::Enemy(glm::vec2 position, std::string direction, std::vector<std::string> animationPath, int interval) : AnimatedItems(animationPath, interval) {
     this->direction = direction;
@@ -33,7 +34,7 @@ void Enemy::UpdatePosition() {
     enemyRight = enemyPos.x + enemySize.x * 0.5f;
 }
 
-bool Enemy::CollideDetection(std::shared_ptr<Character> &character) {
+bool Enemy::CollideDetection(std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) {
     int frameIndex = character->m_Behavior->GetCurrentFrameIndex();
     int whipLevel = character->GetWhipLevel();
     UpdatePosition();
@@ -60,6 +61,20 @@ bool Enemy::CollideDetection(std::shared_ptr<Character> &character) {
                 is_dead = true;
             }
         }
+    }else if(character->m_SubWeapon != nullptr && character->GetUseWeaponFlag()) {
+        std::shared_ptr<Loot> asLoot = std::dynamic_pointer_cast<Loot>(character->m_SubWeapon);
+        glm::vec2 pos = asLoot->GetPosition();
+        glm::vec2 size = glm::abs(asLoot->GetScaledSize());
+        float weaponLeft = pos.x - size.x * 0.5f;
+        float weaponRight = pos.x + size.x * 0.5f;
+        bool overlapX = (weaponLeft > enemyLeft && weaponLeft < enemyRight) ||
+                        (weaponRight > enemyLeft && weaponRight < enemyRight);
+        bool overlapY = enemyTop > charPos.y && enemyBottom < charPos.y;
+        if (overlapX && overlapY) {
+            SetPaused();
+            is_dead = true;
+            character->m_SubWeapon->SetDestroyed(true);
+        }
     }
     else {
         if (!character->GetHurtFlag() && !is_dead && !is_hidden) {
@@ -75,6 +90,8 @@ bool Enemy::CollideDetection(std::shared_ptr<Character> &character) {
                     ifNeedSlip = true;
                 }
                 character->SetHurtFlag(true, ifNeedSlip);
+                character->SetHeart(character->GetHeart() - countHurt);
+                menu->modifyHealth(character->GetHeart(), "player");
             }
         }
     }

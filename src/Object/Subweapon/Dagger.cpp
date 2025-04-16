@@ -16,7 +16,8 @@ namespace Subweapon {
     }
 
     bool Dagger::IsDestroyed() {
-        // later on, check if the dagger collide with enemy
+        if (if_destroyed)
+            return true;
         return false;
     }
 }

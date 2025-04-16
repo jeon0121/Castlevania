@@ -110,7 +110,7 @@ void Menu::modifyHealth(int heart, std::string type) {
         h->SetVisible(false);
     int i = 0;
     for (auto &&h : healthbar){
-        if (i++ != heart)
+        if (i++ < heart)
             h->SetVisible(true);
     }
 }
