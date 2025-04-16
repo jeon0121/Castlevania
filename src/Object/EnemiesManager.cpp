@@ -6,10 +6,14 @@ EnemiesManager::EnemiesManager(App *app) {
     std::shared_ptr<Zombie> zombie_2 = std::make_shared<Zombie>(glm::vec2(640, -265.35), "left");
     std::shared_ptr<Zombie> zombie_3 = std::make_shared<Zombie>(glm::vec2(760, -265.35), "left");
     std::shared_ptr<Leopard> leopard_1 = std::make_shared<Leopard>(glm::vec2(2355, -69), "left");
+    std::shared_ptr<Leopard> leopard_2 = std::make_shared<Leopard>(glm::vec2(3150, 50), "left");
+    std::shared_ptr<Leopard> leopard_3 = std::make_shared<Leopard>(glm::vec2(3450, -69), "left");
     m_Zombies.push_back(zombie_1);
     m_Zombies.push_back(zombie_2);
     m_Zombies.push_back(zombie_3);
     m_Leopards.push_back(leopard_1);
+    m_Leopards.push_back(leopard_2);
+    m_Leopards.push_back(leopard_3);
     for (auto &zombie : m_Zombies) {
         m_Enemies.push_back(zombie);
         app->m_Root.AddChild(zombie);

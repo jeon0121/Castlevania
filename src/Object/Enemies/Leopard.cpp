@@ -6,7 +6,7 @@ Leopard::Leopard(glm::vec2 position, std::string direction) : Enemy(position, di
     walkImages.emplace_back(GA_RESOURCE_DIR"/enemies/leopard/leopard-3.png");
     walkImages.emplace_back(GA_RESOURCE_DIR"/enemies/leopard/leopard-4.png");
     SetAnimationFrames(idleImages, 0);
-    m_Transform.scale = glm::vec2(1.2f, 1.0f);
+    m_Transform.scale = glm::vec2(1.0f, 1.0f);
     if (direction == "right")
         Flip();
 }
@@ -25,10 +25,10 @@ void Leopard::MoveBehav(std::shared_ptr<Character> &character, std::vector<std::
     for (auto& block : blocks) {
         glm::vec2 blockPos = block->GetPosition();
         glm::vec2 blockSize = block->GetScaledSize();
-        bool horizontallyAligned = pos.x + size.x * 0.5f > blockPos.x && pos.x - size.x * 0.5f < blockPos.x + blockSize.x;
-        bool verticallyClose = ((pos.y - size.y * 0.5) - (blockPos.y + blockSize.y * 0.5)) < 5.0f;
-        if (horizontallyAligned && verticallyClose) { 
-            SetPosition({pos.x, blockPos.y + blockSize.y * 0.5f + size.y * 0.5f});
+        bool horizontallyAligned = pos.x > blockPos.x - blockSize.x * 0.5f
+                                && pos.x < blockPos.x + blockSize.x * 0.5f;
+        bool verticallyClose = std::abs((pos.y - size.y * 0.5) - (blockPos.y + blockSize.y * 0.5)) < 5.0f;
+        if (horizontallyAligned && verticallyClose) {
             isOnGround = true;
             break;
         }
@@ -50,6 +50,7 @@ void Leopard::MoveBehav(std::shared_ptr<Character> &character, std::vector<std::
         SetAnimationFrames(walkImages, 100);
         is_jump = false;
         is_walk = true;
+        y_vel = 0.0f;
     }
     if (is_jump) 
         Jump();
@@ -74,9 +75,9 @@ void Leopard::SetDirection(std::string direction) {
 void Leopard::Walk() {
     glm::vec2 pos = GetPosition();
     if (direction == "right") {
-        SetPosition({pos.x + 5.0f, pos.y});
+        SetPosition({pos.x + 7.5f, pos.y});
     } else {
-        SetPosition({pos.x - 5.0f, pos.y});
+        SetPosition({pos.x - 7.5f, pos.y});
     }
 }
 
@@ -87,7 +88,10 @@ void Leopard::Jump() {
     } else {
         SetPosition({pos.x - 7.5f, pos.y + y_vel});
     }
-    y_vel -= 0.5f;
+    if (y_vel < -10.0f) 
+        y_vel = -10.0f;
+    else
+        y_vel -= 0.5f;
 }
 
 glm::vec2 Leopard::GetInitialPos() {
