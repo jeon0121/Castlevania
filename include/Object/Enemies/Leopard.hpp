@@ -14,6 +14,7 @@ public:
     void Walk();
     void Jump();
     glm::vec2 GetInitialPos();
+    void InWindowDetection(int screenWidth) override;
 private:
     std::vector<std::string> idleImages;
     std::vector<std::string> walkImages;

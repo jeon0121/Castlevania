@@ -28,6 +28,7 @@ Menu::Menu(const MenuValue& values)
     // player health
     addText("player", {-390, 320});
     addHealth(m_value.playerHeart, {-260, 318}, "player");
+    addHealth(m_value.playerHeart, {-260, 318}, "player");
 
     // enemy health
     addText("enemy", {-405, 290});

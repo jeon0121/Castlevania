@@ -30,7 +30,7 @@ class Enemy : public AnimatedItems {
 
         bool CollideDetection(std::shared_ptr<Character> &character);
 
-        void InWindowDetection(int screenWidth);
+        virtual void InWindowDetection(int screenWidth);
 
         virtual bool CheckReset();
 

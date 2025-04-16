@@ -106,7 +106,6 @@ std::string Character::GetDirection() const {
 }
 
 void Character::Hurt() {
-    auto pos = m_Behavior->GetPosition();
     if (is_jump && is_hurt && !is_onStair) {
         Fall();
         x_vel = ((m_direction == "right") ? -4.5f : 4.5f);
@@ -585,7 +584,7 @@ void Character::Jump(){
     if (!is_jump)
         y_vel = 14.5f;
     if (is_hurt && is_jump)
-        y_vel += 14.5f;
+        y_vel = 12.5f;
     is_jump = true;
 }
 

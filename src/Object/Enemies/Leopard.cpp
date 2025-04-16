@@ -17,7 +17,9 @@ void Leopard::MoveBehav(std::shared_ptr<Character> &character, std::vector<std::
     glm::vec2 pos = GetPosition();
     glm::vec2 size = GetScaledSize();
     // if character near leopard 3 blocks, leopard will move to character
-    if (character->GetPosition().x > pos.x - size.x - 3 * character->GetSize().x && state == "idle")
+    if (((character->GetPosition().x > pos.x - size.x - 3 * character->GetSize().x && character->GetPosition().x < pos.x) ||
+         (character->GetPosition().x < pos.x - size.x + 3 * character->GetSize().x && character->GetPosition().x > pos.x)) &&
+          state == "idle")
         state = "walk";
     if (state == "idle") return;
 
@@ -59,11 +61,15 @@ void Leopard::MoveBehav(std::shared_ptr<Character> &character, std::vector<std::
 }
 
 void Leopard::SetReset() {
+    state = "idle";
+    y_vel = 0.0f;
     is_dead = false;
     is_hidden = false;
+    is_walk = false;
+    is_jump = false;
     hasEnteredWindow = false;
     SetAnimationFrames(idleImages, 300);
-    SetPosition(initialPos);
+    SetVisible(true);
 }
 
 void Leopard::SetDirection(std::string direction) {
@@ -96,4 +102,26 @@ void Leopard::Jump() {
 
 glm::vec2 Leopard::GetInitialPos() {
     return initialPos;
+}
+
+void Leopard::InWindowDetection(int screenWidth) {
+    if (!is_dead) {
+        glm::vec2 pos = GetPosition();
+        bool outOfWindow = (pos.x < screenWidth * -0.5 || pos.x > screenWidth * 0.5) && state != "idle";
+        if (is_hidden) {
+            SetVisible(false);
+            return;
+        }
+        if (outOfWindow) {
+            if (hasEnteredWindow) {
+                is_hidden = true;
+                SetVisible(false);
+            } else {
+                SetVisible(true);
+            }
+        } else {
+            hasEnteredWindow = true;
+            SetVisible(true);
+        }
+    }
 }

@@ -86,12 +86,14 @@ void EnemiesManager::ManageZombies(float offsetX, std::shared_ptr<Character> &ch
 
 void EnemiesManager::ManageLeopard(float offsetX, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, int screenWidth) {
     for (auto &leopard : m_Leopards) {
+        int initialPosX = leopard->GetInitialPos().x - offsetX;
         if (!leopard->CheckReset()) {
             leopard->MoveBehav(character, blocks);
         }
-        // else if (0 < leopard->GetInitialPos().x - offsetX && leopard->GetInitialPos().x - offsetX < screenWidth) {
-        //     leopard->SetReset();
-        //     leopard->SetDirection((leopard->GetPosition().x > 0) ? "left" : "right");
-        // }
+        else if (initialPosX < -screenWidth || screenWidth < initialPosX) {
+            leopard->SetReset();
+            leopard->SetDirection((leopard->GetInitialPos().x - offsetX > 0) ? "left" : "right");
+            leopard->SetPosition(leopard->GetInitialPos() - glm::vec2(offsetX, 0));
+        }
     }
 }
