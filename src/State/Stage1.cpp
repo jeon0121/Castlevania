@@ -53,18 +53,19 @@ void Stage1::Start(App* app){
         { { 2395, -122 }, { 1.61, 0.68 } },
         { { 2888, -5   }, { 5.32, 0.68 } },
         { { 3478, -122 }, { 3.22, 0.68 } },
-        { { 5670, -50  }, { 0.4,  7    } }
+        { { 5414, -5   }, { 3.73, 0.68 } }
     };
     for (auto& b : blocks) {
         auto block = std::make_shared<Block>(b.pos, b.scale);
         m_Blocks.push_back(block);
+        m_All.push_back(block);
     }
 
     // stair
     std::vector<StairData> stairs = {
         { { 2035, -297 }, { 2296, -69 } },
-        { { 2420, -69  }, { 2560, 50  } },
-        { { 3220, 50   }, { 3350, -69 } },
+        { { 2430, -67  }, { 2560, 45  } },
+        { { 3220, 45   }, { 3350, -67 } },
         { { 4790, -297 }, { 5180, 50  } }
     };
     for (auto& s : stairs) {

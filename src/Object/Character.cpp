@@ -463,11 +463,11 @@ void Character::Ascending(std::shared_ptr<Stair>& stair) {
     }
     if (is_ascending) {
         if (m_pos.y < nextStairPos.y) {
-            y_vel = 1.0f;
-            x_vel = (nextStairPos.x > m_pos.x) ? 1.1f : -1.1f;
+            y_vel = 1.5f;
+            x_vel = (nextStairPos.x > m_pos.x) ? 1.7f : -1.7f;
         }
         else {
-            m_pos.y = nextStairPos.y;
+            m_pos.y = nextStairPos.y - 1.0f;
             x_vel = y_vel = 0.0f;
             is_ascending = false;
         }
@@ -524,11 +524,11 @@ void Character::Descending(std::shared_ptr<Stair>& stair) {
     }
     if (is_descending) {
         if (m_pos.y > nextStairPos.y) {
-            y_vel = -1.0f;
-            x_vel = (nextStairPos.x > m_pos.x) ? 1.1f : -1.1f;
+            y_vel = -1.5f;
+            x_vel = (nextStairPos.x > m_pos.x) ? 1.7f : -1.7f;
         }
         else {
-            m_pos.y = nextStairPos.y;
+            m_pos.y = nextStairPos.y + 1.0f;
             x_vel = y_vel = 0.0f;
             is_descending = false;
         }
