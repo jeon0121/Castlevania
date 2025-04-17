@@ -1,6 +1,6 @@
 #include "Object/Enemies/Zombie.hpp"
 
-Zombie::Zombie(glm::vec2 position, std::string direction): Enemy(position, direction, {}, 250) {
+Zombie::Zombie(glm::vec2 position, std::string direction): Enemy(position, direction, {}, 250, 100) {
     for (int i = 0; i < 2; ++i) {
         zomImages.emplace_back(GA_RESOURCE_DIR"/enemies/zombie/zombie-" + std::to_string(i + 1) + ".png");
     }

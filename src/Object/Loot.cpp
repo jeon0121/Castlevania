@@ -1,4 +1,5 @@
 #include "Object/Loot.hpp"
+#include "Object/LootType/Loot.hpp"
 
 Loot::Loot(glm::vec2 position, std::vector<std::string> animationPath, int interval) : AnimatedItems(animationPath, interval) {
    SetPosition(position);
@@ -61,6 +62,51 @@ bool Loot::IsCollected(std::shared_ptr<Character>& character) {
    return false;
 }
 
-bool Loot::IfCollected() const {return is_collected;}
+bool Loot::IfCollected() const {
+   return is_collected;
+}
 
-bool Loot::IfEnded() const {return is_endResult;}
+bool Loot::IfEnded() const {
+   return is_endResult;
+}
+
+std::shared_ptr<Loot> Loot::CreateLoot(LootType itemType, glm::vec2 position, std::shared_ptr<Character> character) {
+   // 20% whip drop if character’s whip < level 3
+   if (character->GetWhipLevel() != 3 && std::rand() % 5 == 0)
+      return std::make_shared<LootItem::Whip>(position);
+   // if there's loot item type
+   switch (itemType) {
+      // Sub weapon
+      case LootType::Axe:
+         return std::make_shared<Subweapon::Axe>(position);
+      case LootType::Dagger:
+         return std::make_shared<Subweapon::Dagger>(position);
+      case LootType::HolyWater:
+         return std::make_shared<Subweapon::HolyWater>(position);
+      case LootType::Stopwatch:
+         return std::make_shared<Subweapon::Stopwatch>(position);
+
+      // Whip
+      case LootType::Whip:
+         return std::make_shared<LootItem::Whip>(position);
+
+      // Bags
+      case LootType::RedBag:
+         return std::make_shared<LootItem::Bag>(position, LootType::RedBag);
+      case LootType::WhiteBag:
+         return std::make_shared<LootItem::Bag>(position, LootType::WhiteBag);
+      case LootType::PurpleBag:
+         return std::make_shared<LootItem::Bag>(position, LootType::PurpleBag);
+      case LootType::SpecialBag:
+         return std::make_shared<LootItem::Bag>(position, LootType::SpecialBag);
+
+      // Items
+      case LootType::HeartSmall:
+         return std::make_shared<LootItem::Heart>(position, LootType::HeartSmall);
+      case LootType::HeartBig:
+         return std::make_shared<LootItem::Heart>(position, LootType::HeartBig);
+      default:
+         break;
+   }
+   return nullptr;
+}

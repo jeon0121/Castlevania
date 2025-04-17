@@ -25,11 +25,29 @@ void EnemiesManager::AddLeopard(glm::vec2 positions, std::string direction, App 
     app->m_Root.AddChild(leopard);
 }
 
-void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, std::shared_ptr<Menu> &menu) {
+void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, App* app) {
     for (auto &enemy : m_Enemies) {
         enemy->InWindowDetection(screenWidth);
-        if (enemy->CollideDetection(character, menu)) {
-            enemy->Death();
+        if (enemy->CollideDetection(character, app->m_Menu)) {
+            enemy->Death(app, character, m_Loots);
+        }
+    }
+    for (size_t i = 0; i < m_Loots.size();) {
+        auto& loot = m_Loots[i];
+        if (!loot) 
+            m_Loots.erase(m_Loots.begin() + i);
+        else if (!loot->IfCollected()) {
+            loot->Fall(blocks);
+            ++i;
+        }
+        else {
+            loot->Result(app, character, app->m_Menu);
+            if (loot->IfEnded()) {
+                app->m_Root.RemoveChild(loot);
+                m_Loots.erase(m_Loots.begin() + i);
+            }
+            else
+                ++i;
         }
     }
     ManageZombies(offsetX, character, screenWidth);

@@ -56,7 +56,7 @@ bool Torch::CollideDetection(std::shared_ptr<Character> &character) {
     return is_destroyed;
 }
 
-void Torch::Destroy(App* app) {
+void Torch::Destroy(App* app, std::shared_ptr<Character> character) {
     if (IfAnimationStart())
         SetAnimationFrames(torchDeath, 120);
     SetPlaying();
@@ -64,45 +64,9 @@ void Torch::Destroy(App* app) {
         SetPaused();
         SetVisible(false);
         if (!loot) {
-            loot = CreateLoot(itemType, GetPosition());
+            loot = Loot::CreateLoot(itemType, GetPosition(), character);
             app->m_Root.AddChild(loot);
         }
-    }
-}
-
-std::shared_ptr<Loot> Torch::CreateLoot(LootType itemType, glm::vec2 position) {
-    switch (itemType) {
-        // Sub weapon
-        case LootType::Axe:
-            return std::make_shared<Subweapon::Axe>(position);
-        case LootType::Dagger:
-            return std::make_shared<Subweapon::Dagger>(position);
-        case LootType::HolyWater:
-            return std::make_shared<Subweapon::HolyWater>(position);
-        case LootType::Stopwatch:
-            return std::make_shared<Subweapon::Stopwatch>(position);
-
-        // Whip
-        case LootType::Whip:
-            return std::make_shared<LootItem::Whip>(position);
-
-        // Bags
-        case LootType::RedBag:
-            return std::make_shared<LootItem::Bag>(position, LootType::RedBag);
-        case LootType::WhiteBag:
-            return std::make_shared<LootItem::Bag>(position, LootType::WhiteBag);
-        case LootType::PurpleBag:
-            return std::make_shared<LootItem::Bag>(position, LootType::PurpleBag);
-        case LootType::SpecialBag:
-            return std::make_shared<LootItem::Bag>(position, LootType::SpecialBag);
-
-        // Items
-        case LootType::HeartSmall:
-            return std::make_shared<LootItem::Heart>(position, LootType::HeartSmall);
-        case LootType::HeartBig:
-            return std::make_shared<LootItem::Heart>(position, LootType::HeartBig);
-        default:
-            return nullptr;
     }
 }
 
@@ -117,5 +81,5 @@ void Torch::Update(App* app, std::shared_ptr<Character> character, std::shared_p
             app->m_Root.RemoveChild(loot);
     }
     if (CollideDetection(character) && !loot)
-        Destroy(app);
+        Destroy(app, character);
 }

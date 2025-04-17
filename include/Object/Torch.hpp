@@ -15,9 +15,7 @@ public:
 
    bool CollideDetection(std::shared_ptr<Character> &character);
 
-   void Destroy(App* app);
-
-   std::shared_ptr<Loot> CreateLoot(LootType itemType, glm::vec2 position);
+   void Destroy(App* app, std::shared_ptr<Character> character);
 
    std::shared_ptr<Loot> loot = nullptr;
 

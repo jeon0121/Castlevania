@@ -1,7 +1,8 @@
 #include "Object/Enemy.hpp"
 #include "Object/Loot.hpp"
 
-Enemy::Enemy(glm::vec2 position, std::string direction, std::vector<std::string> animationPath, int interval) : AnimatedItems(animationPath, interval) {
+Enemy::Enemy(glm::vec2 position, std::string direction, std::vector<std::string> animationPath, int interval, int score)
+    : AnimatedItems(animationPath, interval), score(score) {
     this->direction = direction;
     SetPosition(position);
     SetZIndex(7);
@@ -10,13 +11,20 @@ Enemy::Enemy(glm::vec2 position, std::string direction, std::vector<std::string>
     }
 }
 
-void Enemy::Death() {
+void Enemy::Death(App* app, std::shared_ptr<Character> character, std::vector<std::shared_ptr<Loot>> m_Loots) {
     if (IfAnimationStart())
         SetAnimationFrames(deathImages, 120);
     SetPlaying();
     if (IfAnimationEnds()) {
         SetPaused();
         SetVisible(false);
+        if (!loot) {
+            loot = Loot::CreateLoot(lootType, GetPosition(), character);
+            if (loot) {
+                m_Loots.push_back(loot);
+                app->m_Root.AddChild(loot);
+            }
+        }
     }
 }
 
@@ -59,9 +67,10 @@ bool Enemy::CollideDetection(std::shared_ptr<Character> &character, std::shared_
             if (overlapX && overlapY) {
                 SetPaused();
                 is_dead = true;
+                menu->modifyNumber(menu->formatScore(menu->m_value.score + score), 0, (menu->m_value.score + score));
             }
         }
-    }else if(character->m_SubWeapon != nullptr && character->GetUseWeaponFlag()) {
+    } else if (character->m_SubWeapon != nullptr && character->GetUseWeaponFlag()) {
         std::shared_ptr<Loot> asLoot = std::dynamic_pointer_cast<Loot>(character->m_SubWeapon);
         glm::vec2 pos = asLoot->GetPosition();
         glm::vec2 size = glm::abs(asLoot->GetScaledSize());
@@ -110,10 +119,10 @@ void Enemy::InWindowDetection(int screenWidth) {
             if (hasEnteredWindow) {
                 is_hidden = true;
                 SetVisible(false);
-            }else {
+            } else {
                 SetVisible(true);
             }
-        }else {
+        } else {
             hasEnteredWindow = true;
             SetVisible(true);
         }

@@ -34,7 +34,9 @@ enum class LootType {
 
    // Hearts
    HeartSmall, // +1
-   HeartBig    // +5
+   HeartBig,   // +5
+
+   None
 };
 
 class Loot : public AnimatedItems {
@@ -54,6 +56,8 @@ public:
    bool IfCollected() const;
 
    bool IfEnded() const;
+
+   static std::shared_ptr<Loot> CreateLoot(LootType itemType, glm::vec2 position, std::shared_ptr<Character> character);
 
    std::shared_ptr<AnimatedItems> score = nullptr;
 protected:

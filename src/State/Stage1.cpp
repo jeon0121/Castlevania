@@ -100,7 +100,7 @@ void Stage1::Start(App* app){
 
 void Stage1::Update(App* app){
     m_Character->Keys(m_Blocks, m_Stairs);
-    m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app->m_Menu);
+    m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app);
     UpdateTorch(app);
     UpdateSubWeapon(app);
     UpdateScroll(mapWidth);

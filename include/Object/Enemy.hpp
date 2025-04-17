@@ -5,10 +5,11 @@
 #include "Object/Character.hpp"
 #include "Object/Block.hpp"
 #include "State/Menu.hpp"
+#include "Object/Loot.hpp"
 
 class Enemy : public AnimatedItems {
     public:
-        Enemy(glm::vec2 position, std::string direction, std::vector<std::string> animationPath, int interval);
+        Enemy(glm::vec2 position, std::string direction, std::vector<std::string> animationPath, int interval, int score);
 
         virtual void MoveBehav() {}
 
@@ -23,7 +24,7 @@ class Enemy : public AnimatedItems {
 
         virtual void SetReset() = 0;
 
-        void Death();
+        void Death(App* app, std::shared_ptr<Character> character, std::vector<std::shared_ptr<Loot>> m_Loots);
 
         void Flip();
 
@@ -37,6 +38,8 @@ class Enemy : public AnimatedItems {
 
         virtual bool CheckReset();
 
+        std::shared_ptr<Loot> loot = nullptr;
+        
     protected:
         std::string direction;
         std::vector<std::string> deathImages;
@@ -44,6 +47,8 @@ class Enemy : public AnimatedItems {
         bool is_hidden = false;
         bool hasEnteredWindow = false;
         int countHurt = 0;
+        int score = 0;
+        LootType lootType = LootType::None;
     private:
         float enemyTop;
         float enemyBottom;

@@ -16,13 +16,15 @@ class EnemiesManager {
 
         void AddLeopard(glm::vec2 positions, std::string direction, App *app);
 
-        void Update(float offsetX, int screenWidth, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, std::shared_ptr<Menu> &menu);
+        void Update(float offsetX, int screenWidth, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, App* app);
 
         void ManageZombies(float offsetX, std::shared_ptr<Character> &character, int screenWidth);
 
         void ManageLeopard(float offsetX, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, int screenWidth);
 
         std::vector<std::shared_ptr<Enemy>> m_Enemies;
+
+        std::vector<std::shared_ptr<Loot>> m_Loots;
     private:
         Uint64 resetStartTime = 0;
         std::vector<std::shared_ptr<ZombieHorde>> m_Zombies;

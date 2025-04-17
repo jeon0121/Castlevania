@@ -1,6 +1,6 @@
 #include "Object/Enemies/Leopard.hpp"
 
-Leopard::Leopard(glm::vec2 position, std::string direction) : Enemy(position, direction, {}, 300), initialPos(position) {
+Leopard::Leopard(glm::vec2 position, std::string direction) : Enemy(position, direction, {}, 300, 200), initialPos(position) {
     idleImages.emplace_back(GA_RESOURCE_DIR"/enemies/leopard/leopard-1.png");
     jumpImages.emplace_back(GA_RESOURCE_DIR"/enemies/leopard/leopard-2.png");
     walkImages.emplace_back(GA_RESOURCE_DIR"/enemies/leopard/leopard-3.png");
