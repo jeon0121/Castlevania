@@ -120,6 +120,11 @@ void Enemy::InWindowDetection(int screenWidth) {
     }
 }
 
+void Enemy::SetHidden(bool hidden) {
+    is_hidden = hidden;
+    SetVisible(!hidden);
+}
+
 bool Enemy::CheckReset() {
     return (is_hidden || is_dead);
 }

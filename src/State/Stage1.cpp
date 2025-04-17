@@ -26,8 +26,28 @@ void Stage1::Start(App* app){
     m_All.push_back(m_Character->m_Behavior);
 
     //EnemiesManager
-    m_EnemiesManager = std::make_shared<EnemiesManager>(app);
+    m_EnemiesManager = std::make_shared<EnemiesManager>();
 
+    // zombies
+    std::vector<std::tuple<glm::vec2, int, float>> zombies = {
+        { { -500, 1215 }, 3, -265.35f },
+        { { 4030, 6144 }, 3, -265.35f }
+    };
+    for (auto& z : zombies) {
+        auto [range, numZombie, yPos] = z;
+        m_EnemiesManager->AddZombie(range, numZombie, {screenWidth * 0.5, yPos}, "left", app);
+    }
+
+    //leopards
+    std::vector<glm::vec2> leopards = {
+        { 2355, -69 },
+        { 3150, 50  },
+        { 3450, -69 }
+    };
+    for (auto& l : leopards) {
+        m_EnemiesManager->AddLeopard(l, "left", app);
+    }
+    
     //torch
     std::vector<TorchData> torchs = {
         { { -392, -240 }, {1, 0.9}, LootType::PurpleBag,  1},

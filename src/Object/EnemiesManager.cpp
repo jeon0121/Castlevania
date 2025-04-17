@@ -1,29 +1,28 @@
 #include "Object/EnemiesManager.hpp"
 #include "Utility/Time.hpp"
 
-EnemiesManager::EnemiesManager(App *app) {
-    std::shared_ptr<Zombie> zombie_1 = std::make_shared<Zombie>(glm::vec2(520, -265.35), "left");
-    std::shared_ptr<Zombie> zombie_2 = std::make_shared<Zombie>(glm::vec2(640, -265.35), "left");
-    std::shared_ptr<Zombie> zombie_3 = std::make_shared<Zombie>(glm::vec2(760, -265.35), "left");
-    std::shared_ptr<Leopard> leopard_1 = std::make_shared<Leopard>(glm::vec2(2355, -69), "left");
-    std::shared_ptr<Leopard> leopard_2 = std::make_shared<Leopard>(glm::vec2(3150, 50), "left");
-    std::shared_ptr<Leopard> leopard_3 = std::make_shared<Leopard>(glm::vec2(3450, -69), "left");
-    m_Zombies.push_back(zombie_1);
-    m_Zombies.push_back(zombie_2);
-    m_Zombies.push_back(zombie_3);
-    m_Leopards.push_back(leopard_1);
-    m_Leopards.push_back(leopard_2);
-    m_Leopards.push_back(leopard_3);
-    for (auto &zombie : m_Zombies) {
+EnemiesManager::EnemiesManager() {}
+
+void EnemiesManager::AddZombie(glm::vec2 range, int numZombie, glm::vec2 pos, std::string direction, App *app) {
+    std::shared_ptr<ZombieHorde> zombieHorde = std::make_shared<ZombieHorde>(range, numZombie, pos, direction);
+    m_Zombies.push_back(zombieHorde);
+    if (zombieHorde->GetSpawnRange().x > app->m_Character->GetPosition().x || app->m_Character->GetPosition().x > zombieHorde->GetSpawnRange().y) {
+        for (auto &zombie : zombieHorde->zombies) 
+            zombie->SetHidden(true);
+    }
+    for (auto &zombie : zombieHorde->zombies) {
+        zombie->SetZIndex(7);
         m_Enemies.push_back(zombie);
         app->m_Root.AddChild(zombie);
     }
-    for (auto &leopard : m_Leopards) {
-        m_Enemies.push_back(leopard);
-        app->m_Root.AddChild(leopard);
-    }
-    for (auto &enemy : m_Enemies) 
-        enemy->SetZIndex(7);
+}
+
+void EnemiesManager::AddLeopard(glm::vec2 positions, std::string direction, App *app) {
+    std::shared_ptr<Leopard> leopard = std::make_shared<Leopard>(positions, direction);
+    leopard->SetZIndex(7);
+    m_Leopards.push_back(leopard);
+    m_Enemies.push_back(leopard);
+    app->m_Root.AddChild(leopard);
 }
 
 void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, std::shared_ptr<Menu> &menu) {
@@ -33,53 +32,48 @@ void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Char
             enemy->Death();
         }
     }
-    ManageZombies(offsetX, character);
+    ManageZombies(offsetX, character, screenWidth);
     ManageLeopard(offsetX, character, blocks, screenWidth);
 }
 
-void EnemiesManager::ManageZombies(float offsetX, std::shared_ptr<Character> &character) {
-    bool reset = true;
+void EnemiesManager::ManageZombies(float offsetX, std::shared_ptr<Character> &character, int screenWidth) {
     constexpr float delay = 2000.0f;
-    for (auto &zombie : m_Zombies) {
-        if (!zombie->CheckReset()) {
-            zombie->MoveBehav();
-            reset = false;
-        }
-    }
-    if (reset && (offsetX < 1215 || offsetX > 4030)) {
-        if (resetStartTime == 0) {
-            resetStartTime = SDL_GetPerformanceCounter();
-        }
-        if (Time::GetRunTimeMs(resetStartTime) > delay) {
-            if (character->GetPosition().x > 0) {
-                m_Zombies[0]->SetPosition({-520, -265.35});
-                m_Zombies[1]->SetPosition({-640, -265.35});
-                m_Zombies[2]->SetPosition({-760, -265.35});
+    for (auto &zombieHorde : m_Zombies) {
+        bool reset = true;
+        for (auto &zombie : zombieHorde->zombies) {
+            if (!zombie->CheckReset()) {
+                zombie->MoveBehav();
+                reset = false;
             }
-            else if (character->GetPosition().x < 0) {
-                m_Zombies[0]->SetPosition({520, -265.35});
-                m_Zombies[1]->SetPosition({640, -265.35});
-                m_Zombies[2]->SetPosition({760, -265.35});
-            }
-            else {
-                int r = std::rand() % 3;
-                m_Zombies[0]->SetPosition({520, -265.35});
-                if (r == 0) {
-                    m_Zombies[1]->SetPosition({640, -265.35});
-                    m_Zombies[2]->SetPosition({760, -265.35});
-                } else if (r == 1) {
-                    m_Zombies[1]->SetPosition({640, -265.35});
-                    m_Zombies[2]->SetPosition({-520, -265.35});
+        }
+        if (reset && (zombieHorde->GetSpawnRange().x < offsetX && offsetX < zombieHorde->GetSpawnRange().y)) {
+            if (resetStartTime == 0)
+                resetStartTime = SDL_GetPerformanceCounter();
+            if (Time::GetRunTimeMs(resetStartTime) > delay) {
+                if (character->GetPosition().x > 10.0f) {
+                    for (int i = 0; i < zombieHorde->GetNumZombie(); i++) {
+                        float spawnX = (std::rand() % 20 + 120) * i;
+                        zombieHorde->zombies[i]->SetPosition({-screenWidth * 0.5 + spawnX, -265.35f});
+                    }
+                } else if (character->GetPosition().x < -10.0f) {
+                    for (int i = 0; i < zombieHorde->GetNumZombie(); i++) {
+                        float spawnX = (std::rand() % 20 + 120) * i;
+                        zombieHorde->zombies[i]->SetPosition({screenWidth * 0.5 + spawnX, -265.35f});
+                    }
                 } else {
-                    m_Zombies[1]->SetPosition({-520, -265.35});
-                    m_Zombies[2]->SetPosition({-640, -265.35});
+                    for (int i = 0; i < zombieHorde->GetNumZombie(); i++) {
+                        int sign = (std::rand() % 2 == 0) ? 1 : -1;
+                        float spawnX = (std::rand() % 20 + 120) * i;
+                        float baseX = screenWidth * 0.5 + spawnX;
+                        zombieHorde->zombies[i]->SetPosition({sign * baseX, -265.35f});
+                    }
                 }
+                for (auto &zombie : zombieHorde->zombies) {
+                    zombie->SetReset();
+                    zombie->SetDirection((zombie->GetPosition().x > 0) ? "left" : "right");
+                }
+                resetStartTime = 0;
             }
-            for (auto &zombie : m_Zombies) {
-                zombie->SetReset();
-                zombie->SetDirection((zombie->GetPosition().x > 0) ? "left" : "right");
-            }
-            resetStartTime = 0;
         }
     }
 }

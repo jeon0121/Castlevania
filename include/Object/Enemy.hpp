@@ -33,6 +33,8 @@ class Enemy : public AnimatedItems {
 
         virtual void InWindowDetection(int screenWidth);
 
+        void SetHidden(bool hidden);
+
         virtual bool CheckReset();
 
     protected:

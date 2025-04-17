@@ -32,3 +32,24 @@ void Zombie::SetDirection(std::string direction) {
         Flip();
     this->direction = direction;
 }
+
+ZombieHorde::ZombieHorde(glm::vec2 range, int numZombie, glm::vec2 pos, std::string direction) : 
+    spawnRange(range), numZombie(numZombie), pos(pos), direction(direction) {
+    for (int i = 0; i < numZombie; ++i) {
+        float spawnX = (std::rand() % 60 + 120) * i;
+        std::shared_ptr<Zombie> zombie = std::make_shared<Zombie>(glm::vec2(pos.x + spawnX, pos.y), direction);
+        zombies.push_back(zombie);
+    }
+}
+
+void ZombieHorde::SetSpawnRange(glm::vec2 range) {
+    spawnRange = range;
+}
+
+glm::vec2 ZombieHorde::GetSpawnRange() const {
+    return spawnRange;
+}
+
+int ZombieHorde::GetNumZombie() const {
+    return numZombie;
+}
