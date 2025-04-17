@@ -28,11 +28,12 @@ Menu::Menu(const MenuValue& values)
     // player health
     addText("player", {-390, 320});
     addHealth(m_value.playerHeart, {-260, 318}, "player");
-    addHealth(m_value.playerHeart, {-260, 318}, "player");
+    addHealth(m_value.playerHeart, {-260, 318}, "empty");
 
     // enemy health
     addText("enemy", {-405, 290});
     addHealth(m_value.enemyHeart, {-260, 288}, "enemy");
+    addHealth(m_value.enemyHeart, {-260, 288}, "empty");
 
     // weapon
     addText("weapon-frame", {90, 290});
@@ -96,7 +97,10 @@ void Menu::addHealth(int heart, const glm::vec2& position, std::string type){
         std::string imagePath = GA_RESOURCE_DIR "/fonts/menu/" + type + "-health-bar.png";
         auto characterImage = std::make_shared<ImageItems>(imagePath);
         characterImage->SetPosition({x, y});
-        characterImage->SetZIndex(50);
+        if (type == "empty")
+            characterImage->SetZIndex(40);
+        else
+            characterImage->SetZIndex(50);
         characterImage->m_Transform.scale = {0.95, 0.81};
         healthbar.push_back(characterImage);
         x += characterImage->GetScaledSize().x + 5;
