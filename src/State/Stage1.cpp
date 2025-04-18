@@ -104,8 +104,19 @@ void Stage1::Update(App* app){
     UpdateTorch(app);
     UpdateSubWeapon(app);
     UpdateScroll(mapWidth);
+    if (m_Character->GetEndSceneFlag())
+        m_stateState = StateState::END;
 }
 
 void Stage1::End(App* app){
-    (void) app;
+    if (m_Character->GetEndSceneFlag()) {
+        app->m_Menu->SetMenuVisibility(false);
+        m_EnemiesManager->RemoveAllEnemies(app);
+        app->m_Menu->modifyWeapon(WeaponType::None);
+        app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(5), 3);
+        app->m_Character = nullptr;
+        app->RemoveAllChildren(m_All);
+        app->m_AppState = App::AppState::START;
+        app->m_GameState = App::GameState::STAGE1;
+    }
 }

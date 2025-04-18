@@ -41,6 +41,7 @@ public:
     const WeaponType& GetSubWeaponType() const;
     const bool& GetUseWeaponFlag() const;
     bool GetHurtFlag();
+    bool GetEndSceneFlag() const;
     const glm::vec2& GetPosition() const;
     const glm::vec2& GetLastPosition() const;
     const glm::vec2& GetSize() const;
@@ -53,6 +54,7 @@ public:
     void SetHeart(int heart);
     int GetHeart() const;
     void SetLevelUpWhip(bool ifLevelUp); // check if it's still at level-up animation
+    bool GetLevelUpWhipFlag() const;
     void LevelUpWhip();
 
     float OffsetValues(std::string typeName);
@@ -108,6 +110,7 @@ private:
     float landPosition;
     Uint64 startHurtTime = 0;
     Uint64 startDuckTime = 0;
+    Uint64 startDeadTime = 0;
 
     int currentBeIndex = 2;
     int currentFrame = -1;

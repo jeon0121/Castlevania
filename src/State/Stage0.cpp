@@ -53,7 +53,8 @@ void Stage0::Start(App* app){
     // block
     std::vector<std::pair<glm::vec2, glm::vec2>> blocks = {
         { {0,    -307}, {100, 0.7} },
-        { {-545, -50 }, {0.4, 7  } }
+        { {-545, -50 }, {0.4, 7  } },
+        { {2600, -50 }, {0.4, 7  } }
     };
     for (auto& b : blocks) {
         auto block = std::make_shared<Block>(b.first, b.second);
@@ -70,7 +71,11 @@ void Stage0::Update(App* app){
     UpdateSubWeapon(app);
     UpdateScroll(mapWidth);
 
-    if (m_Character->GetPosition().x >= 200) {
+    if (m_Character->GetPosition().x >= 200 && m_Character->GetPosition().x <= 320 && m_Character->GetPosition().y <= -220.35) {
+        if (m_Character->GetDirection() == "left") {
+            m_Character->Flip();
+            m_Character->SetDirection(m_Character->GetDirection() == "right" ? "left" : "right");
+        }
         m_Character->ChangeBehavior(0);
         m_Character->m_Behavior->SetPlaying();
         m_Character->m_Behavior->SetLooping(true);

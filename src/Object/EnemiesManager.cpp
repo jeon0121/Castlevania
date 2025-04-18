@@ -3,6 +3,11 @@
 
 EnemiesManager::EnemiesManager() {}
 
+void EnemiesManager::RemoveAllEnemies(App *app) {
+    for (auto &enemy : m_Enemies)
+        app->m_Root.RemoveChild(enemy);
+}
+
 void EnemiesManager::AddZombie(glm::vec2 range, int numZombie, glm::vec2 pos, std::string direction, App *app) {
     std::shared_ptr<ZombieHorde> zombieHorde = std::make_shared<ZombieHorde>(range, numZombie, pos, direction);
     m_Zombies.push_back(zombieHorde);

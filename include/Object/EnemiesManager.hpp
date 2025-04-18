@@ -22,6 +22,8 @@ class EnemiesManager {
 
         void ManageLeopard(float offsetX, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, int screenWidth);
 
+        void RemoveAllEnemies(App *app);
+
         std::vector<std::shared_ptr<Enemy>> m_Enemies;
 
         std::vector<std::shared_ptr<Loot>> m_Loots;
