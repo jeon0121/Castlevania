@@ -57,7 +57,7 @@ public:
 
    bool IfEnded() const;
 
-   static std::shared_ptr<Loot> CreateLoot(LootType itemType, glm::vec2 position, std::shared_ptr<Character> character);
+   static std::shared_ptr<Loot> CreateLoot(LootType itemType, glm::vec2 position);
 
    std::shared_ptr<AnimatedItems> score = nullptr;
 protected:

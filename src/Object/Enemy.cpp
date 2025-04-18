@@ -19,7 +19,7 @@ void Enemy::Death(App* app, std::shared_ptr<Character> character, std::vector<st
         SetPaused();
         SetVisible(false);
         if (!loot) {
-            loot = Loot::CreateLoot(lootType, GetPosition(), character);
+            loot = Loot::CreateLoot(lootType, GetPosition());
             if (loot) {
                 m_Loots.push_back(loot);
                 app->m_Root.AddChild(loot);

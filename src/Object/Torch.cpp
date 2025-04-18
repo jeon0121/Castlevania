@@ -64,8 +64,11 @@ void Torch::Destroy(App* app, std::shared_ptr<Character> character) {
         SetPaused();
         SetVisible(false);
         if (!loot) {
-            loot = Loot::CreateLoot(itemType, GetPosition(), character);
+            if (character->GetWhipLevel() != 3 && itemType == LootType::HeartSmall)
+                itemType = LootType::Whip;
+            loot = Loot::CreateLoot(itemType, GetPosition());
             app->m_Root.AddChild(loot);
+            
         }
     }
 }

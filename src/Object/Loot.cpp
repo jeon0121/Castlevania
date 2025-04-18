@@ -70,11 +70,7 @@ bool Loot::IfEnded() const {
    return is_endResult;
 }
 
-std::shared_ptr<Loot> Loot::CreateLoot(LootType itemType, glm::vec2 position, std::shared_ptr<Character> character) {
-   // 20% whip drop if character’s whip < level 3
-   if (character->GetWhipLevel() != 3 && std::rand() % 5 == 0)
-      return std::make_shared<LootItem::Whip>(position);
-   // if there's loot item type
+std::shared_ptr<Loot> Loot::CreateLoot(LootType itemType, glm::vec2 position) {
    switch (itemType) {
       // Sub weapon
       case LootType::Axe:
