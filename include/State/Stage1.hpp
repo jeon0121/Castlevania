@@ -12,7 +12,9 @@ public:
     void End(App* app) override;
 
 private:
-    int mapWidth = 6144;
+    int mapWidth = 6268;
+    std::shared_ptr<AnimatedItems> door_1;
+    std::shared_ptr<AnimatedItems> door_2;
 };
 #endif
 
