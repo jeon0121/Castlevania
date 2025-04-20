@@ -25,27 +25,32 @@ void Stage1::Start(App* app){
     this->m_Character = app->m_Character;
     m_All.push_back(m_Character->m_Behavior);
 
-    //EnemiesManager
-    m_EnemiesManager = std::make_shared<EnemiesManager>();
+    // EnemiesManager
+    std::vector<PossibleLootData> possibleLoots = {
+        {LootType::HeartSmall, 0.4, -1},
+        {LootType::HolyWater,  0.2,  1},
+        {LootType::Stopwatch,  0.2,  1},
+        {LootType::None,       1.0, -1},
+    };
+    m_EnemiesManager = std::make_shared<EnemiesManager>(possibleLoots);
 
     // zombies
-    std::vector<std::tuple<glm::vec2, int, float>> zombies = {
+    std::vector<ZombieData> zombies = {
         { { -500, 1215 }, 3, -265.35f },
         { { 4030, 6144 }, 3, -265.35f }
     };
     for (auto& z : zombies) {
-        auto [range, numZombie, yPos] = z;
-        m_EnemiesManager->AddZombie(range, numZombie, {screenWidth * 0.5, yPos}, "left", app);
+        m_EnemiesManager->AddZombie(z.range, z.numZombie, {screenWidth * 0.5, z.yPos}, "left", app);
     }
 
     //leopards
-    std::vector<glm::vec2> leopards = {
-        { 2355, -69 },
-        { 3150, 50  },
-        { 3450, -69 }
+    std::vector<LeopardData> leopards = {
+        { {2355, -69} },
+        { {3150, 50 } },
+        { {3450, -69} }
     };
     for (auto& l : leopards) {
-        m_EnemiesManager->AddLeopard(l, "left", app);
+        m_EnemiesManager->AddLeopard(l.pos, "left", app);
     }
     
     //torch

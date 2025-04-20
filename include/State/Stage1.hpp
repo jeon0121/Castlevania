@@ -1,19 +1,16 @@
 #ifndef STAGE1_HPP
 #define STAGE1_HPP
 #include "Scene.hpp"
+#include "App.hpp"
 
 #include "Object/AnimatedItems.hpp"
 
 class Stage1 : public Scene{
 public:
-    void Start(App*) override;
-    void Update(App*) override;
-    void End(App*) override;
+    void Start(App* app) override;
+    void Update(App* app) override;
+    void End(App* app) override;
 
-    // check if loot already drop
-    int isStopwatch = 0; // 1
-    int isHolyWater = 0; // 1
-    int isWhip = 0; // depends on the whip level
 private:
     int mapWidth = 6144;
 };

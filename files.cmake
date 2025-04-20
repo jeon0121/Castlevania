@@ -58,6 +58,7 @@ set(INCLUDE_FILES
     Object/Enemy.hpp
     Object/ImageItems.hpp
     Object/Loot.hpp
+    Object/ObjectData.hpp
     Object/Stair.hpp
     Object/Torch.hpp
 

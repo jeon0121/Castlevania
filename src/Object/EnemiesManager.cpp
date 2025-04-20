@@ -1,7 +1,7 @@
 #include "Object/EnemiesManager.hpp"
 #include "Utility/Time.hpp"
 
-EnemiesManager::EnemiesManager() {}
+EnemiesManager::EnemiesManager(const std::vector<PossibleLootData>& possibleLoots) : m_PossibleLoots(possibleLoots) {}
 
 void EnemiesManager::RemoveAllEnemies(App *app) {
     for (auto &enemy : m_Enemies)
@@ -34,25 +34,20 @@ void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Char
     for (auto &enemy : m_Enemies) {
         enemy->InWindowDetection(screenWidth);
         if (enemy->CollideDetection(character, app->m_Menu)) {
-            enemy->Death(app, character, m_Loots);
+            enemy->Death(app, m_Loots, m_PossibleLoots);
         }
     }
-    for (size_t i = 0; i < m_Loots.size();) {
-        auto& loot = m_Loots[i];
-        if (!loot) 
-            m_Loots.erase(m_Loots.begin() + i);
-        else if (!loot->IfCollected()) {
+    for (auto &&loot : m_Loots) {
+        if (loot && !loot->IfCollected()) {
             loot->Fall(blocks);
-            ++i;
+            loot->IsCollected(character);
         }
-        else {
+        else if (loot && loot->IfCollected() && !loot->IfEnded()) {
             loot->Result(app, character, app->m_Menu);
             if (loot->IfEnded()) {
                 app->m_Root.RemoveChild(loot);
-                m_Loots.erase(m_Loots.begin() + i);
+                m_Loots.erase(std::remove(m_Loots.begin(), m_Loots.end(), loot), m_Loots.end());
             }
-            else
-                ++i;
         }
     }
     ManageZombies(offsetX, character, screenWidth);

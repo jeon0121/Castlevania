@@ -10,7 +10,7 @@
 
 class EnemiesManager {
     public:
-        EnemiesManager();
+        EnemiesManager(const std::vector<PossibleLootData>& possibleLoots);
 
         void AddZombie(glm::vec2 range, int numZombie, glm::vec2 pos, std::string direction, App *app);
 
@@ -31,6 +31,7 @@ class EnemiesManager {
         Uint64 resetStartTime = 0;
         std::vector<std::shared_ptr<ZombieHorde>> m_Zombies;
         std::vector<std::shared_ptr<Leopard>> m_Leopards;
+        std::vector<PossibleLootData> m_PossibleLoots;
 };
 
 #endif

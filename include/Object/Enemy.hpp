@@ -6,6 +6,7 @@
 #include "Object/Block.hpp"
 #include "State/Menu.hpp"
 #include "Object/Loot.hpp"
+#include "Object/ObjectData.hpp"
 
 class Enemy : public AnimatedItems {
     public:
@@ -24,7 +25,7 @@ class Enemy : public AnimatedItems {
 
         virtual void SetReset() = 0;
 
-        void Death(App* app, std::shared_ptr<Character> character, std::vector<std::shared_ptr<Loot>> m_Loots);
+        void Death(App* app, std::vector<std::shared_ptr<Loot>> &m_Loots, std::vector<PossibleLootData> m_PossibleLoots);
 
         void Flip();
 
@@ -37,8 +38,6 @@ class Enemy : public AnimatedItems {
         void SetHidden(bool hidden);
 
         virtual bool CheckReset();
-
-        std::shared_ptr<Loot> loot = nullptr;
         
     protected:
         std::string direction;

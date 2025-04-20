@@ -12,6 +12,7 @@
 #include "Object/Loot.hpp"
 #include "Object/LootType/Loot.hpp"
 #include "Object/EnemiesManager.hpp"
+#include "Object/ObjectData.hpp"
 #include "App.hpp"
 
 class Scene {
@@ -20,20 +21,6 @@ public:
         START,
         UPDATE,
         END,
-    };
-    struct TorchData {
-        glm::vec2 pos;
-        glm::vec2 scale;
-        LootType loot;
-        int type;
-    };
-    struct BlockData {
-        glm::vec2 pos;
-        glm::vec2 scale;
-    };
-    struct StairData {
-        glm::vec2 pos1;
-        glm::vec2 pos2;
     };
 
     virtual void Start(App* app) = 0;

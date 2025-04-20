@@ -146,7 +146,7 @@ void Menu::addWeapon(WeaponType weapon, const glm::vec2 &position){
     std::string imagePath = SetWeaponImagePath(weapon);
     auto characterImage = std::make_shared<ImageItems>(imagePath);
     characterImage->SetPosition({x, y});
-    characterImage->SetZIndex(50);
+    characterImage->SetZIndex(40);
     textImage.push_back(characterImage);
 }
 

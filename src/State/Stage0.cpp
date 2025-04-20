@@ -40,9 +40,9 @@ void Stage0::Start(App* app){
     std::vector<TorchData> torchs = {
         { {-130, -227}, {1, 0.9}, LootType::HeartBig, 2 },
         { {395,  -227}, {1, 0.9}, LootType::Whip,     2 },
-        { {920,  -227}, {1, 0.9}, LootType::HeartBig, 2 },
-        { {1445, -227}, {1, 0.9}, LootType::Dagger,   2 },
-        { {1965, -227}, {1, 0.9}, LootType::HeartBig, 2 },
+        { {920,  -227}, {1, 0.9}, LootType::Whip,     2 },
+        { {1445, -227}, {1, 0.9}, LootType::HeartBig, 2 },
+        { {1965, -227}, {1, 0.9}, LootType::Dagger,   2 },
     };
     for (auto& t : torchs) {
         auto torch = std::make_shared<Torch>(t.pos, t.scale, t.loot, t.type);
@@ -51,13 +51,13 @@ void Stage0::Start(App* app){
     }
 
     // block
-    std::vector<std::pair<glm::vec2, glm::vec2>> blocks = {
+    std::vector<BlockData> blocks = {
         { {0,    -307}, {100, 0.7} },
         { {-545, -50 }, {0.4, 7  } },
         { {2600, -50 }, {0.4, 7  } }
     };
     for (auto& b : blocks) {
-        auto block = std::make_shared<Block>(b.first, b.second);
+        auto block = std::make_shared<Block>(b.pos, b.scale);
         m_Blocks.push_back(block);
     }
 

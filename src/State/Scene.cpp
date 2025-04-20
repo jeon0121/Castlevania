@@ -34,6 +34,11 @@ void Scene::UpdateScroll(int mapWidth) {
                 if (enemy)
                     enemy->SetPosition(enemy->GetPosition() - glm::vec2(dx, 0.0f));
             }
+            for (auto &&loot : m_EnemiesManager->m_Loots){
+                if (loot)
+                    loot->SetPosition(loot->GetPosition() - glm::vec2(dx, 0.0f));
+            }
+            
         }
         if (asLoot)
             asLoot->SetPosition(asLoot->GetPosition() - glm::vec2(dx, 0.0f));
