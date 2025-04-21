@@ -41,7 +41,7 @@ enum class LootType {
 
 class Loot : public AnimatedItems {
 public:
-   Loot(glm::vec2 position, std::vector<std::string> animationPath, int interval);
+   Loot(glm::vec2 position, std::vector<std::string> animationPath, int interval, LootType type);
 
    LootType GetType();
 

@@ -1,7 +1,7 @@
 #include "Object/LootType/Item/Bag.hpp"
 
 namespace LootItem {
-Bag::Bag(glm::vec2 position, LootType type) : Loot(position, {}, 50) {
+Bag::Bag(glm::vec2 position, LootType type) : Loot(position, {}, 50, type) {
     this->type = type;
     SetAnimationFrames(GetImage(), 50);
     SetPlaying();

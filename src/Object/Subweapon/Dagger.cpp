@@ -1,7 +1,7 @@
 #include "Object/Subweapon/Dagger.hpp"
 
 namespace Subweapon {
-    Dagger::Dagger(glm::vec2 position) : Loot(position, {GA_RESOURCE_DIR "/items/weapon/dagger.png"}, 0) {}
+    Dagger::Dagger(glm::vec2 position) : Loot(position, {GA_RESOURCE_DIR "/items/weapon/dagger.png"}, 0, LootType::Dagger) {}
 
     void Dagger::Result(App* app, std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) {
         menu->modifyWeapon(WeaponType::Dagger);

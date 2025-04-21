@@ -2,7 +2,7 @@
 #include "Utility/Time.hpp"
 
 namespace LootItem {
-Heart::Heart(glm::vec2 position, LootType type) : Loot(position, {}, 0) {
+Heart::Heart(glm::vec2 position, LootType type) : Loot(position, {}, 0, type) {
    SetPosition({position.x, position.y + 20.0f});
    this->type = type;
    switch(type) {

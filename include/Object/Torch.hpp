@@ -15,11 +15,10 @@ public:
 
    bool CollideDetection(std::shared_ptr<Character> &character);
 
-   void Destroy(App* app, std::shared_ptr<Character> character);
+   void Destroy(App* app, std::shared_ptr<Character> character, bool &whipDropped);
 
    std::shared_ptr<Loot> loot = nullptr;
 
-   void Update(App* app, std::shared_ptr<Character> character, std::shared_ptr<Menu> menu, const std::vector<std::shared_ptr<Block>>& blocks, std::shared_ptr<Torch> torch);
 private:
    int type;
    float torchTop;

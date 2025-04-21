@@ -2,7 +2,7 @@
 #include "Object/LootType/Loot.hpp"
 #include "Utility/Time.hpp"
 
-Loot::Loot(glm::vec2 position, std::vector<std::string> animationPath, int interval) : AnimatedItems(animationPath, interval) {
+Loot::Loot(glm::vec2 position, std::vector<std::string> animationPath, int interval, LootType type) : AnimatedItems(animationPath, interval), type(type) {
    SetPosition(position);
    SetZIndex(7);
 }

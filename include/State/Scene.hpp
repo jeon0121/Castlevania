@@ -50,6 +50,8 @@ protected:
     std::shared_ptr<EnemiesManager> m_EnemiesManager;
     float offsetX = 0.0f;
     glm::vec2 backgroundPos;
+
+    bool whipDropped = false; // to ensure that dropped whip dont exceed 1
 };
 
 #endif

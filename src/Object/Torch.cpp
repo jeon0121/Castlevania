@@ -56,33 +56,18 @@ bool Torch::CollideDetection(std::shared_ptr<Character> &character) {
     return is_destroyed;
 }
 
-void Torch::Destroy(App* app, std::shared_ptr<Character> character) {
+void Torch::Destroy(App* app, std::shared_ptr<Character> character, bool &whipDropped) {
     if (IfAnimationStart())
         SetAnimationFrames(torchDeath, 120);
     SetPlaying();
     if (IfPlayingTime(0.5)) {
         SetPaused();
         SetVisible(false);
-        if (!loot) {
-            if (character->GetWhipLevel() != 3 && itemType == LootType::HeartSmall)
-                itemType = LootType::Whip;
-            loot = Loot::CreateLoot(itemType, GetPosition());
-            app->m_Root.AddChild(loot);
-            
+        if (character->GetWhipLevel() != 3 && itemType == LootType::HeartSmall && !whipDropped) {
+            itemType = LootType::Whip;
+            whipDropped = true;
         }
+        loot = Loot::CreateLoot(itemType, GetPosition());
+        app->m_Root.AddChild(loot);
     }
-}
-
-void Torch::Update(App* app, std::shared_ptr<Character> character, std::shared_ptr<Menu> menu, const std::vector<std::shared_ptr<Block>>& blocks, std::shared_ptr<Torch> torch) {
-    if (loot && !loot->IfCollected()) {
-        loot->Fall(blocks);
-        if (loot->IsCollected(character))
-            app->m_Root.RemoveChild(torch);
-    }
-    else if (loot && loot->IfCollected() && !loot->IfEnded())
-        loot->Result(app, character, menu);
-    if (loot && loot->IfEnded())
-        app->m_Root.RemoveChild(loot);
-    if (CollideDetection(character) && !loot)
-        Destroy(app, character);
 }

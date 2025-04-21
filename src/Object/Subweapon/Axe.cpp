@@ -1,7 +1,7 @@
 #include "Object/Subweapon/Axe.hpp"
 
 namespace Subweapon {
-    Axe::Axe(glm::vec2 position) : Loot(position, {GA_RESOURCE_DIR "/items/weapon/axe.png"}, 0) {}
+    Axe::Axe(glm::vec2 position) : Loot(position, {GA_RESOURCE_DIR "/items/weapon/axe.png"}, 0, LootType::Axe) {}
 
     void Axe::Result(App* app, std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) {
         menu->modifyWeapon(WeaponType::Axe);

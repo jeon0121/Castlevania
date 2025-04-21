@@ -2,8 +2,22 @@
 #include "Util/Logger.hpp"
 
 void Scene::UpdateTorch(App* app) {
-    for (auto torch : m_Torches) 
-        torch->Update(app, m_Character, app->m_Menu, m_Blocks, torch);
+    for (auto torch : m_Torches) {
+        if (torch->loot && !torch->loot->IfCollected()) {
+            torch->loot->Fall(m_Blocks);
+            if (torch->loot->IsCollected(m_Character))
+                app->m_Root.RemoveChild(torch);
+        }
+        else if (torch->loot && torch->loot->IfCollected() && !torch->loot->IfEnded())
+            torch->loot->Result(app, m_Character, app->m_Menu);
+        if (torch->loot && torch->loot->IfEnded()) {
+            if (torch->loot->GetType() == LootType::Whip)
+                whipDropped = false;
+            app->m_Root.RemoveChild(torch->loot);
+        }
+        if (torch->CollideDetection(m_Character) && !torch->loot)
+            torch->Destroy(app, m_Character, whipDropped);
+    }
 }
 
 void Scene::UpdateScroll(int mapWidth) {

@@ -1,6 +1,6 @@
 #include "Object/LootType/Whip/Whip.hpp"
 
-LootItem::Whip::Whip(glm::vec2 position) : Loot(position, {GA_RESOURCE_DIR "/items/weapon/whip.png"}, 0) {}
+LootItem::Whip::Whip(glm::vec2 position) : Loot(position, {GA_RESOURCE_DIR "/items/weapon/whip.png"}, 0, LootType::Whip) {}
 
 void LootItem::Whip::Result(App* app, std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) {
    (void) app;
