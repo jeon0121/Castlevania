@@ -1,4 +1,5 @@
 #include "Object/LootType/Item/Heart.hpp"
+#include "Utility/Time.hpp"
 
 namespace LootItem {
 Heart::Heart(glm::vec2 position, LootType type) : Loot(position, {}, 0) {
@@ -48,6 +49,10 @@ void Heart::Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks) {
    if (is_landed) {
       y_vel = 0.0f;
       x_vel = 0.0f;
+      if (startLandTime == 0)
+         startLandTime = SDL_GetPerformanceCounter();
+      else if (Time::GetRunTimeMs(startLandTime) > 1600.0f)
+         is_endResult = true;
    }
 }
 

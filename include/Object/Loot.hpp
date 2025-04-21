@@ -71,6 +71,7 @@ protected:
    bool is_landed = false;
    bool is_collected = false;
    bool is_endResult = false;
+   Uint64 startLandTime = 0;
 };
 
 #endif

@@ -25,7 +25,7 @@ class Enemy : public AnimatedItems {
 
         virtual void SetReset() = 0;
 
-        void Death(App* app, std::vector<std::shared_ptr<Loot>> &m_Loots, std::vector<PossibleLootData> m_PossibleLoots);
+        void Death(App* app, std::vector<std::shared_ptr<Loot>> &m_Loots, std::vector<PossibleLootData> &m_PossibleLoots);
 
         void Flip();
 

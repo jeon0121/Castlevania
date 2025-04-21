@@ -1,5 +1,6 @@
 #include "Object/Loot.hpp"
 #include "Object/LootType/Loot.hpp"
+#include "Utility/Time.hpp"
 
 Loot::Loot(glm::vec2 position, std::vector<std::string> animationPath, int interval) : AnimatedItems(animationPath, interval) {
    SetPosition(position);
@@ -38,8 +39,13 @@ void Loot::Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks){
          }
       }
    }
-   if (is_landed) 
+   if (is_landed) {
       y_vel = 0.0f;
+      if (startLandTime == 0)
+         startLandTime = SDL_GetPerformanceCounter();
+      else if (Time::GetRunTimeMs(startLandTime) > 1600.0f)
+         is_endResult = true;
+   }
 }
 
 bool Loot::IsCollected(std::shared_ptr<Character>& character) {

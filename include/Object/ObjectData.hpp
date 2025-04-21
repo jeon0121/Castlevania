@@ -24,6 +24,7 @@ struct PossibleLootData {
    LootType loot;
    float chance;
    int maxSpawn;
+   int spawn = 0;
 };
 
 struct ZombieData {

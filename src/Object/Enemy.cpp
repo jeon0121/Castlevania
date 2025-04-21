@@ -11,17 +11,20 @@ Enemy::Enemy(glm::vec2 position, std::string direction, std::vector<std::string>
     }
 }
 
-void Enemy::Death(App* app, std::vector<std::shared_ptr<Loot>> &m_Loots, std::vector<PossibleLootData> m_PossibleLoots) {
+void Enemy::Death(App* app, std::vector<std::shared_ptr<Loot>> &m_Loots, std::vector<PossibleLootData> &m_PossibleLoots) {
     if (IfAnimationStart())
         SetAnimationFrames(deathImages, 120);
     SetPlaying();
     if (IfAnimationEnds()) {
         SetPaused();
         SetVisible(false);
-        for (const auto& lootData : m_PossibleLoots) {
-            if (static_cast<float>(std::rand()) / RAND_MAX <= lootData.chance) {
-                lootType = lootData.loot;
-                break;
+        for (auto& lootData : m_PossibleLoots) {
+            if (lootData.spawn < lootData.maxSpawn || lootData.maxSpawn == -1) {
+                if (static_cast<float>(std::rand()) / RAND_MAX <= lootData.chance) {
+                    lootType = lootData.loot;
+                    lootData.spawn++;
+                    break;
+                }
             }
         }
         std::shared_ptr<Loot> loot = Loot::CreateLoot(lootType, GetPosition());
@@ -29,6 +32,7 @@ void Enemy::Death(App* app, std::vector<std::shared_ptr<Loot>> &m_Loots, std::ve
             m_Loots.push_back(loot);
             app->m_Root.AddChild(loot);
         }
+        lootType = LootType::None;
     }
 }
 

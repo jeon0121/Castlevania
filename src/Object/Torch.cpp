@@ -78,11 +78,11 @@ void Torch::Update(App* app, std::shared_ptr<Character> character, std::shared_p
         loot->Fall(blocks);
         if (loot->IsCollected(character))
             app->m_Root.RemoveChild(torch);
-    }else if (loot && loot->IfCollected() && !loot->IfEnded()) {
-        loot->Result(app, character, menu);
-        if (loot->IfEnded())
-            app->m_Root.RemoveChild(loot);
     }
+    else if (loot && loot->IfCollected() && !loot->IfEnded())
+        loot->Result(app, character, menu);
+    if (loot && loot->IfEnded())
+        app->m_Root.RemoveChild(loot);
     if (CollideDetection(character) && !loot)
         Destroy(app, character);
 }

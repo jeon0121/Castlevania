@@ -42,12 +42,11 @@ void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Char
             loot->Fall(blocks);
             loot->IsCollected(character);
         }
-        else if (loot && loot->IfCollected() && !loot->IfEnded()) {
+        else if (loot && loot->IfCollected() && !loot->IfEnded()) 
             loot->Result(app, character, app->m_Menu);
-            if (loot->IfEnded()) {
-                app->m_Root.RemoveChild(loot);
-                m_Loots.erase(std::remove(m_Loots.begin(), m_Loots.end(), loot), m_Loots.end());
-            }
+        if (loot && loot->IfEnded()) {
+            app->m_Root.RemoveChild(loot);
+            m_Loots.erase(std::remove(m_Loots.begin(), m_Loots.end(), loot), m_Loots.end());
         }
     }
     ManageZombies(offsetX, character, screenWidth);
