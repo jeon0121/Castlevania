@@ -13,8 +13,8 @@ void Stage0::Start(App* app){
     m_All.push_back(m_Background);
 
     m_End = std::make_shared<ImageItems>(GA_RESOURCE_DIR"/background/stage-0/end.png");
-    m_End->m_Transform.scale = glm::vec2(1.025, 0.92);
-    m_End->SetPosition({441.5, -44.5});
+    m_End->m_Transform.scale = glm::vec2(1.026, 0.92);
+    m_End->SetPosition({441.2, -45.0});
     m_End->SetZIndex(11);
     m_End->SetVisible(false);
     m_All.push_back(m_End);
