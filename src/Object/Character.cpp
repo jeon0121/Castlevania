@@ -46,7 +46,7 @@ Character::Character(const CharacterValue& value) :
     
     m_Behavior = std::make_shared<AnimatedItems>(behaviorVector[value.beIndex], 100, glm::vec2(value.scale, value.scale));
     SetPosition(value.position);
-    m_Behavior->SetZIndex(7);
+    m_Behavior->SetZIndex(10);
     m_size = glm::abs(m_Behavior->GetScaledSize());
     jumph = landh = value.position.y;
     landPosition = prevLandPosition = value.position.y - m_size.y * 0.5;

@@ -78,7 +78,8 @@ void Stage1::Start(App* app){
         { { 2395, -122 }, { 1.61, 0.68 } },
         { { 2888, -5   }, { 5.32, 0.68 } },
         { { 3478, -122 }, { 3.22, 0.68 } },
-        { { 5414, -5   }, { 3.73, 0.68 } }
+        { { 5484, -5   }, { 4.82, 0.68 } },
+        { { 5764, -50  }, { 0.4,  7    } }
     };
     for (auto& b : blocks) {
         auto block = std::make_shared<Block>(b.pos, b.scale);
@@ -98,6 +99,21 @@ void Stage1::Start(App* app){
         m_Stairs.insert(m_Stairs.end(), stair.begin(), stair.end());
         m_All.insert(m_All.end(), stair.begin(), stair.end());
     }
+
+    //door
+    std::vector<std::string> door1Imgs, door2Imgs;
+    for (int i = 1; i <= 2; ++i) {
+        door1Imgs.push_back(GA_RESOURCE_DIR "/items/door/door-" + std::to_string(i) + ".png");
+        door2Imgs.push_back(GA_RESOURCE_DIR "/items/door/door-" + std::to_string(3 - i) + ".png");
+    }
+    door_1 = std::make_shared<AnimatedItems>(door1Imgs, 500, glm::vec2{1.0f, 0.9f});
+    door_2 = std::make_shared<AnimatedItems>(door2Imgs, 500, glm::vec2{1.0f, 0.9f});
+    for (auto& door : {door_1, door_2}) {
+        door->SetPosition({15.0f, 110.0f});
+        door->SetVisible(false);
+        door->SetZIndex(9);
+        m_All.push_back(door);
+    }
     
     app->AddAllChildren(m_All);
     m_stateState = StateState::UPDATE;
@@ -109,11 +125,14 @@ void Stage1::Update(App* app){
     UpdateTorch(app);
     UpdateSubWeapon(app);
     UpdateScroll(mapWidth);
-    if (m_Character->GetEndSceneFlag())
+    if (m_Character->GetEndSceneFlag() || (m_Character->GetPosition().x >= 422 && m_Character->GetPosition().y > 80.75 && m_Character->GetPosition().y < 80.77)) {
+        m_Character->m_Behavior->SetLooping(false);
         m_stateState = StateState::END;
+    }
 }
 
 void Stage1::End(App* app){
+    // dead and reset
     if (m_Character->GetEndSceneFlag()) {
         app->m_Menu->SetMenuVisibility(false);
         m_EnemiesManager->RemoveAllEnemies(app);
@@ -123,5 +142,50 @@ void Stage1::End(App* app){
         app->RemoveAllChildren(m_All);
         app->m_AppState = App::AppState::START;
         app->m_GameState = App::GameState::STAGE1;
+    }
+    // end scene animation
+    else {
+        if (m_Background->m_Transform.scale.x > 1.0f) {
+            m_Character->ChangeBehavior(2);
+            m_Background->SetDrawable(std::make_unique<Util::Image>(GA_RESOURCE_DIR"/background/stage-1/end.png"));
+            m_Background->m_Transform.scale = glm::vec2(0.528, 0.465);
+            m_Background->SetPosition({522.5, -36.2});
+            m_Background->SetZIndex(8);
+        }else if (m_Background->GetPosition().x > 0) {
+            m_Background->SetPosition({m_Background->GetPosition().x - 3.0f, m_Background->GetPosition().y});
+            m_Character->SetPosition({m_Character->GetPosition().x - 3.0f, m_Character->GetPosition().y });
+        }else if (m_Background->GetPosition().x < 0 && !door_2->IsLooping()) {
+            if (!door_1->IsPlaying() && !m_Character->m_Behavior->IsLooping()) {
+                door_1->SetVisible(true);
+                door_1->SetPlaying();
+            }
+            if (door_1->IfAnimationEnds() && !m_Character->m_Behavior->IsLooping()) {
+                m_Character->ChangeBehavior(0);
+                m_Character->m_Behavior->SetPlaying();
+                m_Character->m_Behavior->SetLooping(true);
+            }
+            if (m_Character->GetPosition().x < 200 && m_Character->m_Behavior->IsLooping())
+                m_Character->SetPosition({m_Character->GetPosition().x + 1.5f, m_Character->GetPosition().y });
+            else if (m_Character->GetPosition().x > 200) {
+                m_Character->ChangeBehavior(2);
+                door_1->SetVisible(false);
+                door_1->SetPaused();
+                if (!door_2->IsPlaying()) {
+                    door_2->SetVisible(true);
+                    door_2->SetPlaying();
+                }
+                if (door_2->IfAnimationEnds()) {
+                    door_2->SetLooping(true);
+                }
+            }
+        }else {
+            if (door_1->IsPlaying() && m_Background->GetPosition().x > -530) {
+                m_Background->SetPosition({m_Background->GetPosition().x - 3.0f, m_Background->GetPosition().y});
+                m_Character->SetPosition({m_Character->GetPosition().x - 3.0f, m_Character->GetPosition().y });
+            }else if (!door_1->IsPlaying() && !door_2->IsPlaying()) {
+                door_2->SetVisible(false);
+                door_1->SetPlaying();
+            }
+        }
     }
 }
