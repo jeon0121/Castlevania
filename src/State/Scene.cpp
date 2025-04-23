@@ -3,19 +3,20 @@
 
 void Scene::UpdateTorch(App* app) {
     for (auto torch : m_Torches) {
-        if (torch->loot && !torch->loot->IfCollected()) {
+        if (torch && torch->loot && !torch->loot->IfCollected()) {
             torch->loot->Fall(m_Blocks);
             if (torch->loot->IsCollected(m_Character))
                 app->m_Root.RemoveChild(torch);
         }
-        else if (torch->loot && torch->loot->IfCollected() && !torch->loot->IfEnded())
+        else if (torch && torch->loot && torch->loot->IfCollected() && !torch->loot->IfEnded())
             torch->loot->Result(app, m_Character, app->m_Menu);
-        if (torch->loot && torch->loot->IfEnded()) {
+        if (torch && torch->loot && torch->loot->IfEnded()) {
             if (torch->loot->GetType() == LootType::Whip)
                 whipDropped = false;
             app->m_Root.RemoveChild(torch->loot);
+            m_Torches.erase(std::remove(m_Torches.begin(), m_Torches.end(), torch), m_Torches.end());
         }
-        if (torch->CollideDetection(m_Character) && !torch->loot)
+        if (torch && torch->CollideDetection(m_Character) && !torch->loot)
             torch->Destroy(app, m_Character, whipDropped);
     }
 }
