@@ -7,7 +7,7 @@
 class ImageItems : public Util::GameObject {
 public:
    explicit ImageItems(const std::string path, glm::vec2 scale=glm::vec2(1.0f, 1.0f))
-   : GameObject(std::make_unique<Util::Image>(ConvertImageIfNeeded(path)), 0) {
+   : GameObject(std::make_unique<Util::Image>(path), 0) {
       m_Transform.scale = scale;
    }
    
