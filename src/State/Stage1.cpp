@@ -121,10 +121,12 @@ void Stage1::Start(App* app){
 
 void Stage1::Update(App* app){
     m_Character->Keys(m_Blocks, m_Stairs);
-    m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app);
     UpdateTorch(app);
-    UpdateSubWeapon(app);
-    UpdateScroll(mapWidth);
+    if (!m_Character->GetLevelUpWhipFlag()) {
+        m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app);
+        UpdateSubWeapon(app);
+        UpdateScroll(mapWidth);
+    }
     if (m_Character->GetEndSceneFlag() || (m_Character->GetPosition().x >= 422 && m_Character->GetPosition().y > 80.75 && m_Character->GetPosition().y < 80.77)) {
         m_Character->m_Behavior->SetLooping(false);
         m_stateState = StateState::END;
