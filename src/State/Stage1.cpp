@@ -28,7 +28,7 @@ void Stage1::Start(App* app){
     // EnemiesManager
     std::vector<PossibleLootData> possibleLoots = {
         {LootType::HeartSmall, 0.5, -1}, // infinite drop
-        {LootType::HolyWater,  0.2,  1}, // max drop is 1 on stage 1
+        {LootType::HolyWater,  1,  1}, // max drop is 1 on stage 1
         {LootType::Stopwatch,  0.2,  1}, // max drop is 1 on stage 1
         {LootType::None,       1.0, -1}, // infinite drop
     };

@@ -43,7 +43,7 @@ void Loot::Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks){
       y_vel = 0.0f;
       if (startLandTime == 0)
          startLandTime = SDL_GetPerformanceCounter();
-      else if (Time::GetRunTimeMs(startLandTime) > 1600.0f)
+      else if (Time::GetRunTimeMs(startLandTime) > 2000.0f)
          is_endResult = true;
    }
 }
@@ -80,13 +80,13 @@ std::shared_ptr<Loot> Loot::CreateLoot(LootType itemType, glm::vec2 position) {
    switch (itemType) {
       // Sub weapon
       case LootType::Axe:
-         return std::make_shared<Subweapon::Axe>(position);
+         return std::make_shared<Subweapon::Axe>(position, "loot");
       case LootType::Dagger:
-         return std::make_shared<Subweapon::Dagger>(position);
+         return std::make_shared<Subweapon::Dagger>(position, "loot");
       case LootType::HolyWater:
-         return std::make_shared<Subweapon::HolyWater>(position);
+         return std::make_shared<Subweapon::HolyWater>(position, "loot");
       case LootType::Stopwatch:
-         return std::make_shared<Subweapon::Stopwatch>(position);
+         return std::make_shared<Subweapon::Stopwatch>(position, "loot");
 
       // Whip
       case LootType::Whip:

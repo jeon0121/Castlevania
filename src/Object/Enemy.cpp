@@ -90,8 +90,10 @@ bool Enemy::CollideDetection(std::shared_ptr<Character> &character, std::shared_
         if (overlapX && overlapY) {
             SetPaused();
             is_dead = true;
-            character->m_SubWeapon->SetDestroyed(true);
+            character->m_SubWeapon->SetIsCollide(true);
         }
+        else
+            character->m_SubWeapon->SetIsCollide(false);
     }
     else {
         if (!character->GetLevelUpWhipFlag() && !character->GetHurtFlag() && !is_dead && !is_hidden) {

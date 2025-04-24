@@ -65,8 +65,8 @@ void Scene::UpdateSubWeapon(App* app) {
         if (!m_Character->m_SubWeapon) {
             SetSubweapon(app);
             app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(m_Character->GetAmmo()-1), 3);
-        }else {
-            m_Character->m_SubWeapon->Use();
+        } else {
+            m_Character->m_SubWeapon->Use(m_Blocks);
             asLoot = std::dynamic_pointer_cast<Loot>(m_Character->m_SubWeapon);
             if (m_Character->m_SubWeapon->IsDestroyed() ||
                 asLoot->GetPosition().x < -screenWidth / 2 ||
@@ -85,16 +85,16 @@ void Scene::SetSubweapon(App* app) {
     WeaponType type = m_Character->GetSubWeaponType();
     switch (type) {
         case WeaponType::Axe:
-            m_Character->m_SubWeapon = std::make_shared<Subweapon::Axe>(pos);
+            m_Character->m_SubWeapon = std::make_shared<Subweapon::Axe>(pos, "subweapon");
             break;
         case WeaponType::Dagger:
-            m_Character->m_SubWeapon = std::make_shared<Subweapon::Dagger>(pos);
+            m_Character->m_SubWeapon = std::make_shared<Subweapon::Dagger>(pos, "subweapon");
             break;
         case WeaponType::HolyWater:
-            m_Character->m_SubWeapon = std::make_shared<Subweapon::HolyWater>(pos);
+            m_Character->m_SubWeapon = std::make_shared<Subweapon::HolyWater>(pos, "subweapon");
             break;
         case WeaponType::Stopwatch:
-            m_Character->m_SubWeapon = std::make_shared<Subweapon::Stopwatch>(pos);
+            m_Character->m_SubWeapon = std::make_shared<Subweapon::Stopwatch>(pos, "subweapon");
             break;
         default:
             m_Character->m_SubWeapon = nullptr;
