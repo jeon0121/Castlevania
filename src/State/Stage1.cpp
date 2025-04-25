@@ -28,7 +28,7 @@ void Stage1::Start(App* app){
     // EnemiesManager
     std::vector<PossibleLootData> possibleLoots = {
         {LootType::HeartSmall, 0.5, -1}, // infinite drop
-        {LootType::HolyWater,  1,  1}, // max drop is 1 on stage 1
+        {LootType::HolyWater,  0.2,  1}, // max drop is 1 on stage 1
         {LootType::Stopwatch,  0.2,  1}, // max drop is 1 on stage 1
         {LootType::None,       1.0, -1}, // infinite drop
     };
@@ -122,11 +122,9 @@ void Stage1::Start(App* app){
 void Stage1::Update(App* app){
     m_Character->Keys(m_Blocks, m_Stairs);
     UpdateTorch(app);
-    if (!m_Character->GetLevelUpWhipFlag()) {
-        m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app);
-        UpdateSubWeapon(app);
-        UpdateScroll(mapWidth);
-    }
+    m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app);
+    UpdateSubWeapon(app);
+    UpdateScroll(mapWidth);
     if (m_Character->GetEndSceneFlag() || (m_Character->GetPosition().x >= 422 && m_Character->GetPosition().y > 80.75 && m_Character->GetPosition().y < 80.77)) {
         m_Character->m_Behavior->SetLooping(false);
         m_stateState = StateState::END;

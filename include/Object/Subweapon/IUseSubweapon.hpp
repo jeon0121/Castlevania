@@ -14,6 +14,7 @@ namespace Subweapon {
         void SetDestroyed(bool ifDestroy) { if_destroyed = ifDestroy; }
         bool IsDestroyed() { return if_destroyed; }
         void SetIsCollide(bool ifCollide) { if_collide = ifCollide; }
+        virtual int GetCost() = 0;
     protected:
         bool if_destroyed = false;
         bool if_collide = false;

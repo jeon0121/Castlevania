@@ -17,10 +17,13 @@ namespace Subweapon {
       void SetDirection(std::string direction) override { m_direction = direction; }
       
       std::string GetDirection() override { return m_direction; }
+
+      int GetCost() override { return cost; }
    private:
       std::string m_direction;
       std::string m_type;
       std::vector<std::string> m_throw, m_flame;
+      int cost = 1;
    };
 }
 #endif

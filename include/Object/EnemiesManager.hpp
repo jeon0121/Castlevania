@@ -18,6 +18,10 @@ class EnemiesManager {
 
         void Update(float offsetX, int screenWidth, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, App* app);
 
+        void PauseAllEnemy();
+
+        void PlayAllEnemy();
+
         void ManageZombies(float offsetX, std::shared_ptr<Character> &character, int screenWidth);
 
         void ManageLeopard(float offsetX, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, int screenWidth);
@@ -32,6 +36,8 @@ class EnemiesManager {
         std::vector<std::shared_ptr<ZombieHorde>> m_Zombies;
         std::vector<std::shared_ptr<Leopard>> m_Leopards;
         std::vector<PossibleLootData> m_PossibleLoots;
+
+        bool isEnemyPause = false;
 };
 
 #endif

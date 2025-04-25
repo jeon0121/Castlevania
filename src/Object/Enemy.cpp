@@ -87,7 +87,7 @@ bool Enemy::CollideDetection(std::shared_ptr<Character> &character, std::shared_
         bool overlapX = (weaponLeft > enemyLeft && weaponLeft < enemyRight) ||
                         (weaponRight > enemyLeft && weaponRight < enemyRight);
         bool overlapY = enemyTop > charPos.y && enemyBottom < charPos.y;
-        if (overlapX && overlapY) {
+        if (overlapX && overlapY && character->GetSubWeaponType() != WeaponType::Stopwatch) {
             SetPaused();
             is_dead = true;
             character->m_SubWeapon->SetIsCollide(true);
@@ -146,4 +146,8 @@ void Enemy::SetHidden(bool hidden) {
 
 bool Enemy::CheckReset() {
     return (is_hidden || is_dead);
+}
+
+bool Enemy::IsDead() {
+    return is_dead;
 }

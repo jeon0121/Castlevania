@@ -38,6 +38,8 @@ class Enemy : public AnimatedItems {
         void SetHidden(bool hidden);
 
         virtual bool CheckReset();
+
+        bool IsDead();
         
     protected:
         std::string direction;

@@ -31,6 +31,15 @@ void EnemiesManager::AddLeopard(glm::vec2 positions, std::string direction, App 
 }
 
 void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, App* app) {
+    if (character->GetLevelUpWhipFlag() ||
+       (character->GetSubWeaponType() == WeaponType::Stopwatch && character->GetUseWeaponFlag())) {
+        PauseAllEnemy();
+        isEnemyPause = true;
+    }
+    else if (isEnemyPause) {
+        PlayAllEnemy();
+        isEnemyPause = false;
+    }
     for (auto &enemy : m_Enemies) {
         enemy->InWindowDetection(screenWidth);
         if (enemy->CollideDetection(character, app->m_Menu)) {
@@ -49,8 +58,21 @@ void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Char
             m_Loots.erase(std::remove(m_Loots.begin(), m_Loots.end(), loot), m_Loots.end());
         }
     }
-    ManageZombies(offsetX, character, screenWidth);
-    ManageLeopard(offsetX, character, blocks, screenWidth);
+    if (!isEnemyPause) {
+        ManageZombies(offsetX, character, screenWidth);
+        ManageLeopard(offsetX, character, blocks, screenWidth);
+    }
+}
+
+void EnemiesManager::PauseAllEnemy() {
+    for (auto &&enemy : m_Enemies) 
+        if (!enemy->IsDead())
+            enemy->SetPaused();
+}
+
+void EnemiesManager::PlayAllEnemy() {
+    for (auto &&enemy : m_Enemies) 
+        enemy->SetPlaying();
 }
 
 void EnemiesManager::ManageZombies(float offsetX, std::shared_ptr<Character> &character, int screenWidth) {

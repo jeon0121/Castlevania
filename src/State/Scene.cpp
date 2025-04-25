@@ -64,7 +64,8 @@ void Scene::UpdateSubWeapon(App* app) {
     if (m_Character->GetUseWeaponFlag() && m_Character->GetAmmo() > 0) {
         if (!m_Character->m_SubWeapon) {
             SetSubweapon(app);
-            app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(m_Character->GetAmmo()-1), 3);
+            int cost = m_Character->m_SubWeapon->GetCost();
+            app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(m_Character->GetAmmo()-cost), 3);
         } else {
             m_Character->m_SubWeapon->Use(m_Blocks);
             asLoot = std::dynamic_pointer_cast<Loot>(m_Character->m_SubWeapon);
