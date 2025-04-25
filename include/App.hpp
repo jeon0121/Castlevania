@@ -38,7 +38,7 @@ public:
 
     Util::Renderer m_Root;
     AppState m_AppState = AppState::START;
-    GameState m_GameState = GameState::TITLE;
+    GameState m_GameState = GameState::STAGE1;
     std::shared_ptr<Scene> m_Scene;
     std::shared_ptr<Menu> m_Menu;
     std::shared_ptr<Character> m_Character;
