@@ -3,7 +3,7 @@
 
 void Scene::UpdateTorch(App* app) {
     for (auto torch : m_Torches) {
-        if (torch && torch->loot && !torch->loot->IfCollected()) {
+        if (torch && torch->loot && !torch->loot->IfCollected() && !m_Character->GetLevelUpWhipFlag()) {
             torch->loot->Fall(m_Blocks);
             if (torch->loot->IsCollected(m_Character))
                 app->m_Root.RemoveChild(torch);
@@ -61,7 +61,7 @@ void Scene::UpdateScroll(int mapWidth) {
 }
 
 void Scene::UpdateSubWeapon(App* app) {
-    if (m_Character->GetUseWeaponFlag() && m_Character->GetAmmo() > 0) {
+    if (m_Character->GetUseWeaponFlag() && m_Character->GetAmmo() > 0 && !m_Character->GetLevelUpWhipFlag()) {
         if (!m_Character->m_SubWeapon) {
             SetSubweapon(app);
             int cost = m_Character->m_SubWeapon->GetCost();

@@ -47,7 +47,7 @@ void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Char
         }
     }
     for (auto &&loot : m_Loots) {
-        if (loot && !loot->IfCollected()) {
+        if (loot && !loot->IfCollected() && !character->GetLevelUpWhipFlag()) {
             loot->Fall(blocks);
             loot->IsCollected(character);
         }
