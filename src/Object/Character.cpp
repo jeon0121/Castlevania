@@ -274,6 +274,8 @@ void Character::ChangeBehavior(int BehaviorIndex, bool if_whip) {
 }
 
 void Character::UpdatePosition() {
+    if (m_SubWeapon)
+        m_SubWeapon->SetIsCollide(false);
     glm::vec2 pos = m_Behavior->GetPosition();
     if (is_jump)
         jumph = pos.y;
