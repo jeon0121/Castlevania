@@ -5,3 +5,4 @@
   - [] when character enter the castle (title::end), at windows 11, the character didn't reach the door
 - Stair
   - [] when spamming up and down in stair, character will fall
+  - [] when get hurt on stair, we cant move the character

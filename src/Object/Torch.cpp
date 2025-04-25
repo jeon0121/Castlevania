@@ -64,7 +64,7 @@ bool Torch::CollideDetection(std::shared_ptr<Character> &character) {
         bool overlapX = (weaponLeft > torchLeft && weaponLeft < torchRight) ||
                         (weaponRight > torchLeft && weaponRight < torchRight);
         bool overlapY = torchTop > charPos.y && torchBottom < charPos.y;
-        if (overlapX && overlapY) {
+        if (overlapX && overlapY && character->GetSubWeaponType() != WeaponType::Stopwatch) {
             SetPaused();
             is_destroyed = true;
             character->m_SubWeapon->SetDestroyed(true);

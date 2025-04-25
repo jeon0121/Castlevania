@@ -66,6 +66,7 @@ void Scene::UpdateSubWeapon(App* app) {
             SetSubweapon(app);
             int cost = m_Character->m_SubWeapon->GetCost();
             app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(m_Character->GetAmmo()-cost), 3);
+            m_Character->SetAmmo(m_Character->GetAmmo()-cost);
         } else {
             m_Character->m_SubWeapon->Use(m_Blocks);
             asLoot = std::dynamic_pointer_cast<Loot>(m_Character->m_SubWeapon);
@@ -75,7 +76,6 @@ void Scene::UpdateSubWeapon(App* app) {
                     m_Character->m_SubWeapon = nullptr;
                     app->m_Root.RemoveChild(asLoot);
                     m_Character->SetUseWeaponFlag(false);
-                    m_Character->SetAmmo(m_Character->GetAmmo()-1);
                 }
         }
     }
