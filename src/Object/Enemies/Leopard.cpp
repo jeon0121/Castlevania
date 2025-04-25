@@ -9,6 +9,7 @@ Leopard::Leopard(glm::vec2 position, std::string direction) : Enemy(position, di
     m_Transform.scale = glm::vec2(1.0f, 1.0f);
     if (direction == "right")
         Flip();
+    countHurt = 2;
 }
 
 void Leopard::MoveBehav(std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks) {

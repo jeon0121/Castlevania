@@ -77,8 +77,8 @@ void Stage1::Start(App* app){
         { { 4589, -240 }, {1, 0.9}, LootType::HeartSmall, 1},
         { { 4851, -240 }, {1, 0.9}, LootType::HeartSmall, 1},
         { { 5114, -125 }, {1, 0.9}, LootType::HeartSmall, 1},
-        { { 5376, 105  }, {1, 0.9}, LootType::HeartSmall, 1},
-        { { 5639, 222  }, {1, 0.9}, LootType::Rosary,     1}
+        { { 5376, 105  }, {1, 0.9}, LootType::HeartSmall, 1}
+        // { { 5639, 222  }, {1, 0.9}, LootType::Rosary,     1}
     };
     for (auto& t : torchs) {
         auto torch = std::make_shared<Torch>(t.pos, t.scale, t.loot, t.type);
@@ -112,7 +112,7 @@ void Stage1::Start(App* app){
     for (auto& s : stairs) {
         auto stair = Stair::CreateStair(s.pos1, s.pos2);
         m_Stairs.insert(m_Stairs.end(), stair.begin(), stair.end());
-        m_All.insert(m_All.end(), stair.begin(), stair.end());
+        // m_All.insert(m_All.end(), stair.begin(), stair.end());
     }
 
     //door

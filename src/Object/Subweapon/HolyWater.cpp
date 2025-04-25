@@ -21,6 +21,7 @@ namespace Subweapon {
 
     void HolyWater::Use(const std::vector<std::shared_ptr<Block>>& m_Blocks) {
         glm::vec2 pos = UpdatePosition();
+        glm::vec2 size = glm::abs(GetScaledSize());
         SetPosition(pos + glm::vec2(x_vel, y_vel));
         x_vel = m_direction == "left" ? -6
               : m_direction == "right" ? 6 : 0;
@@ -38,6 +39,7 @@ namespace Subweapon {
                 if (overlapX && isLanding) {
                     is_landed = true;
                     SetAnimationFrames(m_flame, 100);
+                    SetPosition({pos.x, blockTop + size.y * 0.5f});
                     break;
                 }
             }
