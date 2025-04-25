@@ -78,7 +78,7 @@ bool Enemy::CollideDetection(std::shared_ptr<Character> &character, std::shared_
                 menu->modifyNumber(menu->formatScore(menu->m_value.score + score), 0, (menu->m_value.score + score));
             }
         }
-    } else if (character->m_SubWeapon != nullptr && character->GetUseWeaponFlag()) {
+    } else if (character->m_SubWeapon != nullptr && character->GetUseWeaponFlag() && !is_dead) {
         std::shared_ptr<Loot> asLoot = std::dynamic_pointer_cast<Loot>(character->m_SubWeapon);
         glm::vec2 pos = asLoot->GetPosition();
         glm::vec2 size = glm::abs(asLoot->GetScaledSize());
