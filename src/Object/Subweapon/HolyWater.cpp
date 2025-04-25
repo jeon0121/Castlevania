@@ -35,7 +35,7 @@ namespace Subweapon {
                 float blockLeft = blockPos.x - blockSize.x * 0.5f;
                 float blockRight = blockPos.x + blockSize.x * 0.5f;
                 bool overlapX = itemRight > blockLeft && itemLeft < blockRight;
-                bool isLanding = itemBottom <= blockTop;
+                bool isLanding = itemBottom <= blockTop && itemTop > blockTop;
                 if (overlapX && isLanding) {
                     is_landed = true;
                     SetAnimationFrames(m_flame, 100);
