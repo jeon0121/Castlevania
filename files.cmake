@@ -26,6 +26,8 @@ set(SRC_FILES
     State/Title.cpp
     State/Stage0.cpp
     State/Stage1.cpp
+    State/Stage2a.cpp
+    State/Stage2b.cpp
 
     Utility/Time.cpp
     Utility/Position.cpp
