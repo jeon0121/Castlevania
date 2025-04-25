@@ -3,3 +3,5 @@
   - [x] when jump and touch the bottom part of block, character would landed duck
 - Title
   - [] when character enter the castle (title::end), at windows 11, the character didn't reach the door
+- Stair
+  - [] when spamming up and down in stair, character will fall

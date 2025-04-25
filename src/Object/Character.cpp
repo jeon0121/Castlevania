@@ -382,7 +382,10 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const 
 
             // duck
             else if (Util::Input::IsKeyPressed(DOWN) && !is_jump)
-                Duck(Util::Input::IsKeyPressed(LEFT) ? "left" : (Util::Input::IsKeyPressed(RIGHT) ? "right" : ""));
+                if (Util::Input::IsKeyPressed(RIGHT) && Util::Input::IsKeyPressed(LEFT))
+                    Duck("");
+                else
+                    Duck(Util::Input::IsKeyPressed(LEFT) ? "left" : (Util::Input::IsKeyPressed(RIGHT) ? "right" : ""));
 
             // jump
             else if (Util::Input::IsKeyDown(B) && !is_jump && !change_land && !is_onStair) {
@@ -395,8 +398,10 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const 
                 Fall();
 
             // when pressing both key, character will idle
-            else if (Util::Input::IsKeyPressed(LEFT) && Util::Input::IsKeyPressed(RIGHT))
+            else if (Util::Input::IsKeyPressed(LEFT) && Util::Input::IsKeyPressed(RIGHT)) {
+                ChangeBehavior(2);
                 Idle();
+            }
 
             // left
             else if (Util::Input::IsKeyPressed(LEFT) && !is_duck && !is_onStair) {
@@ -428,7 +433,8 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const 
             //           << std::endl;
         }
     }
-    UpdatePosition();
+    if (!is_levelUpWhip)
+        UpdatePosition();
     if (!is_onStair)
         CollideBoundary(m_Blocks);
 }

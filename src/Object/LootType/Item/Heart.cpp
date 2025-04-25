@@ -22,6 +22,7 @@ Heart::Heart(glm::vec2 position, LootType type) : Loot(position, {}, 0, type) {
 
 void Heart::Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks) {
    glm::vec2 itemPos = UpdatePosition();
+   glm::vec2 itemSize = glm::abs(GetScaledSize());
    if (type == LootType::HeartBig){
       SetPosition(itemPos + glm::vec2(x_vel, y_vel));
       y_vel = std::max(y_vel - ((y_vel >= -2.0f) ? 0.5f : 1.3f), -15.0f);
@@ -42,6 +43,8 @@ void Heart::Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks) {
          bool isLanding = itemBottom <= blockTop;
          if (overlapX && isLanding) {
             is_landed = true;
+            if (itemBottom < blockTop)
+               SetPosition({itemPos.x, blockTop + itemSize.y * 0.2f});
             break;
          }
       }

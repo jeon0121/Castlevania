@@ -63,7 +63,22 @@ void Stage1::Start(App* app){
         { { 918,  -127 }, {1, 0.9}, LootType::RedBag,     1},
         { { 1180, -240 }, {1, 0.9}, LootType::HeartSmall, 1},
         { { 1442, -127 }, {1, 0.9}, LootType::HeartSmall, 1},
-        { { 1704, -240 }, {1, 0.9}, LootType::HeartSmall, 1}
+        { { 1704, -240 }, {1, 0.9}, LootType::HeartSmall, 1},
+        { { 1964, -125 }, {1, 0.9}, LootType::HeartSmall, 1},
+        { { 2227, 105  }, {1, 0.9}, LootType::HeartSmall, 1},
+        { { 2490, -240 }, {1, 0.9}, LootType::WhiteBag,   1},
+        { { 2753, 210  }, {1, 0.9}, LootType::HolyWater,  1},
+        { { 3015, 105  }, {1, 0.9}, LootType::HeartBig,   1},
+        { { 3277, -240 }, {1, 0.9}, LootType::WhiteBag,   1},
+        { { 3539, 105  }, {1, 0.9}, LootType::HeartSmall, 1},
+        { { 3802, -240 }, {1, 0.9}, LootType::HeartSmall, 1},
+        { { 4064, -240 }, {1, 0.9}, LootType::HeartSmall, 1},
+        { { 4327, -240 }, {1, 0.9}, LootType::HeartSmall, 1},
+        { { 4589, -240 }, {1, 0.9}, LootType::HeartSmall, 1},
+        { { 4851, -240 }, {1, 0.9}, LootType::HeartSmall, 1},
+        { { 5114, -125 }, {1, 0.9}, LootType::HeartSmall, 1},
+        { { 5376, 105  }, {1, 0.9}, LootType::HeartSmall, 1},
+        { { 5639, 222  }, {1, 0.9}, LootType::Rosary,     1}
     };
     for (auto& t : torchs) {
         auto torch = std::make_shared<Torch>(t.pos, t.scale, t.loot, t.type);
@@ -84,7 +99,7 @@ void Stage1::Start(App* app){
     for (auto& b : blocks) {
         auto block = std::make_shared<Block>(b.pos, b.scale);
         m_Blocks.push_back(block);
-        m_All.push_back(block);
+        // m_All.push_back(block);
     }
 
     // stair
