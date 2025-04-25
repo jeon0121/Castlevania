@@ -21,6 +21,7 @@ glm::vec2 Loot::UpdatePosition() {
 
 void Loot::Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks){
    glm::vec2 itemPos = UpdatePosition();
+   glm::vec2 itemSize = glm::abs(GetScaledSize());
    SetPosition(itemPos + glm::vec2(x_vel, y_vel));
    y_vel = std::max(y_vel - ((y_vel >= -2.0f) ? 0.5f : 1.5f), -15.0f);
 
@@ -36,6 +37,8 @@ void Loot::Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks){
 
          if (overlapX && isLanding) {
             is_landed = true;
+            if (itemBottom < blockTop)
+               SetPosition({itemPos.x, blockTop + itemSize.y * 0.2f});
             break;
          }
       }
