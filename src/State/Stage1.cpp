@@ -193,13 +193,19 @@ void Stage1::End(App* app){
                     door_2->SetLooping(true);
                 }
             }
-        }else {
-            if (door_1->IsPlaying() && m_Background->GetPosition().x > -530) {
+        } else {
+            if (door_1->IsPlaying() && m_Background->GetPosition().x > -527) {
                 m_Background->SetPosition({m_Background->GetPosition().x - 3.0f, m_Background->GetPosition().y});
                 m_Character->SetPosition({m_Character->GetPosition().x - 3.0f, m_Character->GetPosition().y });
-            }else if (!door_1->IsPlaying() && !door_2->IsPlaying()) {
+            } else if (!door_1->IsPlaying() && !door_2->IsPlaying()) {
                 door_2->SetVisible(false);
                 door_1->SetPlaying();
+            } else if (m_Background->GetPosition().x < -527) {
+                app->m_Menu->SetMenuVisibility(false);
+                m_EnemiesManager->RemoveAllEnemies(app);
+                app->RemoveAllChildren(m_All);
+                app->m_AppState = App::AppState::START;
+                app->m_GameState = App::GameState::STAGE2A;
             }
         }
     }

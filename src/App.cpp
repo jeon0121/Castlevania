@@ -34,8 +34,11 @@ void App::Start() {
         case GameState::STAGE1:
             m_Scene = std::make_unique<Stage1>();
             break;
-        case GameState::STAGE2:
-            m_Scene = std::make_unique<Stage2>();
+        case GameState::STAGE2A:
+            m_Scene = std::make_unique<Stage2a>();
+            break;
+        case GameState::STAGE2B:
+            m_Scene = std::make_unique<Stage2b>();
             break;
         case GameState::STAGE3:
             m_Scene = std::make_unique<Stage3>();

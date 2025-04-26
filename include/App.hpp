@@ -18,7 +18,8 @@ public:
         TITLE,
         STAGE0,
         STAGE1,
-        STAGE2,
+        STAGE2A,
+        STAGE2B,
         STAGE3,
     };
 
@@ -38,7 +39,7 @@ public:
 
     Util::Renderer m_Root;
     AppState m_AppState = AppState::START;
-    GameState m_GameState = GameState::STAGE1;
+    GameState m_GameState = GameState::STAGE2A;
     std::shared_ptr<Scene> m_Scene;
     std::shared_ptr<Menu> m_Menu;
     std::shared_ptr<Character> m_Character;
