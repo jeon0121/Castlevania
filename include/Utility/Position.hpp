@@ -21,6 +21,18 @@ public:
     * Useful for determining coordinates for placing objects (e.g., blocks, player, etc.).
     */
    static void LogCursorCoordinate();
+
+   template <typename T>
+   /**
+    * @brief Used to print object coordinate with offset
+    * 
+    * (Make sure that the object have GetPosition() method)
+    */
+   static void PrintObjectCoordinate(const std::shared_ptr<T>& object, int offsetX) {
+      if (object) {
+         std::cout << object->GetPosition().x + offsetX << ", " << object->GetPosition().y << std::endl;
+      }
+   }
 };
 
 #endif
