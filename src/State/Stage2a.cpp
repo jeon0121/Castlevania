@@ -16,7 +16,7 @@ void Stage2a::Start(App *app) {
       //character
       if (!app->m_Character) {
          CharacterValue charactervalue;
-         charactervalue.position = glm::vec2(-326.6, -200.76);
+         charactervalue.position = glm::vec2(-326.6, 80.76);
          charactervalue.direction = "right";
          charactervalue.beIndex = 2;
          app->m_Character = std::make_shared<Character>(charactervalue);
@@ -84,7 +84,7 @@ void Stage2a::Start(App *app) {
       m_stateState = StateState::UPDATE;
    }else {
       this->m_Character = app->m_Character;
-      m_Character->SetPosition({-193.9, -378.65});
+      m_Character->SetPosition({-189.9, -378.65});
       m_Character->SetOffStairs();
       std::shared_ptr<Stair> stair = m_Character->CollideStair(m_Stairs);
       m_Character->Ascending(stair);

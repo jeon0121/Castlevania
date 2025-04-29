@@ -9,6 +9,23 @@ void Stage2b::Start(App *app) {
         backgroundPos = m_Background->GetPosition();
         m_All.push_back(m_Background);
 
+        //torch
+        std::vector<TorchData> torchs = {
+            { { -393, 163  }, {1, 0.9}, LootType::WhiteBag,   1},
+            { { -131, 163  }, {1, 0.9}, LootType::RedBag,     1},
+            { { 131,  163  }, {1, 0.9}, LootType::RedBag,     1},
+            { { 393,  163  }, {1, 0.9}, LootType::WhiteBag,   1},
+            { { 656,  163  }, {1, 0.9}, LootType::Stopwatch,  1},
+            { { 915,  163  }, {1, 0.9}, LootType::HeartSmall, 1},
+            { { 1177, 163  }, {1, 0.9}, LootType::HeartSmall, 1},
+            { { 1505, 163  }, {1, 0.9}, LootType::HeartBig,   1}
+        };
+        for (auto& t : torchs) {
+            auto torch = std::make_shared<Torch>(t.pos, t.scale, t.loot, t.type);
+            m_Torches.push_back(torch);
+            m_All.push_back(torch);
+        }
+
         // block
         std::vector<BlockData> blocks = {
             { { -65,  52   }, { 1.08, 0.68 } },
@@ -54,8 +71,8 @@ void Stage2b::Start(App *app) {
 
 void Stage2b::Update(App *app) {
     m_Character->Keys(m_Blocks, m_Stairs);
-    // UpdateTorch(app);
-    // UpdateSubWeapon(app);
+    UpdateTorch(app);
+    UpdateSubWeapon(app);
     UpdateScroll(mapWidth);
     if (m_Character->GetPosition().y > 300  && m_Character->GetDirection() == "left") {
         app->m_Character = this->m_Character;
