@@ -32,13 +32,17 @@ void App::Start() {
             m_Scene = std::make_unique<Stage0>();
             break;
         case GameState::STAGE1:
-            m_Scene = std::make_unique<Stage1>();
+            m_Scene = std::make_shared<Stage1>();
             break;
         case GameState::STAGE2A:
-            m_Scene = std::make_unique<Stage2a>();
+            if (!m_SceneA)
+                m_SceneA = std::make_shared<Stage2a>();
+            m_Scene = m_SceneA;
             break;
         case GameState::STAGE2B:
-            m_Scene = std::make_unique<Stage2b>();
+            if (!m_SceneB)
+                m_SceneB = std::make_shared<Stage2b>();
+            m_Scene = m_SceneB;
             break;
         case GameState::STAGE3:
             m_Scene = std::make_unique<Stage3>();
