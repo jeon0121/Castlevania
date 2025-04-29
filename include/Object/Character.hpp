@@ -38,6 +38,7 @@ public:
     void SetSubWeaponType(WeaponType type);
     void SetUseWeaponFlag(bool ifuse);
     void SetHurtFlag(bool ifhurt, bool ifNeedSlip);
+    void SetOffStairs();
     const WeaponType& GetSubWeaponType() const;
     const bool& GetUseWeaponFlag() const;
     bool GetHurtFlag();

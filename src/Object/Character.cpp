@@ -588,6 +588,15 @@ void Character::Descending(std::shared_ptr<Stair>& stair) {
     }
 }
 
+void Character::SetOffStairs() {
+    is_ascending = false;
+    is_descending = false;
+    is_onStair = false;
+    currentStair = nullptr;
+    x_vel = y_vel = 0.0f;
+    prevStairState = -1;
+}
+
 void Character::SubWeapon() {
     is_subweapon = true;
     if (is_jump)

@@ -121,8 +121,8 @@ void Stage1::Start(App* app){
         door1Imgs.push_back(GA_RESOURCE_DIR "/items/door/door-" + std::to_string(i) + ".png");
         door2Imgs.push_back(GA_RESOURCE_DIR "/items/door/door-" + std::to_string(3 - i) + ".png");
     }
-    door_1 = std::make_shared<AnimatedItems>(door1Imgs, 500, glm::vec2{1.0f, 0.9f});
-    door_2 = std::make_shared<AnimatedItems>(door2Imgs, 500, glm::vec2{1.0f, 0.9f});
+    door_1 = std::make_shared<AnimatedItems>(door1Imgs, 200, glm::vec2{1.0f, 0.9f});
+    door_2 = std::make_shared<AnimatedItems>(door2Imgs, 200, glm::vec2{1.0f, 0.9f});
     for (auto& door : {door_1, door_2}) {
         door->SetPosition({15.0f, 110.0f});
         door->SetVisible(false);
@@ -167,8 +167,8 @@ void Stage1::End(App* app){
             m_Background->SetPosition({522.5, -36.2});
             m_Background->SetZIndex(8);
         }else if (m_Background->GetPosition().x > 0) {
-            m_Background->SetPosition({m_Background->GetPosition().x - 3.0f, m_Background->GetPosition().y});
-            m_Character->SetPosition({m_Character->GetPosition().x - 3.0f, m_Character->GetPosition().y });
+            m_Background->SetPosition({m_Background->GetPosition().x - 4.0f, m_Background->GetPosition().y});
+            m_Character->SetPosition({m_Character->GetPosition().x - 4.0f, m_Character->GetPosition().y });
         }else if (m_Background->GetPosition().x < 0 && !door_2->IsLooping()) {
             if (!door_1->IsPlaying() && !m_Character->m_Behavior->IsLooping()) {
                 door_1->SetVisible(true);
@@ -180,7 +180,7 @@ void Stage1::End(App* app){
                 m_Character->m_Behavior->SetLooping(true);
             }
             if (m_Character->GetPosition().x < 200 && m_Character->m_Behavior->IsLooping())
-                m_Character->SetPosition({m_Character->GetPosition().x + 1.5f, m_Character->GetPosition().y });
+                m_Character->SetPosition({m_Character->GetPosition().x + 4.0f, m_Character->GetPosition().y });
             else if (m_Character->GetPosition().x > 200) {
                 m_Character->ChangeBehavior(2);
                 door_1->SetVisible(false);
@@ -195,8 +195,8 @@ void Stage1::End(App* app){
             }
         } else {
             if (door_1->IsPlaying() && m_Background->GetPosition().x > -527) {
-                m_Background->SetPosition({m_Background->GetPosition().x - 3.0f, m_Background->GetPosition().y});
-                m_Character->SetPosition({m_Character->GetPosition().x - 3.0f, m_Character->GetPosition().y });
+                m_Background->SetPosition({m_Background->GetPosition().x - 4.0f, m_Background->GetPosition().y});
+                m_Character->SetPosition({m_Character->GetPosition().x - 4.0f, m_Character->GetPosition().y });
             } else if (!door_1->IsPlaying() && !door_2->IsPlaying()) {
                 door_2->SetVisible(false);
                 door_1->SetPlaying();
