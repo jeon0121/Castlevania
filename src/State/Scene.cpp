@@ -30,7 +30,8 @@ void Scene::UpdateScroll(int mapWidth) {
         ((pos.x <= -4.5) && (dx < 0) && (offsetX > 0))) {
         offsetX += dx;
         m_Background->SetPosition(backgroundPos - glm::vec2(offsetX, 0.0f));
-        m_Blink->SetPosition(m_Background->GetPosition());
+        if (m_Blink)
+            m_Blink->SetPosition(m_Background->GetPosition());
         m_Character->SetPosition(m_Character->GetPosition() - glm::vec2(dx, 0.0f));
         for (auto& block : m_Blocks) {
             block->SetPosition(block->GetPosition() - glm::vec2(dx, 0.0f));
@@ -63,15 +64,21 @@ void Scene::UpdateScroll(int mapWidth) {
 }
 
 void Scene::UpdateSubWeapon(App* app) {
-    if (m_Character->GetUseWeaponFlag() && m_Character->GetAmmo() > 0 && !m_Character->GetLevelUpWhipFlag()) {
+    asLoot = std::dynamic_pointer_cast<Loot>(m_Character->m_SubWeapon);
+    if (m_Character->GetUseWeaponFlag() && !m_Character->GetLevelUpWhipFlag()) {
         if (!m_Character->m_SubWeapon) {
             SetSubweapon(app);
             int cost = m_Character->m_SubWeapon->GetCost();
+            if (m_Character->GetAmmo() < cost) {
+                m_Character->m_SubWeapon = nullptr;
+                app->m_Root.RemoveChild(asLoot);
+                m_Character->SetUseWeaponFlag(false);
+                return;
+            }
             app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(m_Character->GetAmmo()-cost), 3);
             m_Character->SetAmmo(m_Character->GetAmmo()-cost);
         } else {
             m_Character->m_SubWeapon->Use(m_Blocks);
-            asLoot = std::dynamic_pointer_cast<Loot>(m_Character->m_SubWeapon);
             if (m_Character->m_SubWeapon->IsDestroyed() ||
                 asLoot->GetPosition().x < -screenWidth / 2 ||
                 asLoot->GetPosition().x > screenWidth / 2) {

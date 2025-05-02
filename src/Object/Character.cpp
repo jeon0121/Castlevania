@@ -365,12 +365,12 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const 
         }
         else if (!is_hurt) {
             // duck subweapon
-            if (((Util::Input::IsKeyPressed(UP) && Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyDown(A)) || (is_subweapon && is_duck)) && !is_jump) {
+            if (((Util::Input::IsKeyPressed(UP) && Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyDown(A)) || (is_subweapon && is_duck)) && !is_jump && m_subweapon != WeaponType::None) {
                 Duck("");
                 SubWeapon();
             }
             // subweapon
-            else if (((Util::Input::IsKeyPressed(UP) && Util::Input::IsKeyPressed(A) && !is_jump) || is_subweapon) && m_subweapon != WeaponType::None && !is_whip && !is_useweapon && m_ammo > 0) {
+            else if (((Util::Input::IsKeyPressed(UP) && Util::Input::IsKeyPressed(A) && !is_jump) || is_subweapon) && m_subweapon != WeaponType::None && !is_whip && !is_useweapon) {
                 SubWeapon();
             }
             // duck whip
