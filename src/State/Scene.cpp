@@ -22,17 +22,18 @@ void Scene::UpdateTorch(App* app) {
     }
 }
 
-void Scene::UpdateScroll(int mapWidth) {
+void Scene::UpdateScroll(int mapWidth, float offset) {
     glm::vec2 pos = m_Character->GetPosition();
     glm::vec2 lastPos = m_Character->GetLastPosition();
-    float dx = pos.x - lastPos.x;
+    float dx = (offset != 0) ? offset : pos.x - lastPos.x;
     if (((pos.x >= 4.5) && (dx > 0) && (offsetX < mapWidth - screenWidth)) ||
-        ((pos.x <= -4.5) && (dx < 0) && (offsetX > 0))) {
+        ((pos.x <= -4.5) && (dx < 0) && (offsetX > 0)) || offset != 0) {
         offsetX += dx;
         m_Background->SetPosition(backgroundPos - glm::vec2(offsetX, 0.0f));
+        if (offset == 0)
+            m_Character->SetPosition(m_Character->GetPosition() - glm::vec2(dx, 0.0f));
         if (m_Blink)
             m_Blink->SetPosition(m_Background->GetPosition());
-        m_Character->SetPosition(m_Character->GetPosition() - glm::vec2(dx, 0.0f));
         for (auto& block : m_Blocks) {
             block->SetPosition(block->GetPosition() - glm::vec2(dx, 0.0f));
         }

@@ -12,7 +12,7 @@ public:
     void End(App* app) override;
 
 private:
-    int mapWidth = 2048;
+    int mapWidth = 2070;
 };
 
 class Stage2b : public Scene{

@@ -29,16 +29,17 @@ void Stage2b::Start(App *app) {
         // block
         std::vector<BlockData> blocks = {
             { { -65,  52   }, { 1.08, 0.68 } },
-            { { -65,  -64  }, { 7.5,  0.68 } },
-            { { 590,  -64  }, { 1.08, 0.68 } },
-            { { 1115, -64  }, { 5.4,  0.68 } },
+            { { -65,  -62  }, { 7.5,  0.68 } },
+            { { 590,  -62  }, { 1.08, 0.68 } },
+            { { 1115, -62  }, { 5.4,  0.68 } },
             { { 1375, -296 }, { 1.08, 0.68 } },
             { { 1510, -180 }, { 1.08, 0.68 } },
 
             { { -545,  65 }, { 0.4,  4 } },
             { { 1565,  50  }, { 0.4,  5 } },
 
-            { { -325,  240 }, { 0.5, 0.15 } }//changescene block
+            { { -325,  240 }, { 0.5, 0.15 } },//changescene block
+            { { 986,  245 }, { 0.5, 0.15 } }
          };
         for (auto& b : blocks) {
             auto block = std::make_shared<Block>(b.pos, b.scale);
@@ -48,7 +49,8 @@ void Stage2b::Start(App *app) {
 
         //stair
         std::vector<StairData> stairs = {
-            { { -325,  280  }, { -133,  100 } }
+            { { -325,  280  }, { -133,  107 } },
+            { { 986,  280  }, { 1303,  -7 } }
          };
         for (auto& s : stairs) {
             auto stair = Stair::CreateStair(s.pos1, s.pos2);
@@ -58,8 +60,21 @@ void Stage2b::Start(App *app) {
     }
 
     //character
+    if (this->m_Character == nullptr) {
+        if (app->stairNum[0] == 1) {
+            this->m_Character = app->m_Character;
+            UpdateScroll(mapWidth, 1050);
+        }
+    }else {
+        if (app->stairNum[1] == 0 && app->stairNum[0] == 1)
+            UpdateScroll(mapWidth, 1050);
+        else if (app->stairNum[1] == 1 && app->stairNum[0] == 0)
+            UpdateScroll(mapWidth, m_Torches[0]->GetPosition().x + 393);
+        else if (app->stairNum[1] == 1 && app->stairNum[0] == 1)
+            UpdateScroll(mapWidth, m_Torches[5]->GetPosition().x + 135);
+    }
     this->m_Character = app->m_Character;
-    m_Character->SetPosition({-324.2, 315.85});
+    m_Character->SetPosition({((m_Character->GetPosition().x < 0) ? -324.2 : -60.5), 315.85});//-285.7 -4.1
     m_Character->SetOffStairs();
     std::shared_ptr<Stair> stair = m_Character->CollideStair(m_Stairs);
     m_Character->Descending(stair);
@@ -75,7 +90,7 @@ void Stage2b::Update(App *app) {
     UpdateSubWeapon(app);
     UpdateScroll(mapWidth);
     if (m_Character->GetPosition().y > 300  && m_Character->GetDirection() == "left") {
-        app->m_Character = this->m_Character;
+        app->stairNum[1] = (m_Character->GetPosition().x < -100) ? 0 : 1;
         app->m_AppState = App::AppState::START;
         app->m_GameState = App::GameState::STAGE2A;
         app->RemoveAllChildren(m_All);

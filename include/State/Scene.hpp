@@ -29,7 +29,7 @@ public:
 
     void UpdateTorch(App* app);
 
-    void UpdateScroll(int mapWidth);
+    void UpdateScroll(int mapWidth, float offset = 0.0f);
 
     void UpdateSubWeapon(App* app);
 

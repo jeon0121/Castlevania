@@ -45,6 +45,7 @@ public:
     std::shared_ptr<Scene> m_SceneB;
     std::shared_ptr<Menu> m_Menu;
     std::shared_ptr<Character> m_Character;
+    std::vector<int> stairNum = {0, 0};
 };
 
 #endif

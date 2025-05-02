@@ -24,13 +24,13 @@ void Stage2a::Start(App *app) {
       //character
       if (!app->m_Character) {
          CharacterValue charactervalue;
-         charactervalue.position = glm::vec2(-326.6, 80.76);
+         charactervalue.position = glm::vec2(-315, 80.76);
          charactervalue.direction = "right";
          charactervalue.beIndex = 2;
          app->m_Character = std::make_shared<Character>(charactervalue);
       }
       else
-         app->m_Character->SetPosition({-326.6, 80.76});
+         app->m_Character->SetPosition({-315, 80.76});
       this->m_Character = app->m_Character;
       app->m_Root.AddChild(m_Character->m_Behavior);
 
@@ -69,7 +69,7 @@ void Stage2a::Start(App *app) {
          { { -515, -200 }, { 0.4,  4    } },
          { { -263, -5   }, { 4.26, 0.68 } },
          { { 128,  -122 }, { 2.12, 0.68 } },
-         { { 658,  -130 }, { 2.13, 1.05 } },
+         // { { 658,  -130 }, { 2.13, 1.05 } },
 
          // { { 689,  -240 }, { 1.62, 2.13 } },
 
@@ -102,8 +102,11 @@ void Stage2a::Start(App *app) {
       }
       m_stateState = StateState::UPDATE;
    }else {
-      this->m_Character = app->m_Character;
-      m_Character->SetPosition({-189.9, -378.65});
+      if (app->stairNum[0] == 1 && app->stairNum[1] == 0)
+         UpdateScroll(mapWidth, -1050);
+      else if (app->stairNum[0] == 0 && app->stairNum[1] == 1)
+         UpdateScroll(mapWidth, 1050);
+      m_Character->SetPosition({((m_Character->GetPosition().x < -100) ? -189.9 : 70.1), -378.65});
       m_Character->SetOffStairs();
       std::shared_ptr<Stair> stair = m_Character->CollideStair(m_Stairs);
       m_Character->Ascending(stair);
@@ -123,7 +126,7 @@ void Stage2a::Update(App *app) {
    UpdateScroll(mapWidth);
    // Position::PrintObjectCoordinate(m_Character, offsetX);
    if (m_Character->GetPosition().y < -380 && m_Character->GetDirection() == "right") {
-      app->m_Character = this->m_Character;
+      app->stairNum[0] = (m_Character->GetPosition().x < -100) ? 0 : 1;
       app->m_AppState = App::AppState::START;
       app->m_GameState = App::GameState::STAGE2B;
       app->RemoveAllChildren(m_All);
