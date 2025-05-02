@@ -30,6 +30,14 @@ void EnemiesManager::AddLeopard(glm::vec2 positions, std::string direction, App 
     app->m_Root.AddChild(leopard);
 }
 
+void EnemiesManager::AddBat(glm::vec2 positions, std::string direction, App *app) {
+    std::shared_ptr<Bat> bat = std::make_shared<Bat>(positions, direction);
+    bat->SetZIndex(7);
+    m_Bats.push_back(bat);
+    m_Enemies.push_back(bat);
+    app->m_Root.AddChild(bat);
+}
+
 void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, App* app) {
     if (character->GetLevelUpWhipFlag() ||
        (character->GetSubWeaponType() == WeaponType::Stopwatch && character->GetUseWeaponFlag())) {
@@ -61,6 +69,7 @@ void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Char
     if (!isEnemyPause) {
         ManageZombies(offsetX, character, screenWidth);
         ManageLeopard(offsetX, character, blocks, screenWidth);
+        ManageBat(offsetX, character, screenWidth);
     }
 }
 
@@ -127,6 +136,37 @@ void EnemiesManager::ManageLeopard(float offsetX, std::shared_ptr<Character> &ch
             leopard->SetReset();
             leopard->SetDirection((leopard->GetInitialPos().x - offsetX > 0) ? "left" : "right");
             leopard->SetPosition(leopard->GetInitialPos() - glm::vec2(offsetX, 0));
+        }
+    }
+}
+
+void EnemiesManager::ManageBat(float offsetX, std::shared_ptr<Character> &character, int screenWidth) {
+    constexpr float delay = 2000.0f;
+    for (auto &bat : m_Bats) {
+        bool reset = true;
+        if (!bat->CheckReset()) {
+            bat->MoveBehav();
+            reset = false;
+        }
+        if (reset) {
+            if (resetStartTime == 0)
+                resetStartTime = SDL_GetPerformanceCounter();
+            if (Time::GetRunTimeMs(resetStartTime) > delay) {
+                for (auto &bat : m_Bats) {
+                    if (character->GetPosition().x > 10.0f)
+                        bat->SetPosition({-screenWidth * 0.5, character->GetPosition().y + 10.0f});
+                    else if (character->GetPosition().x < -10.0f)
+                        bat->SetPosition({screenWidth * 0.5, character->GetPosition().y + 10.0f});
+                    else {
+                        int sign = (std::rand() % 2 == 0) ? 1 : -1;
+                        float baseX = screenWidth * 0.5;
+                        bat->SetPosition({sign * baseX, character->GetPosition().y + 10.0f});
+                    }
+                    bat->SetReset();
+                    bat->SetDirection((bat->GetPosition().x > 0) ? "left" : "right");
+                }
+                resetStartTime = 0;
+            }
         }
     }
 }

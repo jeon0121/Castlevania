@@ -7,6 +7,7 @@
 #include "Object/Block.hpp"
 #include "Object/Enemies/Zombie.hpp"
 #include "Object/Enemies/Leopard.hpp"
+#include "Object/Enemies/Bat.hpp"
 
 class EnemiesManager {
     public:
@@ -15,6 +16,8 @@ class EnemiesManager {
         void AddZombie(glm::vec2 range, int numZombie, glm::vec2 pos, std::string direction, App *app);
 
         void AddLeopard(glm::vec2 positions, std::string direction, App *app);
+
+        void AddBat(glm::vec2 positions, std::string direction, App *app);
 
         void Update(float offsetX, int screenWidth, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, App* app);
 
@@ -26,6 +29,8 @@ class EnemiesManager {
 
         void ManageLeopard(float offsetX, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, int screenWidth);
 
+        void ManageBat(float offsetX, std::shared_ptr<Character> &character, int screenWidth);
+
         void RemoveAllEnemies(App *app);
 
         std::vector<std::shared_ptr<Enemy>> m_Enemies;
@@ -35,6 +40,7 @@ class EnemiesManager {
         Uint64 resetStartTime = 0;
         std::vector<std::shared_ptr<ZombieHorde>> m_Zombies;
         std::vector<std::shared_ptr<Leopard>> m_Leopards;
+        std::vector<std::shared_ptr<Bat>> m_Bats;
         std::vector<PossibleLootData> m_PossibleLoots;
 
         bool isEnemyPause = false;

@@ -34,6 +34,17 @@ void Stage2a::Start(App *app) {
       this->m_Character = app->m_Character;
       app->m_Root.AddChild(m_Character->m_Behavior);
 
+      // EnemiesManager
+      std::vector<PossibleLootData> possibleLoots = {
+         {LootType::HeartSmall, 0.5, -1},
+         {LootType::Stopwatch,  0.2,  1},
+         {LootType::None,       1.0, -1},
+      };
+      m_EnemiesManager = std::make_shared<EnemiesManager>(possibleLoots);
+
+      // bats
+      m_EnemiesManager->AddBat({screenWidth * 0.5, m_Character->GetPosition().y}, "left", app);
+
       //torch
       std::vector<TorchData> torchs = {
          { { -131, 106  }, {1, 0.9}, LootType::HeartBig,   1},
@@ -107,6 +118,7 @@ void Stage2a::Update(App *app) {
       Blink();
    m_Character->Keys(m_Blocks, m_Stairs);
    UpdateTorch(app);
+   m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app);
    UpdateSubWeapon(app);
    UpdateScroll(mapWidth);
    // Position::PrintObjectCoordinate(m_Character, offsetX);
