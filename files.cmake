@@ -18,7 +18,6 @@ set(SRC_FILES
     Object/Character.cpp
     Object/EnemiesManager.cpp
     Object/Enemy.cpp
-    Object/ImageItems.cpp
     Object/Loot.cpp
     Object/Stair.cpp
     Object/Torch.cpp

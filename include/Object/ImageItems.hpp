@@ -20,9 +20,6 @@ public:
    [[nodiscard]] bool GetVisibility() const { return m_Visible; }
 
    void SetPosition(const glm::vec2& Position) { m_Transform.translation = Position; }
-
-private:
-   std::string ConvertImageIfNeeded(const std::string& path);
 };
 
 #endif
