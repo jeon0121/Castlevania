@@ -12,6 +12,14 @@ void Stage1::Start(App* app){
     backgroundPos = m_Background->GetPosition();
     m_All.push_back(m_Background);
 
+    // blink
+    std::vector<std::string> blinkImages = {GA_RESOURCE_DIR"/background/stage-1/entrance-hall-blink.png", GA_RESOURCE_DIR"/background/stage-1/entrance-hall.png"};
+    m_Blink = std::make_shared<AnimatedItems>(blinkImages, 40, m_Background->m_Transform.scale);
+    m_Blink->SetZIndex(1);
+    m_Blink->SetPosition(m_Background->GetPosition());
+    m_Blink->SetVisible(false);
+    m_All.push_back(m_Blink);
+
     //character
     if (!app->m_Character) {
         CharacterValue charactervalue;
@@ -77,8 +85,8 @@ void Stage1::Start(App* app){
         { { 4589, -240 }, {1, 0.9}, LootType::HeartSmall, 1},
         { { 4851, -240 }, {1, 0.9}, LootType::HeartSmall, 1},
         { { 5114, -125 }, {1, 0.9}, LootType::HeartSmall, 1},
-        { { 5376, 105  }, {1, 0.9}, LootType::HeartSmall, 1}
-        // { { 5639, 222  }, {1, 0.9}, LootType::Rosary,     1}
+        { { 5376, 105  }, {1, 0.9}, LootType::HeartSmall, 1},
+        { { 5639, 222  }, {1, 0.9}, LootType::Rosary,     1}
     };
     for (auto& t : torchs) {
         auto torch = std::make_shared<Torch>(t.pos, t.scale, t.loot, t.type);
@@ -135,6 +143,8 @@ void Stage1::Start(App* app){
 }
 
 void Stage1::Update(App* app){
+    if (blinkStartTime != 0)
+        Blink();
     m_Character->Keys(m_Blocks, m_Stairs);
     UpdateTorch(app);
     m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app);

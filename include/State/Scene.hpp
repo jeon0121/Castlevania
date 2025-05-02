@@ -35,12 +35,17 @@ public:
 
     void SetSubweapon(App* app);
 
+    std::shared_ptr<EnemiesManager> GetEnemiesManager();
+
+    void Blink();
+
     StateState m_stateState = StateState::START;
     int screenWidth = 1024;
     int screenHeight = 768;
 
 protected:
     std::shared_ptr<ImageItems> m_Background;
+    std::shared_ptr<AnimatedItems> m_Blink;
     std::shared_ptr<Character> m_Character;
     std::vector<std::shared_ptr<Util::GameObject>> m_All;
     std::vector<std::shared_ptr<Block>> m_Blocks;
@@ -48,8 +53,10 @@ protected:
     std::vector<std::shared_ptr<Torch>> m_Torches;
     std::shared_ptr<Loot> asLoot;
     std::shared_ptr<EnemiesManager> m_EnemiesManager;
-    float offsetX = 0.0f;
     glm::vec2 backgroundPos;
+    float offsetX = 0.0f;
+
+    Uint64 blinkStartTime = 0;
 
     bool whipDropped = false; // to ensure that dropped whip dont exceed 1
 };

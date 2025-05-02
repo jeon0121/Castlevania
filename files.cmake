@@ -6,6 +6,7 @@ set(SRC_FILES
 
     Object/LootType/Item/Bag.cpp
     Object/LootType/Item/Heart.cpp
+    Object/LootType/Item/Rosary.cpp
     Object/Subweapon/Axe.cpp
     Object/Subweapon/HolyWater.cpp
     Object/Subweapon/Dagger.cpp
@@ -46,6 +47,7 @@ set(INCLUDE_FILES
     Object/LootType/Item/Crystal.hpp
     Object/LootType/Item/Heart.hpp
     Object/LootType/Item/Pot.hpp
+    Object/LootType/Item/Rosary.hpp
     Object/Subweapon/Axe.hpp
     Object/Subweapon/HolyWater.hpp
     Object/Subweapon/Dagger.hpp

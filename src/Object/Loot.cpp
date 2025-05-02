@@ -111,6 +111,10 @@ std::shared_ptr<Loot> Loot::CreateLoot(LootType itemType, glm::vec2 position) {
          return std::make_shared<LootItem::Heart>(position, LootType::HeartSmall);
       case LootType::HeartBig:
          return std::make_shared<LootItem::Heart>(position, LootType::HeartBig);
+      
+      // Relic
+      case LootType::Rosary:
+         return std::make_shared<LootItem::Rosary>(position);
       default:
          break;
    }

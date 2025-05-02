@@ -37,6 +37,8 @@ class Enemy : public AnimatedItems {
 
         void SetHidden(bool hidden);
 
+        void SetDead(bool dead);
+
         virtual bool CheckReset();
 
         bool IsDead();

@@ -1,5 +1,6 @@
 #include "State/Scene.hpp"
 #include "Util/Logger.hpp"
+#include "Utility/Time.hpp"
 
 void Scene::UpdateTorch(App* app) {
     for (auto torch : m_Torches) {
@@ -29,6 +30,7 @@ void Scene::UpdateScroll(int mapWidth) {
         ((pos.x <= -4.5) && (dx < 0) && (offsetX > 0))) {
         offsetX += dx;
         m_Background->SetPosition(backgroundPos - glm::vec2(offsetX, 0.0f));
+        m_Blink->SetPosition(m_Background->GetPosition());
         m_Character->SetPosition(m_Character->GetPosition() - glm::vec2(dx, 0.0f));
         for (auto& block : m_Blocks) {
             block->SetPosition(block->GetPosition() - glm::vec2(dx, 0.0f));
@@ -107,5 +109,24 @@ void Scene::SetSubweapon(App* app) {
         asLoot = std::dynamic_pointer_cast<Loot>(m_Character->m_SubWeapon);
         asLoot->m_Transform.scale = (dir == "right") ? glm::vec2(-1, 1) : glm::vec2(1, 1);
         app->m_Root.AddChild(asLoot);
+    }
+}
+
+std::shared_ptr<EnemiesManager> Scene::GetEnemiesManager() {
+    return m_EnemiesManager;
+}
+
+void Scene::Blink() {
+    if (blinkStartTime == 0) {
+        blinkStartTime = SDL_GetPerformanceCounter();
+        m_Blink->SetVisible(true);
+        m_Blink->SetLooping(true);
+        m_Blink->SetPlaying();
+    }
+    if (Time::GetRunTimeMs(blinkStartTime) > 800.0f) {
+        m_Blink->SetVisible(false);
+        m_Blink->SetLooping(false);
+        m_Blink->SetPaused();
+        blinkStartTime = 0;
     }
 }

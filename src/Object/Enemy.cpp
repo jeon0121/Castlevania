@@ -141,6 +141,10 @@ void Enemy::SetHidden(bool hidden) {
     SetVisible(!hidden);
 }
 
+void Enemy::SetDead(bool dead) {
+    is_dead = dead;
+}
+
 bool Enemy::CheckReset() {
     return (is_hidden || is_dead);
 }

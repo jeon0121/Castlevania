@@ -13,6 +13,14 @@ void Stage2a::Start(App *app) {
       backgroundPos = m_Background->GetPosition();
       m_All.push_back(m_Background);
 
+      // blink
+      std::vector<std::string> blinkImages = {GA_RESOURCE_DIR"/background/stage-2/crypt-a-blink.png", GA_RESOURCE_DIR"/background/stage-2/crypt-a.png"};
+      m_Blink = std::make_shared<AnimatedItems>(blinkImages, 40, m_Background->m_Transform.scale);
+      m_Blink->SetZIndex(1);
+      m_Blink->SetPosition(m_Background->GetPosition());
+      m_Blink->SetVisible(false);
+      m_All.push_back(m_Blink);
+
       //character
       if (!app->m_Character) {
          CharacterValue charactervalue;
@@ -34,7 +42,7 @@ void Stage2a::Start(App *app) {
          { { 394, -125  }, {1, 0.9}, LootType::RedBag,     1},
          { { 721,  163  }, {1, 0.9}, LootType::HeartBig,   1},
          { { 919,  -240 }, {1, 0.9}, LootType::RedBag,     1},
-         // { { 1180, 220  }, {1, 0.9}, LootType::Rosary,     1},
+         { { 1180, 220  }, {1, 0.9}, LootType::Rosary,     1},
          { { 1443, 105  }, {1, 0.9}, LootType::RedBag,     1}
       };
       for (auto& t : torchs) {
@@ -52,7 +60,7 @@ void Stage2a::Start(App *app) {
          { { 128,  -122 }, { 2.12, 0.68 } },
          { { 658,  -130 }, { 2.13, 1.05 } },
 
-         { { 689,  -240 }, { 1.62, 2.13 } },
+         // { { 689,  -240 }, { 1.62, 2.13 } },
 
          { { 722,  -67  }, { 3.18, 0.68 } },
          { { 1046, -122 }, { 2.12, 0.68 } },
@@ -95,6 +103,8 @@ void Stage2a::Start(App *app) {
 }
 
 void Stage2a::Update(App *app) {
+   if (blinkStartTime != 0)
+      Blink();
    m_Character->Keys(m_Blocks, m_Stairs);
    UpdateTorch(app);
    UpdateSubWeapon(app);
