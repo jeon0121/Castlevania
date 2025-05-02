@@ -204,13 +204,13 @@ void Stage1::End(App* app){
                 }
             }
         } else {
-            if (door_1->IsPlaying() && m_Background->GetPosition().x > -527) {
+            if (door_1->IsPlaying() && m_Background->GetPosition().x > -516) {
                 m_Background->SetPosition({m_Background->GetPosition().x - 4.0f, m_Background->GetPosition().y});
                 m_Character->SetPosition({m_Character->GetPosition().x - 4.0f, m_Character->GetPosition().y });
             } else if (!door_1->IsPlaying() && !door_2->IsPlaying()) {
                 door_2->SetVisible(false);
                 door_1->SetPlaying();
-            } else if (m_Background->GetPosition().x < -527) {
+            } else if (m_Background->GetPosition().x < -516) {
                 app->m_Menu->SetMenuVisibility(false);
                 m_EnemiesManager->RemoveAllEnemies(app);
                 app->RemoveAllChildren(m_All);

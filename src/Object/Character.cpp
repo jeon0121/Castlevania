@@ -392,8 +392,11 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const 
             // jump
             else if (Util::Input::IsKeyDown(B) && !is_jump && !change_land && !is_onStair) {
                 Jump();
-                jumptype = (Util::Input::IsKeyPressed(LEFT)) ? 1 :
-                           (Util::Input::IsKeyPressed(RIGHT)) ? 2 : 0;
+                if (Util::Input::IsKeyPressed(RIGHT) && Util::Input::IsKeyPressed(LEFT))
+                    jumptype = (m_direction == "left") ? 1 : 2;
+                else
+                    jumptype = (Util::Input::IsKeyPressed(LEFT)) ? 1 :
+                               (Util::Input::IsKeyPressed(RIGHT)) ? 2 : 0;
             }
             // fall
             else if (is_jump)

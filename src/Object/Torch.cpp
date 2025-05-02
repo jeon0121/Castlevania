@@ -45,7 +45,7 @@ bool Torch::CollideDetection(std::shared_ptr<Character> &character) {
             bool overlapX = (whipLeft > torchLeft && whipLeft < torchRight) ||
                             (whipRight > torchLeft && whipRight < torchRight) ||
                             (whipLeft < torchLeft && whipRight > torchRight);
-            bool overlapY = torchTop > charPos.y && torchBottom < charPos.y;
+            bool overlapY = torchTop + 1.5f > charPos.y && torchBottom - 1.5f < charPos.y;
 
             if (overlapX && overlapY) {
                 SetPaused();
