@@ -4,6 +4,7 @@ set(SRC_FILES
     Object/Enemies/Bat.cpp
     Object/Enemies/Zombie.cpp
     Object/Enemies/Leopard.cpp
+    Object/Enemies/Fishman.cpp
 
     Object/LootType/Item/Bag.cpp
     Object/LootType/Item/Heart.cpp
@@ -41,6 +42,7 @@ set(INCLUDE_FILES
     Object/Enemies/Bat.hpp
     Object/Enemies/Zombie.hpp
     Object/Enemies/Leopard.hpp
+    Object/Enemies/Fishman.hpp
 
     Object/LootType/Loot.hpp
     Object/LootType/Item/Bag.hpp

@@ -9,7 +9,6 @@ public:
    Bat(glm::vec2 position, std::string direction);
    void MoveBehav() override;
    void SetReset() override;
-   void SetDirection(std::string direction);
 private:
    std::vector<std::string> batImages;
    float y_vel = 0.0f;

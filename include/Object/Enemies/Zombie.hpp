@@ -8,7 +8,6 @@ public:
     Zombie(glm::vec2 position, std::string direction);
     void MoveBehav() override;
     void SetReset() override;
-    void SetDirection(std::string direction);
 private:
     std::vector<std::string> zomImages;
     glm::vec2 spawnRange;

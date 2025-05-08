@@ -11,6 +11,12 @@ Enemy::Enemy(glm::vec2 position, std::string direction, std::vector<std::string>
     }
 }
 
+void Enemy::SetDirection(std::string direction) {
+    if (direction != this->direction)
+       Flip();
+    this->direction = direction;
+ }
+
 void Enemy::Death(App* app, std::vector<std::shared_ptr<Loot>> &m_Loots, std::vector<PossibleLootData> &m_PossibleLoots) {
     if (IfAnimationStart())
         SetAnimationFrames(deathImages, 120);

@@ -73,12 +73,6 @@ void Leopard::SetReset() {
     SetVisible(true);
 }
 
-void Leopard::SetDirection(std::string direction) {
-    if (direction != this->direction)
-        Flip();
-    this->direction = direction;
-}
-
 void Leopard::Walk() {
     glm::vec2 pos = GetPosition();
     if (direction == "right") {

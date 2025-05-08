@@ -6,3 +6,5 @@
 - Stair
   - [] when spamming up and down in stair, character will fall
   - [] when get hurt on stair, we cant move the character
+- Bat
+  - [] the bat's movement is still weird

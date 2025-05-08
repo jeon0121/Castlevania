@@ -28,9 +28,3 @@ void Bat::SetReset() {
    SetPlaying();
    SetLooping(true);
 }
-
-void Bat::SetDirection(std::string direction) {
-   if (direction != this->direction)
-      Flip();
-   this->direction = direction;
-}
