@@ -2,9 +2,9 @@
   - [x] when falling from block, character can jump although it haven't landed
   - [x] when jump and touch the bottom part of block, character would landed duck
 - Title
-  - [] when character enter the castle (title::end), at windows 11, the character didn't reach the door
+  - [ ] when character enter the castle (title::end), at windows 11, the character didn't reach the door
 - Stair
-  - [] when spamming up and down in stair, character will fall
-  - [] when get hurt on stair, we cant move the character
+  - [ ] when spamming up and down in stair, character will fall
+  - [x] when get hurt on stair, we cant move the character
 - Bat
-  - [] the bat's movement is still weird
+  - [x] the bat's movement is still weird

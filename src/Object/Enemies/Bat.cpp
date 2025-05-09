@@ -4,6 +4,7 @@ Bat::Bat(glm::vec2 position, std::string direction): Enemy(position, direction, 
    for (int i = 0; i < 3; ++i) {
       batImages.emplace_back(GA_RESOURCE_DIR"/enemies/bat/bat-" + std::to_string(i + 1) + ".png");
    }
+   x_initial = position.x;
    SetAnimationFrames(batImages, 250);
    m_Transform.scale = glm::vec2(1, 0.9f);
    if (direction == "right")
@@ -15,8 +16,9 @@ Bat::Bat(glm::vec2 position, std::string direction): Enemy(position, direction, 
 
 void Bat::MoveBehav() {
    glm::vec2 pos = GetPosition();
-   pos.y -= 2 * sin(pos.x / 50.0f);
+   pos.y -= 2 * sin(x_initial / 50.0f);
    pos.x += (direction == "right" ? 3 : -3);
+   x_initial += (direction == "right" ? 3 : -3);
    SetPosition(pos);
 }
 

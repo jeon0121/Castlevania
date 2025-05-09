@@ -12,6 +12,7 @@ public:
 private:
    std::vector<std::string> batImages;
    float y_vel = 0.0f;
+   float x_initial = 0.0f;
 };
 
 #endif

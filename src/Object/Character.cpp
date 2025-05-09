@@ -117,7 +117,11 @@ void Character::Hurt() {
         x_vel = ((m_direction == "right") ? -4.5f : 4.5f);
     }
     if (startHurtTime == 0) {
-        if (ifNeedSlip) {
+        if (is_onStair) {
+            is_hurt = false;
+            is_hurtOnStair = true;
+        }
+        if (ifNeedSlip && !is_onStair) {
             m_direction = (m_direction == "right") ? "left" : "right";
             Flip();
         }
@@ -128,20 +132,18 @@ void Character::Hurt() {
         if (Time::GetRunTimeMs(startHurtTime) > 3600.0f) {
             startHurtTime = 0;
             m_Behavior->SetVisible(true);
-        }else if (!is_hurt && GetHeart() > 0){
+            if (is_onStair) {
+                is_hurtOnStair = false;
+            }
+        } else if (GetHeart() > 0) {
             int timeCount = static_cast<int>(Time::GetRunTimeMs(startHurtTime)) / 10;
             m_Behavior->SetVisible(timeCount % 4 != 0);
         }
     }
-    if (is_collide.y && GetHeart() > 0)
+    if (is_collide.y && GetHeart() > 0 && !is_hurtOnStair)
         startDuckTime = SDL_GetPerformanceCounter();
     if (startDuckTime) {
-        if (is_onStair) {
-            if (Time::GetRunTimeMs(startHurtTime) > 3600.0f)
-                is_hurt = false;
-        }
-        else
-            HandleFallDuck(m_direction);
+        HandleFallDuck(m_direction);
     }
 }
 

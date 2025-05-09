@@ -131,7 +131,8 @@ private:
     bool change_land = false;
     bool is_hurt = false;
     bool is_dead = false;
-    bool ifNeedSlip = false;//if char need slip when collide with enemy
+    bool ifNeedSlip = false; //if char need slip when collide with enemy
+    bool is_hurtOnStair = false;
 };
 
 #endif

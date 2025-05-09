@@ -64,6 +64,8 @@ bool Enemy::CollideDetection(std::shared_ptr<Character> &character, std::shared_
     glm::vec2 charSize = character->GetSize();
     float charLeft = charPos.x - charSize.x * 0.5f;
     float charRight = charPos.x + charSize.x * 0.5f;
+    float charTop = charPos.y + charSize.y * 0.5f;
+    float charBottom = charPos.y - charSize.y * 0.5f;
 
     if (character->IfWhip() && !is_dead) {
         bool isNormalWhip = (whipLevel != 3 && (frameIndex == 2 || frameIndex == 3));
@@ -100,10 +102,11 @@ bool Enemy::CollideDetection(std::shared_ptr<Character> &character, std::shared_
         }
     } else {
         if (!character->GetLevelUpWhipFlag() && !character->GetHurtFlag() && !is_dead && !is_hidden) {
-            bool overlapX = (charLeft > enemyLeft && charLeft < enemyRight) ||
-                                (charRight > enemyLeft && charRight < enemyRight) ||
-                                (charLeft < enemyLeft && charRight > enemyRight);
-            bool overlapY = enemyTop > charPos.y && enemyBottom < charPos.y;
+            bool overlapX = (charLeft > enemyLeft && charLeft < enemyRight)   ||
+                            (charRight > enemyLeft && charRight < enemyRight) ||
+                            (charLeft < enemyLeft && charRight > enemyRight);
+            bool overlapY = (enemyTop > charPos.y && enemyBottom < charPos.y) ||
+                            (charTop > enemyBottom && charBottom < enemyTop);
             if (overlapX && overlapY) {
                 bool ifNeedSlip = false;
                 if (direction == character->GetDirection() &&
