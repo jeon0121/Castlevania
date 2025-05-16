@@ -37,4 +37,9 @@ struct LeopardData {
    glm::vec2 pos;
 };
 
+struct HitableBlockData {
+   glm::vec2 pos;
+   LootType loot;
+};
+
 #endif

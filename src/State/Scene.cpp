@@ -37,6 +37,17 @@ void Scene::UpdateScroll(int mapWidth, float offset) {
         for (auto& block : m_Blocks) {
             block->SetPosition(block->GetPosition() - glm::vec2(dx, 0.0f));
         }
+        for (auto& hitableBlock : m_HitableBlocks) {
+            hitableBlock->SetPosition(hitableBlock->GetPosition() - glm::vec2(dx, 0.0f));
+            if (hitableBlock->loot) {
+                hitableBlock->loot->SetPosition(hitableBlock->loot->GetPosition() - glm::vec2(dx, 0.0f));
+                if (hitableBlock->loot->score)
+                    hitableBlock->loot->score->SetPosition(hitableBlock->loot->score->GetPosition() - glm::vec2(dx, 0.0f));
+            }
+            if (!hitableBlock->particles.empty()) 
+                for (auto& particle : hitableBlock->particles) 
+                    particle->SetPosition(particle->GetPosition() - glm::vec2(dx, 0.0f));
+        }
         for (auto& stair : m_Stairs) {
             stair->SetPosition(stair->GetPosition() - glm::vec2(dx, 0.0f));
         }
@@ -136,5 +147,23 @@ void Scene::Blink() {
         m_Blink->SetLooping(false);
         m_Blink->SetPaused();
         blinkStartTime = 0;
+    }
+}
+
+void Scene::UpdateHitableBlock(App* app) {
+    for (auto hitableBlock : m_HitableBlocks) {
+        if (hitableBlock && hitableBlock->loot) {
+            hitableBlock->loot->Fall(m_Blocks);
+            if (hitableBlock->loot->IsCollected(m_Character))
+                app->m_Root.RemoveChild(hitableBlock);
+        }
+        else if (hitableBlock && hitableBlock->loot && hitableBlock->loot->IfCollected() && !hitableBlock->loot->IfEnded())
+            hitableBlock->loot->Result(app, m_Character, app->m_Menu);
+        if (hitableBlock && hitableBlock->loot && hitableBlock->loot->IfEnded()) {
+            app->m_Root.RemoveChild(hitableBlock->loot);
+        }
+        if (hitableBlock && hitableBlock->CollideDetection(m_Character))
+            hitableBlock->RemoveBlock(app, m_Blocks);
+        hitableBlock->ScatterParticles(app);
     }
 }

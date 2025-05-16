@@ -43,7 +43,7 @@ void Stage2a::Start(App *app) {
       m_EnemiesManager = std::make_shared<EnemiesManager>(possibleLoots);
 
       // bats
-      m_EnemiesManager->AddBat({screenWidth * 0.5, m_Character->GetPosition().y}, "left", app);
+      // m_EnemiesManager->AddBat({screenWidth * 0.5, m_Character->GetPosition().y}, "left", app);
 
       //torch
       std::vector<TorchData> torchs = {
@@ -69,9 +69,9 @@ void Stage2a::Start(App *app) {
          { { -515, -200 }, { 0.4,  4    } },
          { { -263, -5   }, { 4.26, 0.68 } },
          { { 128,  -122 }, { 2.12, 0.68 } },
-         // { { 658,  -130 }, { 2.13, 1.05 } },
+         { { 658,  -130 }, { 2.13, 1.05 } },
 
-         // { { 689,  -240 }, { 1.62, 2.13 } },
+         { { 689,  -240 }, { 1.62, 2.13 } },
 
          { { 722,  -67  }, { 3.18, 0.68 } },
          { { 1046, -122 }, { 2.12, 0.68 } },
@@ -79,14 +79,30 @@ void Stage2a::Start(App *app) {
          { { 1510, 228  }, { 1.08, 0.68 } },
          { { 1572, -50  }, { 0.4,  7    } },
 
-         { { -191, -450 }, { 0.5, 0.15 } }//changescene block
+         { { -191, -450 }, { 0.5,  0.15 } }//changescene block
       };
       for (auto& b : blocks) {
          auto block = std::make_shared<Block>(b.pos, b.scale);
          m_Blocks.push_back(block);
-         m_All.push_back(block);
+         // m_All.push_back(block);
       }
-
+      // hitable block
+      std::vector<std::vector<HitableBlockData>> hitableBlocks = {
+         { 
+            { { 558, -296 }, LootType::HeartBig },
+            { { 558, -236 }, LootType::None     },
+         },
+      };
+      for (auto& hb : hitableBlocks) {
+         auto hitableBlock = std::make_shared<HitableBlock>(LootType::HeartBig);
+         for (auto& b : hb) {
+            auto block = std::make_shared<Block>(b.pos, glm::vec2(1.025, 0.90), GA_RESOURCE_DIR"/background/stage-2/block-1.png");
+            m_Blocks.push_back(block);
+            m_All.push_back(block);
+            hitableBlock->AddBlock(block, b.loot);
+         }
+         m_HitableBlocks.push_back(hitableBlock);
+      }
       // stair
       std::vector<StairData> stairs = {
          { { 193,  -67  }, { 459,  -297 } },
@@ -124,6 +140,7 @@ void Stage2a::Update(App *app) {
    m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app);
    UpdateSubWeapon(app);
    UpdateScroll(mapWidth);
+   UpdateHitableBlock(app);
    // Position::PrintObjectCoordinate(m_Character, offsetX);
    if (m_Character->GetPosition().y < -380 && m_Character->GetDirection() == "right") {
       app->stairNum[0] = (m_Character->GetPosition().x < -100) ? 0 : 1;

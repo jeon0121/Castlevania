@@ -8,6 +8,8 @@
 #include "Object/ImageItems.hpp"
 #include "Object/Character.hpp"
 #include "Object/Block.hpp"
+#include "Object/Stair.hpp"
+#include "Object/HitableBlock.hpp"
 #include "Object/Torch.hpp"
 #include "Object/Loot.hpp"
 #include "Object/LootType/Loot.hpp"
@@ -39,6 +41,8 @@ public:
 
     void Blink();
 
+    void UpdateHitableBlock(App* app);
+
     StateState m_stateState = StateState::START;
     int screenWidth = 1024;
     int screenHeight = 768;
@@ -49,6 +53,7 @@ protected:
     std::shared_ptr<Character> m_Character;
     std::vector<std::shared_ptr<Util::GameObject>> m_All;
     std::vector<std::shared_ptr<Block>> m_Blocks;
+    std::vector<std::shared_ptr<HitableBlock>> m_HitableBlocks;
     std::vector<std::shared_ptr<Stair>> m_Stairs;
     std::vector<std::shared_ptr<Torch>> m_Torches;
     std::shared_ptr<Loot> asLoot;

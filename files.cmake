@@ -19,6 +19,7 @@ set(SRC_FILES
     Object/Character.cpp
     Object/EnemiesManager.cpp
     Object/Enemy.cpp
+    Object/HitableBlock.cpp
     Object/Loot.cpp
     Object/Stair.cpp
     Object/Torch.cpp
@@ -63,6 +64,7 @@ set(INCLUDE_FILES
     Object/Character.hpp
     Object/EnemiesManager.hpp
     Object/Enemy.hpp
+    Object/HitableBlock.hpp
     Object/ImageItems.hpp
     Object/Loot.hpp
     Object/ObjectData.hpp

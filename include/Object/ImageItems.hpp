@@ -15,11 +15,11 @@ public:
       m_Drawable = std::make_shared<Util::Image>(imagePath);
    }
 
-   [[nodiscard]] const glm::vec2& GetPosition() const { return m_Transform.translation; }
+   [[nodiscard]] virtual const glm::vec2& GetPosition() const { return m_Transform.translation; }
 
    [[nodiscard]] bool GetVisibility() const { return m_Visible; }
 
-   void SetPosition(const glm::vec2& Position) { m_Transform.translation = Position; }
+   virtual void SetPosition(const glm::vec2& Position) { m_Transform.translation = Position; }
 };
 
 #endif
