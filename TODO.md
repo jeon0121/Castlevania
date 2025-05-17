@@ -8,3 +8,5 @@
   - [x] when get hurt on stair, we cant move the character
 - Bat
   - [x] the bat's movement is still weird
+- Block
+  - [] in stage2a, when jumping at the height of one block, char behavior weird
