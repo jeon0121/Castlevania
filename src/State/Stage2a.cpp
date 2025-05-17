@@ -148,6 +148,7 @@ void Stage2a::Update(App *app) {
       app->m_GameState = App::GameState::STAGE2B;
       app->RemoveAllChildren(m_All);
       app->m_Root.RemoveChild(m_Character->m_Behavior);
+      m_EnemiesManager->RemoveAllEnemies(app);
    }
 
 }

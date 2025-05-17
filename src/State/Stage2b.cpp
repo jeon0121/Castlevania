@@ -57,6 +57,19 @@ void Stage2b::Start(App *app) {
             m_Stairs.insert(m_Stairs.end(), stair.begin(), stair.end());
             m_All.insert(m_All.end(), stair.begin(), stair.end());
         }
+
+        // EnemiesManager
+        std::vector<PossibleLootData> possibleLoots = {
+            {LootType::HeartSmall, 0.5, -1},
+            {LootType::HeartBig,  0.2,  1},
+            {LootType::Stopwatch,  0.2,  1},
+            {LootType::None,       1.0, -1},
+         };
+        m_EnemiesManager = std::make_shared<EnemiesManager>(possibleLoots);
+
+        // Fishman
+        m_EnemiesManager->AddFishman({-335, -250}, "right", app);
+        m_EnemiesManager->AddFishman({185, -250}, "left", app);
     }
 
     //character
@@ -87,6 +100,7 @@ void Stage2b::Start(App *app) {
 void Stage2b::Update(App *app) {
     m_Character->Keys(m_Blocks, m_Stairs);
     UpdateTorch(app);
+    m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app);
     UpdateSubWeapon(app);
     UpdateScroll(mapWidth);
     if (m_Character->GetPosition().y > 300  && m_Character->GetDirection() == "left") {
@@ -95,6 +109,7 @@ void Stage2b::Update(App *app) {
         app->m_GameState = App::GameState::STAGE2A;
         app->RemoveAllChildren(m_All);
         app->m_Root.RemoveChild(m_Character->m_Behavior);
+        m_EnemiesManager->RemoveAllEnemies(app);
     }
 }
 
