@@ -20,7 +20,7 @@ Fishman::Fishman(glm::vec2 position, std::string direction, App* app): Enemy(pos
     }
 
     SetAnimationFrames(idleImages, 0);
-    m_Transform.scale = glm::vec2(1, 0.9f);
+    m_Transform.scale = glm::vec2(1, 0.88f);
     if (direction == "right")
         Flip();
     SetPlaying();
@@ -122,7 +122,7 @@ void Fishman::Walk(std::shared_ptr<Character> &character) {
         startWalkTime = SDL_GetPerformanceCounter();
     }
     SetPosition({pos.x + (direction == "right" ? 3.0f : -3.0f), pos.y});
-    if (Time::GetRunTimeMs(startWalkTime) > 2500.0f) {
+    if (Time::GetRunTimeMs(startWalkTime) > 1800.0f) {
         startWalkTime = 0;
         state = "Attack";
         SetAnimationFrames(shootImages, 400);

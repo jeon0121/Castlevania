@@ -22,7 +22,7 @@ private:
     bool isFire = false;
     bool isBubble = false;
     bool isOnBlock = false;
-    float y_vel = 29.5f;
+    float y_vel = 27.5f;
     std::vector<float> bbl_vel = {0, 12.0f, 0};
     Uint64 startWalkTime = 0;
     std::string state = "Spawn";

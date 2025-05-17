@@ -28,7 +28,7 @@ void Stage2b::Start(App *app) {
 
         // block
         std::vector<BlockData> blocks = {
-            { { -65,  52   }, { 1.08, 0.68 } },
+            { { -65,  54   }, { 1.08, 0.68 } },
             { { -65,  -62  }, { 7.5,  0.68 } },
             { { 590,  -62  }, { 1.08, 0.68 } },
             { { 1115, -62  }, { 5.4,  0.68 } },
@@ -37,9 +37,6 @@ void Stage2b::Start(App *app) {
 
             { { -545,  65 }, { 0.4,  4 } },
             { { 1565,  50  }, { 0.4,  5 } },
-
-            { { -325,  240 }, { 0.5, 0.15 } },//changescene block
-            { { 986,  245 }, { 0.5, 0.15 } }
          };
         for (auto& b : blocks) {
             auto block = std::make_shared<Block>(b.pos, b.scale);
@@ -68,8 +65,13 @@ void Stage2b::Start(App *app) {
         m_EnemiesManager = std::make_shared<EnemiesManager>(possibleLoots);
 
         // Fishman
-        m_EnemiesManager->AddFishman({-335, -250}, "right", app);
-        m_EnemiesManager->AddFishman({185, -250}, "left", app);
+        std::vector<FishmanData> fishmans = {
+            {{-395, -250}, "right"},
+            {{185,  -250}, "left"}
+        };
+        for (auto& f : fishmans) {
+            m_EnemiesManager->AddFishman(f.pos, f.direction, app);
+        }
     }
 
     //character

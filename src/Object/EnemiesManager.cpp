@@ -212,11 +212,11 @@ void EnemiesManager::ManageFishman(App *app, std::shared_ptr<Character> &charact
             if (resetStartTime == 0)
                 resetStartTime = SDL_GetPerformanceCounter();
             if (Time::GetRunTimeMs(resetStartTime) > delay) {
-                int rd = std::rand() % (450 - 280 + 1) + 280;
+                int rd = std::rand() % (460 - 150 + 1) + 150;
                 float posX = character->GetPosition().x;
                 fishman->SetPosition({(rd % 2 == 0 ? posX + rd : posX - rd), -250});
-                if (fishman->GetPosition().x < -430.0f)
-                    fishman->SetPosition({-430.0f, -250});
+                if (fishman->GetPosition().x < -460.0f)
+                    fishman->SetPosition({-460.0f, -250});
 
                 if (character->GetPosition().x > fishman->GetPosition().x)
                     fishman->SetDirection("right");

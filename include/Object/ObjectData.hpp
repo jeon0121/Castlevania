@@ -44,6 +44,7 @@ struct HitableBlockData {
 
 struct FishmanData {
    glm::vec2 pos;
+   std::string direction;
 };
 
 #endif
