@@ -42,4 +42,8 @@ struct HitableBlockData {
    LootType loot;
 };
 
+struct FishmanData {
+   glm::vec2 pos;
+};
+
 #endif
