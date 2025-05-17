@@ -8,6 +8,7 @@
 #include "Object/Enemies/Zombie.hpp"
 #include "Object/Enemies/Leopard.hpp"
 #include "Object/Enemies/Bat.hpp"
+#include "Object/Enemies/Fishman.hpp"
 
 class EnemiesManager {
     public:
@@ -18,6 +19,8 @@ class EnemiesManager {
         void AddLeopard(glm::vec2 positions, std::string direction, App *app);
 
         void AddBat(glm::vec2 positions, std::string direction, App *app);
+
+        void AddFishman(glm::vec2 positions, std::string direction, App *app);
 
         void Update(float offsetX, int screenWidth, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, App* app);
 
@@ -31,6 +34,10 @@ class EnemiesManager {
 
         void ManageBat(float offsetX, std::shared_ptr<Character> &character, int screenWidth);
 
+        void ManageFishman(App *app, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, int screenWidth);
+
+        void FireAttack(std::shared_ptr<Character> &character, int screenWidth, std::shared_ptr<Menu> &menu);
+
         void RemoveAllEnemies(App *app);
 
         std::vector<std::shared_ptr<Enemy>> m_Enemies;
@@ -41,8 +48,11 @@ class EnemiesManager {
         std::vector<std::shared_ptr<ZombieHorde>> m_Zombies;
         std::vector<std::shared_ptr<Leopard>> m_Leopards;
         std::vector<std::shared_ptr<Bat>> m_Bats;
+        std::vector<std::shared_ptr<Fishman>> m_Fishmans;
         std::vector<PossibleLootData> m_PossibleLoots;
-
+        std::vector<std::shared_ptr<ImageItems>> fires;
+        std::vector<bool> isFire = {false, false};
+        std::vector<std::string> fireDirections = {"right", "right"};
         bool isEnemyPause = false;
 };
 

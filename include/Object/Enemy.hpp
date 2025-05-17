@@ -27,6 +27,8 @@ class Enemy : public AnimatedItems {
 
         void SetDirection(std::string direction);
 
+        std::string GetDirection();
+
         void Death(App* app, std::vector<std::shared_ptr<Loot>> &m_Loots, std::vector<PossibleLootData> &m_PossibleLoots);
 
         void Flip();

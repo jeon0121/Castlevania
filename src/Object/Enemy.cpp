@@ -17,6 +17,10 @@ void Enemy::SetDirection(std::string direction) {
     this->direction = direction;
  }
 
+std::string Enemy::GetDirection() {
+    return this->direction;
+}
+
 void Enemy::Death(App* app, std::vector<std::shared_ptr<Loot>> &m_Loots, std::vector<PossibleLootData> &m_PossibleLoots) {
     if (IfAnimationStart())
         SetAnimationFrames(deathImages, 120);

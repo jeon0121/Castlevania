@@ -38,6 +38,20 @@ void EnemiesManager::AddBat(glm::vec2 positions, std::string direction, App *app
     app->m_Root.AddChild(bat);
 }
 
+void EnemiesManager::AddFishman(glm::vec2 positions, std::string direction, App *app) {
+    std::shared_ptr<Fishman> fishman = std::make_shared<Fishman>(positions, direction, app);
+    std::shared_ptr<ImageItems> fire = std::make_shared<ImageItems>(GA_RESOURCE_DIR"/enemies/fishman/fire.png", glm::vec2(0.8, 0.8));
+    fire->SetVisible(false);
+    fire->SetZIndex(6.5);
+    fires.push_back(fire);
+    app->m_Root.AddChild(fire);
+
+    fishman->SetZIndex(7);
+    m_Fishmans.push_back(fishman);
+    m_Enemies.push_back(fishman);
+    app->m_Root.AddChild(fishman);
+}
+
 void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, App* app) {
     if (character->GetLevelUpWhipFlag() ||
        (character->GetSubWeaponType() == WeaponType::Stopwatch && character->GetUseWeaponFlag())) {
@@ -70,6 +84,7 @@ void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Char
         ManageZombies(offsetX, character, screenWidth);
         ManageLeopard(offsetX, character, blocks, screenWidth);
         ManageBat(offsetX, character, screenWidth);
+        ManageFishman(app, character, blocks, screenWidth);
     }
 }
 
@@ -166,6 +181,87 @@ void EnemiesManager::ManageBat(float offsetX, std::shared_ptr<Character> &charac
                     bat->SetDirection((bat->GetPosition().x > 0) ? "left" : "right");
                 }
                 resetStartTime = 0;
+            }
+        }
+    }
+}
+
+void EnemiesManager::ManageFishman(App *app, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, int screenWidth) {
+    constexpr float delay = 2000.0f;
+    for (auto &fishman : m_Fishmans) {
+        bool reset = true;
+        if (!fishman->CheckReset()) {
+            fishman->MoveBehav(character, blocks);
+            FireAttack(character, screenWidth, app->m_Menu);
+            auto it = std::find(m_Fishmans.begin(), m_Fishmans.end(), fishman);
+            auto index = std::distance(m_Fishmans.begin(), it);
+            if (fishman->GetFireFlag()) {
+                isFire[index] = true;
+                if (fireDirections[index] != fishman->GetDirection()) {
+                    glm::vec2 scale = fires[index]->m_Transform.scale;
+                    fires[index]->m_Transform.scale = glm::vec2(-1 * scale.x, scale.y);
+                    fireDirections[index] = fishman->GetDirection();
+                }
+                glm::vec2 pos = fishman->GetPosition();
+                fires[index]->SetPosition({pos.x, pos.y + 25.0f});
+                fires[index]->SetVisible(true);
+            }
+            reset = false;
+        }
+        if (reset) {
+            if (resetStartTime == 0)
+                resetStartTime = SDL_GetPerformanceCounter();
+            if (Time::GetRunTimeMs(resetStartTime) > delay) {
+                int rd = std::rand() % (450 - 280 + 1) + 280;
+                float posX = character->GetPosition().x;
+                fishman->SetPosition({(rd % 2 == 0 ? posX + rd : posX - rd), -250});
+                if (fishman->GetPosition().x < -430.0f)
+                    fishman->SetPosition({-430.0f, -250});
+
+                if (character->GetPosition().x > fishman->GetPosition().x)
+                    fishman->SetDirection("right");
+                else
+                    fishman->SetDirection("left");
+                fishman->SetReset();
+                resetStartTime = 0;
+            }
+        }
+    }
+}
+
+void EnemiesManager::FireAttack(std::shared_ptr<Character> &character, int screenWidth, std::shared_ptr<Menu> &menu) {
+    for (int i = 0; i < 2; i++) {
+        if (isFire[i]) {
+            glm::vec2 firePos = fires[i]->GetPosition();
+            fires[i]->SetPosition({firePos.x + (fireDirections[i] == "right" ? 6.0f : -6.0f), firePos.y});
+            if (fires[i]->GetPosition().x > screenWidth * 0.6f || fires[i]->GetPosition().x < screenWidth * -0.6f)
+                isFire[i] = false;
+
+            if (!character->GetLevelUpWhipFlag() && !character->GetHurtFlag()) {
+                glm::vec2 charPos = character->GetPosition();
+                glm::vec2 charSize = character->GetSize();
+                float charLeft = charPos.x - charSize.x * 0.5f;
+                float charRight = charPos.x + charSize.x * 0.5f;
+                float charTop = charPos.y + charSize.y * 0.5f;
+                float charBottom = charPos.y - charSize.y * 0.5f;
+                glm::vec2 pos = fires[i]->GetPosition();
+                glm::vec2 size = glm::abs(fires[i]->GetScaledSize());
+                float fireLeft = pos.x - size.x * 0.5f;
+                float fireRight = pos.x + size.x * 0.5f;
+                bool overlapX = (charRight > fireLeft && charRight < fireRight) ||
+                                (charLeft < fireRight && charLeft > fireLeft);
+                bool overlapY = charTop > firePos.y && charBottom < firePos.y;
+                if (overlapX && overlapY) {
+                    bool ifNeedSlip = false;
+                    if (fireDirections[i] == character->GetDirection() &&
+                        ((fireDirections[i] == "right" && character->GetPosition().x > fires[i]->GetPosition().x) ||
+                         (fireDirections[i] == "left" && character->GetPosition().x < fires[i]->GetPosition().x))) {
+                        ifNeedSlip = true;
+                    }
+                    character->SetHurtFlag(true, ifNeedSlip);
+                    character->SetHeart(character->GetHeart() - 2);
+                    menu->modifyHealth(character->GetHeart(), "player");
+                }
             }
         }
     }
