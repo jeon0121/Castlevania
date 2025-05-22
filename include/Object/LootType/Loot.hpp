@@ -2,6 +2,8 @@
 #define LOOTTYPE_HPP
 
 #include "Object/LootType/Item/Bag.hpp"
+#include "Object/LootType/Item/Chicken.hpp"
+#include "Object/LootType/Item/Crystal.hpp"
 #include "Object/LootType/Item/Heart.hpp"
 #include "Object/LootType/Item/Rosary.hpp"
 #include "Object/Subweapon/Axe.hpp"

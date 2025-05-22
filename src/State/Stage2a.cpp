@@ -43,7 +43,7 @@ void Stage2a::Start(App *app) {
       m_EnemiesManager = std::make_shared<EnemiesManager>(possibleLoots);
 
       // bats
-      // m_EnemiesManager->AddBat({screenWidth * 0.5, m_Character->GetPosition().y}, "left", app);
+      m_EnemiesManager->AddBat({screenWidth * 0.5, m_Character->GetPosition().y}, "left", app);
 
       //torch
       std::vector<TorchData> torchs = {
@@ -89,12 +89,12 @@ void Stage2a::Start(App *app) {
       // hitable block
       std::vector<std::vector<HitableBlockData>> hitableBlocks = {
          { 
-            { { 558, -296 }, LootType::HeartBig },
-            { { 558, -236 }, LootType::None     },
+            { { 558, -296 }, LootType::Chicken },
+            { { 558, -236 }, LootType::None    },
          },
       };
       for (auto& hb : hitableBlocks) {
-         auto hitableBlock = std::make_shared<HitableBlock>(LootType::HeartBig);
+         auto hitableBlock = std::make_shared<HitableBlock>(LootType::Chicken);
          for (auto& b : hb) {
             auto block = std::make_shared<Block>(b.pos, glm::vec2(1.025, 0.90), GA_RESOURCE_DIR"/background/stage-2/block-1.png");
             m_Blocks.push_back(block);

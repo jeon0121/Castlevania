@@ -152,7 +152,7 @@ void Scene::Blink() {
 
 void Scene::UpdateHitableBlock(App* app) {
     for (auto hitableBlock : m_HitableBlocks) {
-        if (hitableBlock && hitableBlock->loot) {
+        if (hitableBlock && hitableBlock->loot && !hitableBlock->loot->IfCollected() && !m_Character->GetLevelUpWhipFlag()) {
             hitableBlock->loot->Fall(m_Blocks);
             if (hitableBlock->loot->IsCollected(m_Character))
                 app->m_Root.RemoveChild(hitableBlock);

@@ -7,6 +7,8 @@ set(SRC_FILES
     Object/Enemies/Fishman.cpp
 
     Object/LootType/Item/Bag.cpp
+    Object/LootType/Item/Chicken.cpp
+    Object/LootType/Item/Crystal.cpp
     Object/LootType/Item/Heart.cpp
     Object/LootType/Item/Rosary.cpp
     Object/Subweapon/Axe.cpp
