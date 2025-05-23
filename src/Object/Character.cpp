@@ -327,7 +327,7 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const 
     else if (!is_levelUpWhip) {
         if (is_hurt || startHurtTime != 0)
             Hurt();
-        Position::PrintCursorCoordinate();
+        // Position::PrintCursorCoordinate();
 
         constexpr Util::Keycode A      = Util::Keycode::J;
         constexpr Util::Keycode B      = Util::Keycode::K;

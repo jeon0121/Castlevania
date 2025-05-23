@@ -40,6 +40,7 @@ struct LeopardData {
 struct HitableBlockData {
    glm::vec2 pos;
    LootType loot;
+   std::string path;
 };
 
 struct FishmanData {

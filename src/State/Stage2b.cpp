@@ -31,24 +31,39 @@ void Stage2b::Start(App *app) {
             { { -65,  54   }, { 1.08, 0.68 } },
             { { -65,  -62  }, { 7.5,  0.68 } },
             { { 590,  -62  }, { 1.08, 0.68 } },
-            { { 1115, -62  }, { 5.4,  0.68 } },
+            { { 1077, -62  }, { 4.75, 0.68 } },
             { { 1375, -296 }, { 1.08, 0.68 } },
             { { 1510, -180 }, { 1.08, 0.68 } },
 
-            { { -545,  65 }, { 0.4,  4 } },
-            { { 1565,  50  }, { 0.4,  5 } },
+            { { -545,  65  }, { 0.4,  4    } },
+            { { 1565,  50  }, { 0.4,  5    } },
          };
         for (auto& b : blocks) {
             auto block = std::make_shared<Block>(b.pos, b.scale);
             m_Blocks.push_back(block);
             m_All.push_back(block);
         }
-
+        // hitable block
+        std::vector<std::vector<HitableBlockData>> hitableBlocks = {
+            { 
+                { { 1430, -62 }, LootType::None, GA_RESOURCE_DIR"/background/block/block-1.png" },
+            },
+        };
+        for (auto& hb : hitableBlocks) {
+            auto hitableBlock = std::make_shared<HitableBlock>(LootType::None);
+            for (auto& b : hb) {
+                auto block = std::make_shared<Block>(b.pos, glm::vec2(1.025, 0.90), b.path);
+                m_Blocks.push_back(block);
+                m_All.push_back(block);
+                hitableBlock->AddBlock(block, b.loot);
+            }
+            m_HitableBlocks.push_back(hitableBlock);
+        }
         //stair
         std::vector<StairData> stairs = {
-            { { -325,  280  }, { -133,  107 } },
-            { { 986,  280  }, { 1303,  -7 } }
-         };
+            { { -325, 280  }, { -133, 107 } },
+            { { 986,  280  }, { 1303, -7  } }
+        };
         for (auto& s : stairs) {
             auto stair = Stair::CreateStair(s.pos1, s.pos2);
             m_Stairs.insert(m_Stairs.end(), stair.begin(), stair.end());
@@ -105,6 +120,7 @@ void Stage2b::Update(App *app) {
     m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app);
     UpdateSubWeapon(app);
     UpdateScroll(mapWidth);
+    UpdateHitableBlock(app);
     if (m_Character->GetPosition().y > 300  && m_Character->GetDirection() == "left") {
         app->stairNum[1] = (m_Character->GetPosition().x < -100) ? 0 : 1;
         app->m_AppState = App::AppState::START;

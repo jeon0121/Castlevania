@@ -89,14 +89,14 @@ void Stage2a::Start(App *app) {
       // hitable block
       std::vector<std::vector<HitableBlockData>> hitableBlocks = {
          { 
-            { { 558, -296 }, LootType::Chicken },
-            { { 558, -236 }, LootType::None    },
+            { { 558, -296 }, LootType::Chicken, GA_RESOURCE_DIR"/background/block/block-2.png" },
+            { { 558, -237 }, LootType::None   , GA_RESOURCE_DIR"/background/block/block-1.png" },
          },
       };
       for (auto& hb : hitableBlocks) {
          auto hitableBlock = std::make_shared<HitableBlock>(LootType::Chicken);
          for (auto& b : hb) {
-            auto block = std::make_shared<Block>(b.pos, glm::vec2(1.025, 0.90), GA_RESOURCE_DIR"/background/stage-2/block-1.png");
+            auto block = std::make_shared<Block>(b.pos, glm::vec2(1.025, 0.90), b.path);
             m_Blocks.push_back(block);
             m_All.push_back(block);
             hitableBlock->AddBlock(block, b.loot);

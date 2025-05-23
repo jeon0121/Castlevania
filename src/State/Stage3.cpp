@@ -12,14 +12,6 @@ void Stage3::Start(App* app){
     backgroundPos = m_Background->GetPosition();
     m_All.push_back(m_Background);
 
-    // blink
-    // std::vector<std::string> blinkImages = {GA_RESOURCE_DIR"/background/stage-1/entrance-hall-blink.png", GA_RESOURCE_DIR"/background/stage-1/entrance-hall.png"};
-    // m_Blink = std::make_shared<AnimatedItems>(blinkImages, 40, m_Background->m_Transform.scale);
-    // m_Blink->SetZIndex(1);
-    // m_Blink->SetPosition(m_Background->GetPosition());
-    // m_Blink->SetVisible(false);
-    // m_All.push_back(m_Blink);
-
     //character
     if (!app->m_Character) {
         CharacterValue charactervalue;
@@ -56,26 +48,41 @@ void Stage3::Start(App* app){
 
     // block
     std::vector<BlockData> blocks = {
-         { { 0,    -352 }, { 100,  0.7  } },
-         { { -547, -50  }, { 0.4,  7    } },
-         { { -263, -5   }, { 4.26, 0.68 } },
-         { { 393,  -122 }, { 6.42, 0.68 } },
+        { { 0,    -352 }, { 100,  0.7  } },
+        { { -547, -50  }, { 0.4,  7    } },
+        { { -303, -5   }, { 3.86, 0.68 } },
+        { { 360,  -122 }, { 5.85, 0.68 } },
 
-         { { 2295, -240 }, { 1.08, 0.68 } },
-         { { 2500, -122 }, { 2.2,  0.68 } },
+        { { 2262, -240 }, { 0.52, 0.68 } },
+        { { 2525, -122 }, { 1.62, 0.68 } },
 
-         { { 2610, -240 }, { 0.3,  2    } },
-         { { 2610,  160 }, { 0.3,  2    } },
+        { { 2610, -240 }, { 0.3,  2    } },
+        { { 2610,  160 }, { 0.3,  2    } },
     };
     for (auto& b : blocks) {
         auto block = std::make_shared<Block>(b.pos, b.scale);
         m_Blocks.push_back(block);
         m_All.push_back(block);
     }
-
+    // hitable block
+    std::vector<std::vector<HitableBlockData>> hitableBlocks = {
+        { 
+            { { 2327, -239 }, LootType::None, GA_RESOURCE_DIR"/background/block/block-1.png" },
+        },
+    };
+    for (auto& hb : hitableBlocks) {
+        auto hitableBlock = std::make_shared<HitableBlock>(LootType::None);
+        for (auto& b : hb) {
+        auto block = std::make_shared<Block>(b.pos, glm::vec2(1.025, 0.90), b.path);
+        m_Blocks.push_back(block);
+        m_All.push_back(block);
+        hitableBlock->AddBlock(block, b.loot);
+        }
+        m_HitableBlocks.push_back(hitableBlock);
+    }
     // stair
     std::vector<StairData> stairs = {
-        { { -70,   48  }, { 68,   -66 } },
+        { { -70,   45  }, { 68,   -66 } },
         { { 716,  -66  }, { 985, -294 } },
         { { 2295, -180 }, { 2430, -66 } }
     };
@@ -90,11 +97,12 @@ void Stage3::Start(App* app){
 }
 
 void Stage3::Update(App* app){
-    // Position::PrintObjectCoordinate(m_Character, offsetX);
+    Position::PrintObjectCoordinate(m_Character, offsetX);
     m_Character->Keys(m_Blocks, m_Stairs);
     UpdateTorch(app);
     UpdateSubWeapon(app);
     UpdateScroll(mapWidth);
+    UpdateHitableBlock(app);
 }
 
 void Stage3::End(App* app){
