@@ -3,9 +3,22 @@
 
 EnemiesManager::EnemiesManager(const std::vector<PossibleLootData>& possibleLoots) : m_PossibleLoots(possibleLoots) {}
 
-void EnemiesManager::RemoveAllEnemies(App *app) {
-    for (auto &enemy : m_Enemies)
-        app->m_Root.RemoveChild(enemy);
+void EnemiesManager::RemoveAllChild(App *app) {
+    for (auto &child : rendererVec)
+        app->m_Root.RemoveChild(child);
+    for (auto &loot : m_Loots)
+        app->m_Root.RemoveChild(loot);
+    m_Enemies.clear();
+    m_Loots.clear();
+    rendererVec.clear();
+    m_Bats.clear();
+    m_Fishmans.clear();
+    fires.clear();
+}
+
+void EnemiesManager::AddAllChild(App *app) {
+    for (auto &child : rendererVec)
+        app->m_Root.AddChild(child);
 }
 
 void EnemiesManager::AddZombie(glm::vec2 range, int numZombie, glm::vec2 pos, std::string direction, App *app) {
@@ -18,7 +31,7 @@ void EnemiesManager::AddZombie(glm::vec2 range, int numZombie, glm::vec2 pos, st
     for (auto &zombie : zombieHorde->zombies) {
         zombie->SetZIndex(7);
         m_Enemies.push_back(zombie);
-        app->m_Root.AddChild(zombie);
+        rendererVec.push_back(zombie);
     }
 }
 
@@ -27,7 +40,7 @@ void EnemiesManager::AddLeopard(glm::vec2 positions, std::string direction, App 
     leopard->SetZIndex(7);
     m_Leopards.push_back(leopard);
     m_Enemies.push_back(leopard);
-    app->m_Root.AddChild(leopard);
+    rendererVec.push_back(leopard);
 }
 
 void EnemiesManager::AddBat(glm::vec2 positions, std::string direction, App *app) {
@@ -35,21 +48,32 @@ void EnemiesManager::AddBat(glm::vec2 positions, std::string direction, App *app
     bat->SetZIndex(7);
     m_Bats.push_back(bat);
     m_Enemies.push_back(bat);
-    app->m_Root.AddChild(bat);
+    rendererVec.push_back(bat);
 }
 
 void EnemiesManager::AddFishman(glm::vec2 positions, std::string direction, App *app) {
-    std::shared_ptr<Fishman> fishman = std::make_shared<Fishman>(positions, direction, app);
+    std::string bubbleImage = GA_RESOURCE_DIR"/enemies/fishman/bubble.png";
+    std::vector<std::shared_ptr<ImageItems>> bubbles;
+    for (int i = 0; i < 3; i++) {
+        bubbles.push_back(std::make_shared<ImageItems>(bubbleImage, glm::vec2(0.8, 0.8)));
+        bubbles[i]->SetVisible(false);
+        bubbles[i]->SetZIndex(7.5);
+        rendererVec.push_back(bubbles[i]);
+    }
+
+    std::shared_ptr<Fishman> fishman = std::make_shared<Fishman>(positions, direction, app, bubbles);
     std::shared_ptr<ImageItems> fire = std::make_shared<ImageItems>(GA_RESOURCE_DIR"/enemies/fishman/fire.png", glm::vec2(0.8, 0.8));
     fire->SetVisible(false);
     fire->SetZIndex(6.5);
     fires.push_back(fire);
-    app->m_Root.AddChild(fire);
+    isFire = {false, false};
+    rendererVec.push_back(fire);
+
 
     fishman->SetZIndex(7);
     m_Fishmans.push_back(fishman);
     m_Enemies.push_back(fishman);
-    app->m_Root.AddChild(fishman);
+    rendererVec.push_back(fishman);
 }
 
 void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, App* app) {
@@ -104,7 +128,7 @@ void EnemiesManager::ManageZombies(float offsetX, std::shared_ptr<Character> &ch
     for (auto &zombieHorde : m_Zombies) {
         bool reset = true;
         for (auto &zombie : zombieHorde->zombies) {
-            if (!zombie->CheckReset()) {
+            if (!zombie->CheckReset() && !zombie->IsDead()) {
                 zombie->MoveBehav();
                 reset = false;
             }
@@ -144,7 +168,7 @@ void EnemiesManager::ManageZombies(float offsetX, std::shared_ptr<Character> &ch
 void EnemiesManager::ManageLeopard(float offsetX, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, int screenWidth) {
     for (auto &leopard : m_Leopards) {
         int initialPosX = leopard->GetInitialPos().x - offsetX;
-        if (!leopard->CheckReset()) {
+        if (!leopard->CheckReset() && !leopard->IsDead()) {
             leopard->MoveBehav(character, blocks);
         }
         else if (initialPosX < -screenWidth || screenWidth < initialPosX) {
@@ -159,11 +183,11 @@ void EnemiesManager::ManageBat(float offsetX, std::shared_ptr<Character> &charac
     constexpr float delay = 2000.0f;
     for (auto &bat : m_Bats) {
         bool reset = true;
-        if (!bat->CheckReset()) {
+        if (!bat->CheckReset() && !bat->IsDead()) {
             bat->MoveBehav();
             reset = false;
         }
-        if (reset) {
+        if (reset && character->GetPosition().y >= -266) {
             if (resetStartTime == 0)
                 resetStartTime = SDL_GetPerformanceCounter();
             if (Time::GetRunTimeMs(resetStartTime) > delay) {
@@ -188,11 +212,11 @@ void EnemiesManager::ManageBat(float offsetX, std::shared_ptr<Character> &charac
 
 void EnemiesManager::ManageFishman(App *app, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, int screenWidth) {
     constexpr float delay = 2000.0f;
+    FireAttack(character, screenWidth, app->m_Menu);
     for (auto &fishman : m_Fishmans) {
         bool reset = true;
-        if (!fishman->CheckReset()) {
+        if (!fishman->CheckReset() && !fishman->IsDead()) {
             fishman->MoveBehav(character, blocks);
-            FireAttack(character, screenWidth, app->m_Menu);
             auto it = std::find(m_Fishmans.begin(), m_Fishmans.end(), fishman);
             auto index = std::distance(m_Fishmans.begin(), it);
             if (fishman->GetFireFlag()) {
@@ -217,6 +241,8 @@ void EnemiesManager::ManageFishman(App *app, std::shared_ptr<Character> &charact
                 fishman->SetPosition({(rd % 2 == 0 ? posX + rd : posX - rd), -250});
                 if (fishman->GetPosition().x < -460.0f)
                     fishman->SetPosition({-460.0f, -250});
+                else if (fishman->GetPosition().x > 245.0f)
+                    fishman->SetPosition({245.0f, -250});
 
                 if (character->GetPosition().x > fishman->GetPosition().x)
                     fishman->SetDirection("right");
@@ -234,7 +260,7 @@ void EnemiesManager::FireAttack(std::shared_ptr<Character> &character, int scree
         if (isFire[i]) {
             glm::vec2 firePos = fires[i]->GetPosition();
             fires[i]->SetPosition({firePos.x + (fireDirections[i] == "right" ? 6.0f : -6.0f), firePos.y});
-            if (fires[i]->GetPosition().x > screenWidth * 0.6f || fires[i]->GetPosition().x < screenWidth * -0.6f)
+            if (fires[i]->GetPosition().x > screenWidth * 2.0f || fires[i]->GetPosition().x < screenWidth * -2.0f)
                 isFire[i] = false;
 
             if (!character->GetLevelUpWhipFlag() && !character->GetHurtFlag()) {
