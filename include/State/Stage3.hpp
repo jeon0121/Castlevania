@@ -6,11 +6,12 @@
 
 class Stage3 : public Scene{
 public:
-    void Start(App*) override {};
-    void Update(App*) override {};
-    void End(App*) override {};
+    void Start(App*) override;
+    void Update(App*) override;
+    void End(App*) override;
 
 private:
+    int mapWidth = 3122;
 
 };
 #endif

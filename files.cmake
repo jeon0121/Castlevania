@@ -33,6 +33,7 @@ set(SRC_FILES
     State/Stage1.cpp
     State/Stage2a.cpp
     State/Stage2b.cpp
+    State/Stage3.cpp
 
     Utility/Time.cpp
     Utility/Position.cpp
