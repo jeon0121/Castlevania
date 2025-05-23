@@ -42,9 +42,6 @@ void Stage2a::Start(App *app) {
       };
       m_EnemiesManager = std::make_shared<EnemiesManager>(possibleLoots);
 
-      // bats
-      m_EnemiesManager->AddBat({screenWidth * 0.5, m_Character->GetPosition().y}, "left", app);
-
       //torch
       std::vector<TorchData> torchs = {
          { { -131, 106  }, {1, 0.9}, LootType::HeartBig,   1},
@@ -133,6 +130,10 @@ void Stage2a::Start(App *app) {
 }
 
 void Stage2a::Update(App *app) {
+   if (m_EnemiesManager->m_Enemies.size() == 0 && m_Character->GetPosition().y >= -266) {
+      m_EnemiesManager->AddBat({screenWidth * 0.5, m_Character->GetPosition().y}, "left", app);
+      m_EnemiesManager->AddAllChild(app);
+   }
    if (blinkStartTime != 0)
       Blink();
    m_Character->Keys(m_Blocks, m_Stairs);
@@ -148,7 +149,7 @@ void Stage2a::Update(App *app) {
       app->m_GameState = App::GameState::STAGE2B;
       app->RemoveAllChildren(m_All);
       app->m_Root.RemoveChild(m_Character->m_Behavior);
-      m_EnemiesManager->RemoveAllEnemies(app);
+      m_EnemiesManager->RemoveAllChild(app);
    }
 
 }

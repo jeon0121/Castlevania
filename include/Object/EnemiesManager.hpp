@@ -39,11 +39,15 @@ class EnemiesManager {
 
         void FireAttack(std::shared_ptr<Character> &character, int screenWidth, std::shared_ptr<Menu> &menu);
 
-        void RemoveAllEnemies(App *app);
+        void RemoveAllChild(App *app);
+
+        void AddAllChild(App *app);
 
         std::vector<std::shared_ptr<Enemy>> m_Enemies;
 
         std::vector<std::shared_ptr<Loot>> m_Loots;
+
+        std::vector<std::shared_ptr<Util::GameObject>> rendererVec;
     private:
         Uint64 resetStartTime = 0;
         std::vector<std::shared_ptr<ZombieHorde>> m_Zombies;

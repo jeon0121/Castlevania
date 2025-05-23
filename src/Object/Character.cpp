@@ -116,6 +116,8 @@ void Character::Hurt() {
         Fall();
         x_vel = ((m_direction == "right") ? -4.5f : 4.5f);
     }
+    if (!is_onStair)
+        is_hurtOnStair = false;
     if (startHurtTime == 0) {
         if (is_onStair) {
             is_hurt = false;
@@ -140,6 +142,7 @@ void Character::Hurt() {
             m_Behavior->SetVisible(timeCount % 4 != 0);
         }
     }
+    // if ((m_pos.y - m_size.y * 0.5f) <= landPosition  && GetHeart() > 0 && !is_hurtOnStair && !startDuckTime && !is_jump && is_hurt)
     if (is_collide.y && GetHeart() > 0 && !is_hurtOnStair)
         startDuckTime = SDL_GetPerformanceCounter();
     if (startDuckTime) {
