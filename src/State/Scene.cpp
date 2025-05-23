@@ -60,15 +60,14 @@ void Scene::UpdateScroll(int mapWidth, float offset) {
             }
         }
         if (m_EnemiesManager) {
-            for (auto& enemy : m_EnemiesManager->m_Enemies) {
-                if (enemy)
-                    enemy->SetPosition(enemy->GetPosition() - glm::vec2(dx, 0.0f));
-            }
             for (auto &&loot : m_EnemiesManager->m_Loots){
                 if (loot)
                     loot->SetPosition(loot->GetPosition() - glm::vec2(dx, 0.0f));
             }
-            
+            for (auto &item : m_EnemiesManager->rendererVec) {
+                if (item)
+                    item->m_Transform.translation = item->m_Transform.translation - glm::vec2(dx, 0.0f);
+            }
         }
         if (asLoot)
             asLoot->SetPosition(asLoot->GetPosition() - glm::vec2(dx, 0.0f));

@@ -5,19 +5,13 @@
 //walk towards char about 4.5 block, then attack, <4.5 drop when they hit border
 //about 2~3s reborn.
 
-Fishman::Fishman(glm::vec2 position, std::string direction, App* app): Enemy(position, direction, {}, 250, 100) {
+Fishman::Fishman(glm::vec2 position, std::string direction, App* app, std::vector<std::shared_ptr<ImageItems>> bubbles): Enemy(position, direction, {}, 250, 100) {
     idleImages.emplace_back(GA_RESOURCE_DIR"/enemies/fishman/fishman-1.png");
     walkImages.emplace_back(GA_RESOURCE_DIR"/enemies/fishman/fishman-1.png");
     walkImages.emplace_back(GA_RESOURCE_DIR"/enemies/fishman/fishman-2.png");
     shootImages.emplace_back(GA_RESOURCE_DIR"/enemies/fishman/fishman-3.png");
     shootImages.emplace_back(GA_RESOURCE_DIR"/enemies/fishman/fishman-4.png");
-    std::string bubbleImage = GA_RESOURCE_DIR"/enemies/fishman/bubble.png";
-    for (int i = 0; i < 3; i++) {
-        bubbles.push_back(std::make_shared<ImageItems>(bubbleImage, glm::vec2(0.8, 0.8)));
-        bubbles[i]->SetVisible(false);
-        bubbles[i]->SetZIndex(7.5);
-        app->m_Root.AddChild(bubbles[i]);
-    }
+    this->bubbles = bubbles;
 
     SetAnimationFrames(idleImages, 0);
     m_Transform.scale = glm::vec2(1, 0.88f);
@@ -73,7 +67,7 @@ void Fishman::SetReset() {
 
 bool Fishman::CheckReset() {
     glm::vec2 pos = GetPosition();
-    if (pos.y < -380)
+    if (pos.y < -380 || pos.x > 480 || pos.x < -500)
         is_hidden = true;
     return !isBubble && (is_hidden || is_dead);
 }

@@ -160,7 +160,7 @@ void Stage1::End(App* app){
     // dead and reset
     if (m_Character->GetEndSceneFlag()) {
         app->m_Menu->SetMenuVisibility(false);
-        m_EnemiesManager->RemoveAllEnemies(app);
+        m_EnemiesManager->RemoveAllChild(app);
         app->m_Menu->modifyWeapon(WeaponType::None);
         app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(5), 3);
         app->m_Character = nullptr;
@@ -212,7 +212,7 @@ void Stage1::End(App* app){
                 door_1->SetPlaying();
             } else if (m_Background->GetPosition().x < -516) {
                 app->m_Menu->SetMenuVisibility(false);
-                m_EnemiesManager->RemoveAllEnemies(app);
+                m_EnemiesManager->RemoveAllChild(app);
                 app->RemoveAllChildren(m_All);
                 app->m_AppState = App::AppState::START;
                 app->m_GameState = App::GameState::STAGE2A;

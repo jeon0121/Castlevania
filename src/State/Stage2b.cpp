@@ -78,15 +78,6 @@ void Stage2b::Start(App *app) {
             {LootType::None,       1.0, -1},
          };
         m_EnemiesManager = std::make_shared<EnemiesManager>(possibleLoots);
-
-        // Fishman
-        std::vector<FishmanData> fishmans = {
-            {{-395, -250}, "right"},
-            {{185,  -250}, "left"}
-        };
-        for (auto& f : fishmans) {
-            m_EnemiesManager->AddFishman(f.pos, f.direction, app);
-        }
     }
 
     //character
@@ -110,7 +101,17 @@ void Stage2b::Start(App *app) {
     m_Character->Descending(stair);
     app->m_Root.AddChild(m_Character->m_Behavior);
 
+    // Fishman
+    std::vector<FishmanData> fishmans = {
+        {{-395, -250}, "right"},
+        {{185,  -250}, "left"}
+    };
+    for (auto& f : fishmans) {
+        m_EnemiesManager->AddFishman(f.pos, f.direction, app);
+    }
+
     app->AddAllChildren(m_All);
+    m_EnemiesManager->AddAllChild(app);
     m_stateState = StateState::UPDATE;
 }
 
@@ -127,7 +128,7 @@ void Stage2b::Update(App *app) {
         app->m_GameState = App::GameState::STAGE2A;
         app->RemoveAllChildren(m_All);
         app->m_Root.RemoveChild(m_Character->m_Behavior);
-        m_EnemiesManager->RemoveAllEnemies(app);
+        m_EnemiesManager->RemoveAllChild(app);
     }
 }
 

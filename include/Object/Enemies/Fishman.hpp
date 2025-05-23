@@ -5,7 +5,7 @@
 
 class Fishman : public Enemy {
 public:
-    Fishman(glm::vec2 position, std::string direction, App* app);
+    Fishman(glm::vec2 position, std::string direction, App* app, std::vector<std::shared_ptr<ImageItems>> bubbles);
     void MoveBehav(std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks) override;
     void SetReset() override;
     void Spawn(std::shared_ptr<Character> &character);
