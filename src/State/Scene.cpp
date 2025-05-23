@@ -164,7 +164,7 @@ void Scene::UpdateHitableBlock(App* app) {
             app->m_Root.RemoveChild(hitableBlock->loot);
         }
         if (hitableBlock && hitableBlock->CollideDetection(m_Character))
-            hitableBlock->RemoveBlock(app, m_Blocks);
+            hitableBlock->RemoveBlock(app, m_Blocks, m_All);
         hitableBlock->ScatterParticles(app);
     }
 }

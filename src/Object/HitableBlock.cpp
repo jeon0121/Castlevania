@@ -3,10 +3,11 @@
 
 HitableBlock::HitableBlock(LootType itemType) : ImageItems(GA_RESOURCE_DIR"/fonts/Menu/weapon-frame.png"), itemType(itemType) {}
 
-void HitableBlock::AddBlock(std::shared_ptr<Block> &block, LootType loot) {
+void HitableBlock::AddBlock(std::shared_ptr<Block> &block, LootType loot, std::vector<std::shared_ptr<Util::GameObject>> &m_All) {
     if (block == nullptr) return;
     block->SetZIndex(6);
     blockLootPair.push_back(std::make_pair(block, loot));
+    m_All.push_back(block);
     UpdatePosition();
 }
 
@@ -66,7 +67,7 @@ bool HitableBlock::CollideDetection(std::shared_ptr<Character> &character) {
     return false;
 }
 
-void HitableBlock::RemoveBlock(App* app, std::vector<std::shared_ptr<Block>> &blocks) {
+void HitableBlock::RemoveBlock(App* app, std::vector<std::shared_ptr<Block>> &blocks, std::vector<std::shared_ptr<Util::GameObject>> &m_All) {
     if (blockLootPair.empty()) return;
     auto block = blockLootPair.front().first;
     LootType lootType = blockLootPair.front().second;
@@ -77,6 +78,7 @@ void HitableBlock::RemoveBlock(App* app, std::vector<std::shared_ptr<Block>> &bl
     }
     blockLootPair.erase(blockLootPair.begin());
     app->m_Root.RemoveChild(block);
+    m_All.erase(std::remove(m_All.begin(), m_All.end(), block), m_All.end());
     blocks.erase(std::remove(blocks.begin(), blocks.end(), block), blocks.end());
     SetParticles(app, block);
 }
