@@ -41,16 +41,16 @@ void Stage2b::Start(App *app) {
         for (auto& b : blocks) {
             auto block = std::make_shared<Block>(b.pos, b.scale);
             m_Blocks.push_back(block);
-            m_All.push_back(block);
+            // m_All.push_back(block);
         }
         // hitable block
         std::vector<std::vector<HitableBlockData>> hitableBlocks = {
             { 
-                { { 1430, -62 }, LootType::None, GA_RESOURCE_DIR"/background/block/block-1.png" },
+                { { 1400, -64 }, LootType::None, GA_RESOURCE_DIR"/background/block/block-3.png" },
             },
         };
         for (auto& hb : hitableBlocks) {
-            auto hitableBlock = std::make_shared<HitableBlock>(LootType::None);
+            auto hitableBlock = std::make_shared<HitableBlock>(LootType::SpecialBag);
             for (auto& b : hb) {
                 auto block = std::make_shared<Block>(b.pos, glm::vec2(1.025, 0.90), b.path);
                 m_Blocks.push_back(block);
@@ -67,13 +67,13 @@ void Stage2b::Start(App *app) {
         for (auto& s : stairs) {
             auto stair = Stair::CreateStair(s.pos1, s.pos2);
             m_Stairs.insert(m_Stairs.end(), stair.begin(), stair.end());
-            m_All.insert(m_All.end(), stair.begin(), stair.end());
+            // m_All.insert(m_All.end(), stair.begin(), stair.end());
         }
 
         // EnemiesManager
         std::vector<PossibleLootData> possibleLoots = {
             {LootType::HeartSmall, 0.5, -1},
-            {LootType::HeartBig,  0.2,  1},
+            {LootType::HeartBig,   0.2,  1},
             {LootType::Stopwatch,  0.2,  1},
             {LootType::None,       1.0, -1},
          };

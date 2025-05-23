@@ -62,21 +62,21 @@ void Stage3::Start(App* app){
     for (auto& b : blocks) {
         auto block = std::make_shared<Block>(b.pos, b.scale);
         m_Blocks.push_back(block);
-        m_All.push_back(block);
+        // m_All.push_back(block);
     }
     // hitable block
     std::vector<std::vector<HitableBlockData>> hitableBlocks = {
         { 
-            { { 2327, -239 }, LootType::None, GA_RESOURCE_DIR"/background/block/block-1.png" },
+            { { 2329, -236 }, LootType::Badge, GA_RESOURCE_DIR"/background/block/block-3.png" },
         },
     };
     for (auto& hb : hitableBlocks) {
-        auto hitableBlock = std::make_shared<HitableBlock>(LootType::None);
+        auto hitableBlock = std::make_shared<HitableBlock>(LootType::Badge);
         for (auto& b : hb) {
-        auto block = std::make_shared<Block>(b.pos, glm::vec2(1.025, 0.90), b.path);
-        m_Blocks.push_back(block);
-        m_All.push_back(block);
-        hitableBlock->AddBlock(block, b.loot);
+            auto block = std::make_shared<Block>(b.pos, glm::vec2(1.025, 0.90), b.path);
+            m_Blocks.push_back(block);
+            m_All.push_back(block);
+            hitableBlock->AddBlock(block, b.loot);
         }
         m_HitableBlocks.push_back(hitableBlock);
     }
@@ -89,7 +89,7 @@ void Stage3::Start(App* app){
     for (auto& s : stairs) {
         auto stair = Stair::CreateStair(s.pos1, s.pos2);
         m_Stairs.insert(m_Stairs.end(), stair.begin(), stair.end());
-        m_All.insert(m_All.end(), stair.begin(), stair.end());
+        // m_All.insert(m_All.end(), stair.begin(), stair.end());
     }
 
     app->AddAllChildren(m_All);

@@ -38,6 +38,9 @@ Menu::Menu(const MenuValue& values)
     // weapon
     addText("weapon-frame", {90, 290});
     addWeapon(m_value.weapon, {95, 288});
+
+    // badge
+    addBadge({370, 300});
 }
 
 std::string Menu::formatTime(int time) {
@@ -153,6 +156,19 @@ void Menu::addWeapon(WeaponType weapon, const glm::vec2 &position){
 void Menu::modifyWeapon(WeaponType weapon) {
     std::string imagePath = SetWeaponImagePath(weapon);
     textImage[7]->SetImage(imagePath);
+}
+
+void Menu::addBadge(glm::vec2 position){
+    float x = position.x, y = position.y;
+    std::string imagePath = GA_RESOURCE_DIR "/transparent.png";
+    auto characterImage = std::make_shared<ImageItems>(imagePath);
+    characterImage->SetPosition({x, y});
+    characterImage->SetZIndex(40);
+    textImage.push_back(characterImage);
+}
+
+void Menu::modifyBadge() {
+    textImage[8]->SetImage(GA_RESOURCE_DIR "/items/item/badge.png");
 }
 
 void Menu::SetMenuVisibility(const bool visible) {

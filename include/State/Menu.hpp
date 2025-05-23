@@ -46,6 +46,10 @@ public:
 
     void modifyWeapon(WeaponType weapon);
 
+    void addBadge(glm::vec2 position);
+    
+    void modifyBadge();
+
     void SetMenuVisibility(const bool visible);
 };
 

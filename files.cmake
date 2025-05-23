@@ -6,6 +6,7 @@ set(SRC_FILES
     Object/Enemies/Leopard.cpp
     Object/Enemies/Fishman.cpp
 
+    Object/LootType/Item/Badge.cpp
     Object/LootType/Item/Bag.cpp
     Object/LootType/Item/Chicken.cpp
     Object/LootType/Item/Crystal.cpp
@@ -49,6 +50,7 @@ set(INCLUDE_FILES
     Object/Enemies/Fishman.hpp
 
     Object/LootType/Loot.hpp
+    Object/LootType/Item/Badge.hpp
     Object/LootType/Item/Bag.hpp
     Object/LootType/Item/Chicken.hpp
     Object/LootType/Item/Crystal.hpp

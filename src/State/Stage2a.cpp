@@ -114,7 +114,7 @@ void Stage2a::Start(App *app) {
       for (auto& s : stairs) {
          auto stair = Stair::CreateStair(s.pos1, s.pos2);
          m_Stairs.insert(m_Stairs.end(), stair.begin(), stair.end());
-         m_All.insert(m_All.end(), stair.begin(), stair.end());
+         // m_All.insert(m_All.end(), stair.begin(), stair.end());
       }
       m_stateState = StateState::UPDATE;
    }else {
