@@ -58,12 +58,14 @@ protected:
     std::vector<std::shared_ptr<Torch>> m_Torches;
     std::shared_ptr<Loot> asLoot;
     std::shared_ptr<EnemiesManager> m_EnemiesManager;
+    std::shared_ptr<Enemy> m_Boss;
     glm::vec2 backgroundPos;
     float offsetX = 0.0f;
 
     Uint64 blinkStartTime = 0;
 
     bool whipDropped = false; // to ensure that dropped whip dont exceed 1
+    bool reachBoss = false;
 };
 
 #endif

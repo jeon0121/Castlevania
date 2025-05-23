@@ -12,6 +12,14 @@ void Stage3::Start(App* app){
     backgroundPos = m_Background->GetPosition();
     m_All.push_back(m_Background);
 
+    // blink
+    std::vector<std::string> blinkImages = {GA_RESOURCE_DIR"/background/stage-3/phantom-bat-blink.png", GA_RESOURCE_DIR"/background/stage-3/phantom-bat.png"};
+    m_Blink = std::make_shared<AnimatedItems>(blinkImages, 40, m_Background->m_Transform.scale);
+    m_Blink->SetZIndex(1);
+    m_Blink->SetPosition(m_Background->GetPosition());
+    m_Blink->SetVisible(false);
+    m_All.push_back(m_Blink);
+
     //character
     if (!app->m_Character) {
         CharacterValue charactervalue;
@@ -24,6 +32,17 @@ void Stage3::Start(App* app){
         app->m_Character->SetPosition({-315, 80.76});
     this->m_Character = app->m_Character;
     m_All.push_back(m_Character->m_Behavior);
+
+    // EnemiesManager
+    // std::vector<PossibleLootData> possibleLoots = {
+    //     {LootType::HeartSmall, 0.5, -1}, // infinite drop
+    // };
+    // m_EnemiesManager = std::make_shared<EnemiesManager>(possibleLoots);
+
+    // boss
+    m_Boss = std::make_shared<PhantomBat>(glm::vec2(2020, 190));
+    m_Boss->SetZIndex(7);
+    m_All.push_back(m_Boss);
 
     //torch
     std::vector<TorchData> torchs = {
@@ -101,8 +120,19 @@ void Stage3::Update(App* app){
     m_Character->Keys(m_Blocks, m_Stairs);
     UpdateTorch(app);
     UpdateSubWeapon(app);
-    UpdateScroll(mapWidth);
     UpdateHitableBlock(app);
+    // once reach the boss, stop scrolling
+    if (m_Character->GetPosition().x <= 20 && !reachBoss) {
+        UpdateScroll(mapWidth);
+    }
+    else if (m_Character->GetPosition().x > 20 && !reachBoss) {
+        reachBoss = true;
+    }
+    // boss
+    else if (reachBoss) {
+        whipDropped = true;
+        m_Boss->MoveBehav(m_Character);
+    }
 }
 
 void Stage3::End(App* app){

@@ -1,6 +1,7 @@
 set(SRC_FILES
     App.cpp
 
+    Object/Boss/PhantomBat.cpp
     Object/Enemies/Bat.cpp
     Object/Enemies/Zombie.cpp
     Object/Enemies/Leopard.cpp
@@ -44,6 +45,7 @@ set(INCLUDE_FILES
     App.hpp
     State.hpp
 
+    Object/Boss/PhantomBat.hpp
     Object/Enemies/Bat.hpp
     Object/Enemies/Zombie.hpp
     Object/Enemies/Leopard.hpp

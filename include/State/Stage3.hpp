@@ -12,7 +12,6 @@ public:
 
 private:
     int mapWidth = 3122;
-
 };
 #endif
 

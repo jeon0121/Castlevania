@@ -5,6 +5,7 @@
 #include "Object/Enemy.hpp"
 #include "Object/Character.hpp"
 #include "Object/Block.hpp"
+#include "Object/Boss/PhantomBat.hpp"
 #include "Object/Enemies/Zombie.hpp"
 #include "Object/Enemies/Leopard.hpp"
 #include "Object/Enemies/Bat.hpp"

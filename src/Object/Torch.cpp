@@ -55,7 +55,6 @@ bool Torch::CollideDetection(std::shared_ptr<Character> &character) {
     }
     else if (character->m_SubWeapon != nullptr && character->GetUseWeaponFlag() && !is_destroyed) {
         std::shared_ptr<Loot> asLoot = std::dynamic_pointer_cast<Loot>(character->m_SubWeapon);
-        glm::vec2 charPos = character->GetPosition();
         glm::vec2 weaponPos = asLoot->GetPosition();
         glm::vec2 weaponSize = glm::abs(asLoot->GetScaledSize());
         float weaponLeft = weaponPos.x - weaponSize.x * 0.5f;
@@ -63,7 +62,7 @@ bool Torch::CollideDetection(std::shared_ptr<Character> &character) {
         
         bool overlapX = (weaponLeft > torchLeft && weaponLeft < torchRight) ||
                         (weaponRight > torchLeft && weaponRight < torchRight);
-        bool overlapY = torchTop > charPos.y && torchBottom < charPos.y;
+        bool overlapY = torchTop > weaponPos.y && torchBottom < weaponPos.y;
         if (overlapX && overlapY && character->GetSubWeaponType() != WeaponType::Stopwatch) {
             SetPaused();
             is_destroyed = true;

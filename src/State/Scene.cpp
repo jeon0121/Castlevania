@@ -70,6 +70,8 @@ void Scene::UpdateScroll(int mapWidth, float offset) {
             }
             
         }
+        if (m_Boss)
+            m_Boss->SetPosition(m_Boss->GetPosition() - glm::vec2(dx, 0.0f));
         if (asLoot)
             asLoot->SetPosition(asLoot->GetPosition() - glm::vec2(dx, 0.0f));
     }
