@@ -139,6 +139,7 @@ void Stage1::Start(App* app){
     }
     
     app->AddAllChildren(m_All);
+    m_EnemiesManager->AddAllChild(app);
     m_stateState = StateState::UPDATE;
 }
 
@@ -170,53 +171,7 @@ void Stage1::End(App* app){
     }
     // end scene animation
     else {
-        if (m_Background->m_Transform.scale.x > 1.0f) {
-            m_Character->ChangeBehavior(2);
-            m_Background->SetDrawable(std::make_unique<Util::Image>(GA_RESOURCE_DIR"/background/stage-1/end.png"));
-            m_Background->m_Transform.scale = glm::vec2(0.528, 0.465);
-            m_Background->SetPosition({522.5, -36.2});
-            m_Background->SetZIndex(8);
-        }else if (m_Background->GetPosition().x > 0) {
-            m_Background->SetPosition({m_Background->GetPosition().x - 4.0f, m_Background->GetPosition().y});
-            m_Character->SetPosition({m_Character->GetPosition().x - 4.0f, m_Character->GetPosition().y });
-        }else if (m_Background->GetPosition().x < 0 && !door_2->IsLooping()) {
-            if (!door_1->IsPlaying() && !m_Character->m_Behavior->IsLooping()) {
-                door_1->SetVisible(true);
-                door_1->SetPlaying();
-            }
-            if (door_1->IfAnimationEnds() && !m_Character->m_Behavior->IsLooping()) {
-                m_Character->ChangeBehavior(0);
-                m_Character->m_Behavior->SetPlaying();
-                m_Character->m_Behavior->SetLooping(true);
-            }
-            if (m_Character->GetPosition().x < 200 && m_Character->m_Behavior->IsLooping())
-                m_Character->SetPosition({m_Character->GetPosition().x + 4.0f, m_Character->GetPosition().y });
-            else if (m_Character->GetPosition().x > 200) {
-                m_Character->ChangeBehavior(2);
-                door_1->SetVisible(false);
-                door_1->SetPaused();
-                if (!door_2->IsPlaying()) {
-                    door_2->SetVisible(true);
-                    door_2->SetPlaying();
-                }
-                if (door_2->IfAnimationEnds()) {
-                    door_2->SetLooping(true);
-                }
-            }
-        } else {
-            if (door_1->IsPlaying() && m_Background->GetPosition().x > -516) {
-                m_Background->SetPosition({m_Background->GetPosition().x - 4.0f, m_Background->GetPosition().y});
-                m_Character->SetPosition({m_Character->GetPosition().x - 4.0f, m_Character->GetPosition().y });
-            } else if (!door_1->IsPlaying() && !door_2->IsPlaying()) {
-                door_2->SetVisible(false);
-                door_1->SetPlaying();
-            } else if (m_Background->GetPosition().x < -516) {
-                app->m_Menu->SetMenuVisibility(false);
-                m_EnemiesManager->RemoveAllChild(app);
-                app->RemoveAllChildren(m_All);
-                app->m_AppState = App::AppState::START;
-                app->m_GameState = App::GameState::STAGE2A;
-            }
-        }
+        EndAnimation(app, GA_RESOURCE_DIR"/background/stage-1/end.png", glm::vec2(0.528, 0.465), door_1, door_2);
+        app->m_GameState = App::GameState::STAGE2A;
     }
 }

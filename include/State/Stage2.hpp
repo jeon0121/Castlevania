@@ -13,6 +13,8 @@ public:
 
 private:
     int mapWidth = 2070;
+    std::shared_ptr<AnimatedItems> door_1;
+    std::shared_ptr<AnimatedItems> door_2;
 };
 
 class Stage2b : public Scene{

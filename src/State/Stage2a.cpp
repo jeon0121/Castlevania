@@ -112,6 +112,22 @@ void Stage2a::Start(App *app) {
          m_Stairs.insert(m_Stairs.end(), stair.begin(), stair.end());
          // m_All.insert(m_All.end(), stair.begin(), stair.end());
       }
+
+      //door
+      std::vector<std::string> door1Imgs, door2Imgs;
+      for (int i = 1; i <= 2; ++i) {
+         door1Imgs.push_back(GA_RESOURCE_DIR "/items/door/door-" + std::to_string(i) + ".png");
+         door2Imgs.push_back(GA_RESOURCE_DIR "/items/door/door-" + std::to_string(3 - i) + ".png");
+      }
+      door_1 = std::make_shared<AnimatedItems>(door1Imgs, 200, glm::vec2{1.0f, 0.9f});
+      door_2 = std::make_shared<AnimatedItems>(door2Imgs, 200, glm::vec2{1.0f, 0.9f});
+      for (auto& door : {door_1, door_2}) {
+         door->SetPosition({15.0f, 110.0f});
+         door->SetVisible(false);
+         door->SetZIndex(9);
+         m_All.push_back(door);
+      }
+
       m_stateState = StateState::UPDATE;
    }else {
       if (app->stairNum[0] == 1 && app->stairNum[1] == 0)
@@ -150,9 +166,30 @@ void Stage2a::Update(App *app) {
       app->m_Root.RemoveChild(m_Character->m_Behavior);
       m_EnemiesManager->RemoveAllChild(app);
    }
-
+   if (m_Character->GetEndSceneFlag() || (m_Character->GetPosition().x >= 422 && m_Character->GetPosition().y > 80.75 && m_Character->GetPosition().y < 80.77)) {
+      m_Character->m_Behavior->SetLooping(false);
+      m_stateState = StateState::END;
+   }
 }
 
 void Stage2a::End(App *app) {
-   
+   // dead and reset
+    if (m_Character->GetEndSceneFlag()) {
+        app->m_Menu->SetMenuVisibility(false);
+        m_EnemiesManager->RemoveAllChild(app);
+        app->m_Menu->modifyWeapon(WeaponType::None);
+        app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(5), 3);
+        app->m_Character = nullptr;
+        app->RemoveAllChildren(m_All);
+        app->m_Root.RemoveChild(m_Character->m_Behavior);
+        app->m_AppState = App::AppState::START;
+        app->m_GameState = App::GameState::STAGE2A;
+    }
+    // end scene animation
+    else {
+        EndAnimation(app, GA_RESOURCE_DIR"/background/stage-2/end.png", glm::vec2(0.537, 0.473), door_1, door_2);
+        if (app->m_AppState == App::AppState::START)
+            app->m_Root.RemoveChild(m_Character->m_Behavior);
+        app->m_GameState = App::GameState::STAGE3;
+    }
 }
