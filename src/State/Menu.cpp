@@ -112,7 +112,7 @@ void Menu::addHealth(int heart, const glm::vec2& position, std::string type){
 }
 
 void Menu::modifyHealth(int heart, std::string type) {
-    std::vector<std::shared_ptr<ImageItems>>& healthbar = health[type == "player" ? 0 : 1];
+    std::vector<std::shared_ptr<ImageItems>>& healthbar = health[type == "player" ? 0 : 2];
     for (auto &&h : healthbar)
         h->SetVisible(false);
     int i = 0;

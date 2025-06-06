@@ -75,8 +75,7 @@ void Stage3::Start(App* app){
         { { 2262, -240 }, { 0.52, 0.68 } },
         { { 2525, -122 }, { 1.62, 0.68 } },
 
-        { { 2610, -240 }, { 0.3,  2    } },
-        { { 2610,  160 }, { 0.3,  2    } },
+        { { 2610, -50  }, { 0.3,  7    } }
     };
     for (auto& b : blocks) {
         auto block = std::make_shared<Block>(b.pos, b.scale);
@@ -115,22 +114,25 @@ void Stage3::Start(App* app){
 }
 
 void Stage3::Update(App* app){
-    Position::PrintObjectCoordinate(m_Character, offsetX);
+    // Position::PrintObjectCoordinate(m_Character, offsetX);
     m_Character->Keys(m_Blocks, m_Stairs);
     UpdateTorch(app);
     UpdateSubWeapon(app);
     UpdateHitableBlock(app);
     // once reach the boss, stop scrolling
-    if (m_Character->GetPosition().x <= 20 && !reachBoss) {
+    if (m_Character->GetPosition().x <= 20 && !reachBoss)
         UpdateScroll(mapWidth);
-    }
     else if (m_Character->GetPosition().x > 20 && !reachBoss) {
         reachBoss = true;
+        BlockData bData = { { -547, -50 }, { 0.4, 7 } };
+        auto block = std::make_shared<Block>(bData.pos, bData.scale);
+        m_Blocks.push_back(block);
     }
     // boss
     else if (reachBoss) {
         whipDropped = true;
-        m_Boss->MoveBehav(m_Character);
+        m_Boss->MoveBehav(m_Character, screenHeight, screenWidth);
+        m_Boss->CollideDetection(m_Character, app->m_Menu);
     }
 }
 

@@ -22,6 +22,12 @@ class Enemy : public AnimatedItems {
             (void) character;
             (void) blocks;
         }
+        
+        virtual void MoveBehav(std::shared_ptr<Character> &character, int screenHeight, int screenWidth) {
+            (void) character;
+            (void) screenHeight;
+            (void) screenWidth;
+        }
 
         virtual void SetReset() = 0;
 
@@ -53,14 +59,13 @@ class Enemy : public AnimatedItems {
         bool is_dead = false;
         bool is_hidden = false;
         bool hasEnteredWindow = false;
-        int countHurt = 0;
-        int score = 0;
-        LootType lootType = LootType::None;
-    private:
         float enemyTop;
         float enemyBottom;
         float enemyLeft;
         float enemyRight;
+        int countHurt = 0;
+        int score = 0;
+        LootType lootType = LootType::None;
 };
 
 

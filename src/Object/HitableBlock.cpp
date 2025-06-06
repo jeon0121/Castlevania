@@ -53,10 +53,9 @@ bool HitableBlock::CollideDetection(std::shared_ptr<Character> &character) {
             float whipLeft = (character->GetDirection() == "left") ? charLeft - whipWidth : charRight;
             float whipRight = (character->GetDirection() == "left") ? charLeft : charRight + whipWidth;
 
-            bool overlapX = (whipLeft > blockLeft && whipLeft < blockRight) ||
-                            (whipRight > blockLeft && whipRight < blockRight) ||
-                            (whipLeft < blockLeft && whipRight > blockRight) ||
-                            (whipLeft > blockLeft && whipRight < blockRight);
+            bool overlapX = (blockLeft < whipLeft && whipLeft < blockRight) ||
+                            (blockLeft < whipRight && whipRight < blockRight) ||
+                            (whipLeft - 3.0f < blockLeft && blockRight < whipRight);
             bool overlapY = blockTop + 1.5f > charPos.y && blockBottom - 1.5f < charPos.y;
             if (overlapX && overlapY) {
                 startDestroyedTime = SDL_GetPerformanceCounter();
