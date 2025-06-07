@@ -36,6 +36,7 @@ set(SRC_FILES
     State/Stage2a.cpp
     State/Stage2b.cpp
     State/Stage3.cpp
+    State/GG.cpp
 
     Utility/Time.cpp
     Utility/Position.cpp
@@ -83,6 +84,7 @@ set(INCLUDE_FILES
     State/Title.hpp
     State/Stage0.hpp
     State/Stage1.hpp
+    State/GG.hpp
 
     Utility/Time.hpp
     Utility/Position.hpp

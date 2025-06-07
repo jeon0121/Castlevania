@@ -59,14 +59,17 @@ std::string Menu::formatScore(int score) {
     return std::string(zero, '0') + scoreStr;
 }
 
-void Menu::addText(std::string text, const glm::vec2& position){
+void Menu::addText(std::string text, const glm::vec2& position, int type){
     float x = position.x, y = position.y;
     std::string imagePath = GA_RESOURCE_DIR "/fonts/menu/" + text + ".png";
     auto characterImage = std::make_shared<ImageItems>(imagePath);
     characterImage->SetPosition({x, y});
     characterImage->SetZIndex(50);
     characterImage->m_Transform.scale = {1, 0.88};
-    textImage.push_back(characterImage);
+    if (type == 0)
+        textImage.push_back(characterImage);
+    else
+        GGImage.push_back(characterImage);
 }
 
 void Menu::addNumber(std::string text, const glm::vec2& position){

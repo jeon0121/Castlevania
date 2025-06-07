@@ -22,6 +22,7 @@ public:
         STAGE2A,
         STAGE2B,
         STAGE3,
+        GG
     };
 
     AppState GetAppState() const { return m_AppState; }
@@ -40,7 +41,7 @@ public:
 
     Util::Renderer m_Root;
     AppState m_AppState = AppState::START;
-    GameState m_GameState = GameState::STAGE2A;
+    GameState m_GameState = GameState::GG;
     std::shared_ptr<Scene> m_Scene;
     std::shared_ptr<Scene> m_SceneA;
     std::shared_ptr<Scene> m_SceneB;

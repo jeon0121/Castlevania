@@ -5,6 +5,7 @@
 #include "Util/Keycode.hpp"
 #include "Util/Logger.hpp"
 #include "State.hpp"
+#include "State/GG.hpp"
 
 void App::Start() {
     LOG_TRACE("Start");
@@ -53,6 +54,9 @@ void App::Start() {
             break;
         case GameState::STAGE3:
             m_Scene = std::make_unique<Stage3>();
+            break;
+        case GameState::GG:
+            m_Scene = std::make_unique<GG>();
             break;
     }
     if(!m_Character && m_GameState != GameState::TITLE) {
