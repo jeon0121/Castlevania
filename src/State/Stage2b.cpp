@@ -129,9 +129,26 @@ void Stage2b::Update(App *app) {
         app->RemoveAllChildren(m_All);
         app->m_Root.RemoveChild(m_Character->m_Behavior);
         m_EnemiesManager->RemoveAllChild(app);
+    }else if (m_Character->GetDeadFlag()) {
+        app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/deadBGM.wav");
+        app->BGM->Play(1);
+    }
+    if (m_Character->GetEndSceneFlag()) {
+        m_Character->m_Behavior->SetLooping(false);
+        m_stateState = StateState::END;
     }
 }
 
 void Stage2b::End(App *app) {
-   
+    // dead and reset
+    if (m_Character->GetEndSceneFlag()) {
+        app->m_Menu->SetMenuVisibility(false);
+        m_EnemiesManager->RemoveAllChild(app);
+        app->m_Menu->modifyWeapon(WeaponType::None);
+        app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(5), 3);
+        app->RemoveAllChildren(m_All);
+        app->m_Root.RemoveChild(m_Character->m_Behavior);
+        app->m_AppState = App::AppState::START;
+        app->m_GameState = App::GameState::STAGE2A;
+    }
 }

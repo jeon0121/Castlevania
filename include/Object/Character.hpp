@@ -44,6 +44,7 @@ public:
     const bool& GetUseWeaponFlag() const;
     bool GetHurtFlag();
     bool GetEndSceneFlag() const;
+    bool GetDeadFlag() const;
     const glm::vec2& GetPosition() const;
     const glm::vec2& GetLastPosition() const;
     const glm::vec2& GetSize() const;

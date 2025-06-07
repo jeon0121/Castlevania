@@ -90,7 +90,7 @@ void Stage0::End(App* app){
     m_Character-> SetPosition(glm::vec2(pos.x+1.5f, pos.y));
     if (!is_endSound && m_Character->GetPosition().x >= 280) {
         std::shared_ptr<Util::SFX> endSound = std::make_shared<Util::SFX>(GA_RESOURCE_DIR "/Sound Effects/25.wav");
-        endSound->SetVolume(50);
+        endSound->SetVolume(60);
         endSound->Play();
         is_endSound = true;
     }

@@ -36,8 +36,7 @@ void Title::Start(App* app){
     charactervalue.position = glm::vec2(480, -265);
     charactervalue.beIndex = 0;
     charactervalue.scale = 0.8;
-    app->m_Character = std::make_shared<Character>(charactervalue);
-    this->m_Character = app->m_Character;
+    m_Character = std::make_shared<Character>(charactervalue);
     m_Character->m_Behavior->SetVisible(false);
     m_All.push_back(m_Character->m_Behavior);
 
@@ -64,6 +63,9 @@ void Title::Start(App* app){
         anim->SetZIndex(6);
         m_All.push_back(anim);
     }
+
+    titleBGM = std::make_shared<Util::BGM>(GA_RESOURCE_DIR "/BGM/titleBGM.wav");
+    titleBGM->SetVolume(50);
 
     app->AddAllChildren(m_All);
 }
@@ -95,6 +97,7 @@ void Title::End(App* app){
         m_Background->m_Transform.scale = glm::vec2(0.65, 0.55);
         m_Background->SetPosition({0, -85});
         app->m_Menu->SetMenuVisibility(true);
+        titleBGM->Play(1);
     }
 
     //Cutscene animation

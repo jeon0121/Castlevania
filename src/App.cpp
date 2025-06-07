@@ -23,6 +23,13 @@ void App::Start() {
         for (auto &&healthbar : m_Menu->health){
             for (auto &&h : healthbar) m_Root.AddChild(h);
         }
+        BGM = std::make_shared<Util::BGM>(GA_RESOURCE_DIR "/BGM/stageBGM.wav");
+        BGM->SetVolume(50);
+    }
+    if (m_GameState == GameState::STAGE2A && m_Character && m_Character->GetEndSceneFlag()) {
+        m_Character = nullptr;
+        m_SceneA = nullptr;
+        m_SceneB = nullptr;
     }
     switch(m_GameState){
         case GameState::TITLE:
@@ -47,6 +54,10 @@ void App::Start() {
         case GameState::STAGE3:
             m_Scene = std::make_unique<Stage3>();
             break;
+    }
+    if(!m_Character && m_GameState != GameState::TITLE) {
+        BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/stageBGM.wav");
+        BGM->Play();
     }
     m_Scene->Start(this);
     m_Scene->m_stateState = Scene::StateState::UPDATE;

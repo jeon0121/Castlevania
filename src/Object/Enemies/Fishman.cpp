@@ -20,7 +20,6 @@ Fishman::Fishman(glm::vec2 position, std::string direction, App* app, std::vecto
     SetPlaying();
     SetLooping(true);
     soundEft = std::make_shared<Util::SFX>(GA_RESOURCE_DIR "/Sound Effects/14.wav");
-    soundEft->SetVolume(30);
     countHurt = 2;
 }
 
@@ -79,6 +78,7 @@ void Fishman::Spawn(std::shared_ptr<Character> &character) {
     if (GetPosition().y == -250) {
         soundEft->LoadMedia(GA_RESOURCE_DIR "/Sound Effects/14.wav");
         soundEft->Play();
+        soundEft->SetVolume(30);
         if (character->GetPosition().x > pos.x)
             SetDirection("right");
         else
@@ -95,6 +95,7 @@ void Fishman::Bubble(glm::vec2 fishpos) {
         }
         soundEft->LoadMedia(GA_RESOURCE_DIR "/Sound Effects/15.wav");
         soundEft->Play();
+        soundEft->SetVolume(30);
     }
     bool check = false;
     for (int i = 0; i < 3; i++) {

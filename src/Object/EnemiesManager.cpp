@@ -1,7 +1,10 @@
 #include "Object/EnemiesManager.hpp"
 #include "Utility/Time.hpp"
 
-EnemiesManager::EnemiesManager(const std::vector<PossibleLootData>& possibleLoots) : m_PossibleLoots(possibleLoots) {}
+EnemiesManager::EnemiesManager(const std::vector<PossibleLootData>& possibleLoots) : m_PossibleLoots(possibleLoots) {
+    stopWatchSound = std::make_shared<Util::SFX>(GA_RESOURCE_DIR "/Sound Effects/26.wav");
+    stopWatchSound->SetVolume(60);
+}
 
 void EnemiesManager::RemoveAllChild(App *app) {
     for (auto &child : rendererVec)
@@ -79,10 +82,17 @@ void EnemiesManager::AddFishman(glm::vec2 positions, std::string direction, App 
 void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, App* app) {
     if (character->GetLevelUpWhipFlag() ||
        (character->GetSubWeaponType() == WeaponType::Stopwatch && character->GetUseWeaponFlag())) {
+        if (!character->GetLevelUpWhipFlag() && !isEnemyPause) {
+            stopWatchSound->SetVolume(60);
+            stopWatchSound->Play(1, 5000);
+            app->BGM->Pause();
+        }
         PauseAllEnemy();
         isEnemyPause = true;
     }
     else if (isEnemyPause) {
+        stopWatchSound->SetVolume(0);
+        app->BGM->Resume();
         PlayAllEnemy();
         isEnemyPause = false;
     }

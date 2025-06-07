@@ -98,6 +98,10 @@ bool Character::GetEndSceneFlag() const {
     return false;
 }
 
+bool Character::GetDeadFlag() const {
+    return (is_dead && !startDeadTime);
+}
+
 const glm::vec2& Character::GetPosition() const {
     return m_pos;
 }
@@ -467,6 +471,7 @@ void Character::HandleFallDuck(const std::string& direction) {
     }else {
         if (!startDuckTime) {
             m_soundEft->LoadMedia(GA_RESOURCE_DIR "/Sound Effects/13.wav");
+            m_soundEft->SetVolume(40);
             m_soundEft->Play();
             startDuckTime = SDL_GetPerformanceCounter();
         }

@@ -1,6 +1,7 @@
 #ifndef APP_HPP
 #define APP_HPP
 #include "Util/Renderer.hpp"
+#include "Util/BGM.hpp"
 #include "pch.hpp" // IWYU pragma: export
 #include "State/Menu.hpp"
 
@@ -46,6 +47,7 @@ public:
     std::shared_ptr<Menu> m_Menu;
     std::shared_ptr<Character> m_Character;
     std::vector<int> stairNum = {0, 0};
+    std::shared_ptr<Util::BGM> BGM;
 };
 
 #endif

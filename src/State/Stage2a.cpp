@@ -158,6 +158,8 @@ void Stage2a::Update(App *app) {
    UpdateScroll(mapWidth);
    UpdateHitableBlock(app);
    // Position::PrintObjectCoordinate(m_Character, offsetX);
+
+   //change to stage2B
    if (m_Character->GetPosition().y < -380 && m_Character->GetDirection() == "right") {
       app->stairNum[0] = (m_Character->GetPosition().x < -100) ? 0 : 1;
       app->m_AppState = App::AppState::START;
@@ -166,6 +168,11 @@ void Stage2a::Update(App *app) {
       app->m_Root.RemoveChild(m_Character->m_Behavior);
       m_EnemiesManager->RemoveAllChild(app);
    }
+   //character dead bgm
+   else if (m_Character->GetDeadFlag()) {
+      app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/deadBGM.wav");
+      app->BGM->Play(1);
+   }
    if (m_Character->GetEndSceneFlag() || (m_Character->GetPosition().x >= 422 && m_Character->GetPosition().y > 80.75 && m_Character->GetPosition().y < 80.77)) {
       m_Character->m_Behavior->SetLooping(false);
       m_stateState = StateState::END;
@@ -173,7 +180,7 @@ void Stage2a::Update(App *app) {
 }
 
 void Stage2a::End(App *app) {
-   // dead and reset
+    // dead and reset
     if (m_Character->GetEndSceneFlag()) {
         app->m_Menu->SetMenuVisibility(false);
         m_EnemiesManager->RemoveAllChild(app);

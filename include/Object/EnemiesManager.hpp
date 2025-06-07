@@ -58,6 +58,7 @@ class EnemiesManager {
         std::vector<std::shared_ptr<ImageItems>> fires;
         std::vector<bool> isFire = {false, false};
         std::vector<std::string> fireDirections = {"right", "right"};
+        std::shared_ptr<Util::SFX> stopWatchSound;
         bool isEnemyPause = false;
 };
 
