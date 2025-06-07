@@ -43,7 +43,7 @@ public:
 
     void UpdateHitableBlock(App* app);
 
-    void EndAnimation(App* app, std::string imagePath, glm::vec2 scale, std::shared_ptr<AnimatedItems> door_1, std::shared_ptr<AnimatedItems> door_2);
+    void EndAnimation(App* app, std::string imagePath, glm::vec2 scale, std::shared_ptr<AnimatedItems> door_1, std::shared_ptr<AnimatedItems> door_2, std::shared_ptr<Util::SFX> doorSound);
 
     StateState m_stateState = StateState::START;
     int screenWidth = 1024;

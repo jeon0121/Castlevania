@@ -169,7 +169,7 @@ void Scene::UpdateHitableBlock(App* app) {
     }
 }
 
-void Scene::EndAnimation(App* app, std::string imagePath, glm::vec2 scale, std::shared_ptr<AnimatedItems> door_1, std::shared_ptr<AnimatedItems> door_2) {
+void Scene::EndAnimation(App* app, std::string imagePath, glm::vec2 scale, std::shared_ptr<AnimatedItems> door_1, std::shared_ptr<AnimatedItems> door_2, std::shared_ptr<Util::SFX> doorSound) {
     if (m_Background->m_Transform.scale.x > 1.0f) {
         m_Character->ChangeBehavior(2);
         m_Background->SetDrawable(std::make_unique<Util::Image>(imagePath));
@@ -188,6 +188,7 @@ void Scene::EndAnimation(App* app, std::string imagePath, glm::vec2 scale, std::
             m_Character->ChangeBehavior(0);
             m_Character->m_Behavior->SetPlaying();
             m_Character->m_Behavior->SetLooping(true);
+            doorSound->Play();
         }
         if (m_Character->GetPosition().x < 200 && m_Character->m_Behavior->IsLooping())
             m_Character->SetPosition({m_Character->GetPosition().x + 4.0f, m_Character->GetPosition().y });
@@ -198,6 +199,7 @@ void Scene::EndAnimation(App* app, std::string imagePath, glm::vec2 scale, std::
             if (!door_2->IsPlaying()) {
                 door_2->SetVisible(true);
                 door_2->SetPlaying();
+                doorSound->Play();
             }
             if (door_2->IfAnimationEnds()) {
                 door_2->SetLooping(true);

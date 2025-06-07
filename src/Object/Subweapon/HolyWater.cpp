@@ -1,7 +1,7 @@
 #include "Object/Subweapon/HolyWater.hpp"
 
 namespace Subweapon {
-    HolyWater::HolyWater(glm::vec2 position, std::string type) : Loot(position, {GA_RESOURCE_DIR "/items/weapon/holywater.png"}, 0, LootType::HolyWater), m_type(type) {
+    HolyWater::HolyWater(glm::vec2 position, std::string type) : Loot(position, {GA_RESOURCE_DIR "/Sound Effects/24.wav"}, {GA_RESOURCE_DIR "/items/weapon/holywater.png"}, 0, LootType::HolyWater), m_type(type) {
         m_throw.emplace_back(GA_RESOURCE_DIR "/main character/subweapon/holy-water/holy-water.png");
         for (int i = 0; i < 10; i++) 
             m_flame.emplace_back(GA_RESOURCE_DIR "/main character/subweapon/fire-bomb/fire-bomb-" + std::to_string(i % 5 + 1) + ".png");
@@ -10,6 +10,8 @@ namespace Subweapon {
             SetAnimationFrames(m_throw, 0);
             y_vel = 5;
         }
+        usingSound = std::make_shared<Util::SFX>(GA_RESOURCE_DIR "/Sound Effects/30.wav");
+        usingSound->SetVolume(50);
     }
 
     void HolyWater::Result(App* app, std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) {
@@ -38,6 +40,7 @@ namespace Subweapon {
                 bool isLanding = itemBottom <= blockTop && itemTop > blockTop;
                 if (overlapX && isLanding) {
                     is_landed = true;
+                    usingSound->Play();
                     SetAnimationFrames(m_flame, 100);
                     SetPosition({pos.x, blockTop + size.y * 0.5f});
                     break;

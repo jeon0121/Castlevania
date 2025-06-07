@@ -9,6 +9,8 @@ void HitableBlock::AddBlock(std::shared_ptr<Block> &block, LootType loot, std::v
     blockLootPair.push_back(std::make_pair(block, loot));
     m_All.push_back(block);
     UpdatePosition();
+    breakSound = std::make_shared<Util::SFX>(GA_RESOURCE_DIR "/Sound Effects/21.wav");
+    breakSound->SetVolume(50);
 }
 
 void HitableBlock::UpdatePosition() {
@@ -60,6 +62,7 @@ bool HitableBlock::CollideDetection(std::shared_ptr<Character> &character) {
             bool overlapY = blockTop + 1.5f > charPos.y && blockBottom - 1.5f < charPos.y;
             if (overlapX && overlapY) {
                 startDestroyedTime = SDL_GetPerformanceCounter();
+                breakSound->Play();
                 return true;
             }
         }

@@ -4,6 +4,7 @@
 #include "Object/AnimatedItems.hpp"
 #include "Object/Character.hpp"
 #include "Object/Block.hpp"
+#include <Util/SFX.hpp>
 #include "State/Menu.hpp"
 #include "App.hpp"
 
@@ -41,7 +42,7 @@ enum class LootType {
 
 class Loot : public AnimatedItems {
 public:
-   Loot(glm::vec2 position, std::vector<std::string> animationPath, int interval, LootType type);
+   Loot(glm::vec2 position, std::string soundPath, std::vector<std::string> animationPath, int interval, LootType type);
 
    LootType GetType();
 
@@ -72,6 +73,7 @@ protected:
    bool is_collected = false;
    bool is_endResult = false;
    Uint64 startLandTime = 0;
+   std::shared_ptr<Util::SFX> collectSound; //when collected
 };
 
 #endif

@@ -5,6 +5,7 @@
 #include "Object/Character.hpp"
 #include "Object/Loot.hpp"
 #include "Object/LootType/Loot.hpp"
+#include <Util/SFX.hpp>
 #include "App.hpp"
 
 class Torch : public AnimatedItems {
@@ -28,6 +29,7 @@ private:
    bool is_destroyed = false;
    LootType itemType;
    std::vector<std::string> torchDeath;
+   std::shared_ptr<Util::SFX> destroySound;
 };
 
 #endif

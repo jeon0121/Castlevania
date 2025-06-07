@@ -179,7 +179,6 @@ void Stage2a::End(App *app) {
         m_EnemiesManager->RemoveAllChild(app);
         app->m_Menu->modifyWeapon(WeaponType::None);
         app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(5), 3);
-        app->m_Character = nullptr;
         app->RemoveAllChildren(m_All);
         app->m_Root.RemoveChild(m_Character->m_Behavior);
         app->m_AppState = App::AppState::START;
@@ -187,7 +186,9 @@ void Stage2a::End(App *app) {
     }
     // end scene animation
     else {
-        EndAnimation(app, GA_RESOURCE_DIR"/background/stage-2/end.png", glm::vec2(0.537, 0.473), door_1, door_2);
+        std::shared_ptr<Util::SFX> doorSound = std::make_shared<Util::SFX>(GA_RESOURCE_DIR "/Sound Effects/29.wav");
+        doorSound->SetVolume(50);
+        EndAnimation(app, GA_RESOURCE_DIR"/background/stage-2/end.png", glm::vec2(0.537, 0.473), door_1, door_2, doorSound);
         if (app->m_AppState == App::AppState::START)
             app->m_Root.RemoveChild(m_Character->m_Behavior);
         app->m_GameState = App::GameState::STAGE3;

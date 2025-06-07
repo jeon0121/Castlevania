@@ -13,6 +13,7 @@ public:
 
 private:
     int mapWidth = 3072;
+    bool is_endSound = false;
     std::shared_ptr<ImageItems> m_End;
 };
 #endif

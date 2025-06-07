@@ -2,9 +2,11 @@
 #include "Object/LootType/Loot.hpp"
 #include "Utility/Time.hpp"
 
-Loot::Loot(glm::vec2 position, std::vector<std::string> animationPath, int interval, LootType type) : AnimatedItems(animationPath, interval), type(type) {
+Loot::Loot(glm::vec2 position, std::string soundPath, std::vector<std::string> animationPath, int interval, LootType type) : AnimatedItems(animationPath, interval), type(type) {
    SetPosition(position);
    SetZIndex(7);
+   collectSound = std::make_shared<Util::SFX>(soundPath);
+   collectSound->SetVolume(50);
 }
 
 LootType Loot::GetType() { return type; }
@@ -67,6 +69,7 @@ bool Loot::IsCollected(std::shared_ptr<Character>& character) {
    if (overlapX && overlapY) {
       SetVisible(false);
       is_collected = true;
+      collectSound->Play();
       return true;
    }
    return false;

@@ -171,7 +171,9 @@ void Stage1::End(App* app){
     }
     // end scene animation
     else {
-        EndAnimation(app, GA_RESOURCE_DIR"/background/stage-1/end.png", glm::vec2(0.528, 0.465), door_1, door_2);
+        std::shared_ptr<Util::SFX> doorSound = std::make_shared<Util::SFX>(GA_RESOURCE_DIR "/Sound Effects/29.wav");
+        doorSound->SetVolume(50);
+        EndAnimation(app, GA_RESOURCE_DIR"/background/stage-1/end.png", glm::vec2(0.528, 0.465), door_1, door_2, doorSound);
         app->m_GameState = App::GameState::STAGE2A;
     }
 }

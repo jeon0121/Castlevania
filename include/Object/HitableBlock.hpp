@@ -33,6 +33,7 @@ class HitableBlock : public ImageItems {
         float y_vel = 0;
         std::vector<float> x_vel;
         Uint64 startDestroyedTime = 0;
+        std::shared_ptr<Util::SFX> breakSound;
 };
 
 #endif

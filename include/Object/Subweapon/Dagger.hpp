@@ -22,6 +22,7 @@ namespace Subweapon {
    private:
       std::string m_direction;
       std::string m_type;
+      bool is_playSound = false;
       int cost = 1;
    };
 }
