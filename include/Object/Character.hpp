@@ -8,6 +8,7 @@
 #include "Util/Time.hpp"
 #include "Util/GameObject.hpp"
 #include "Util/Animation.hpp"
+#include <Util/SFX.hpp>
 #include "Object/AnimatedItems.hpp"
 #include "Object/Subweapon/IUseSubweapon.hpp"
 #include "Object/ImageItems.hpp"
@@ -43,6 +44,7 @@ public:
     const bool& GetUseWeaponFlag() const;
     bool GetHurtFlag();
     bool GetEndSceneFlag() const;
+    bool GetDeadFlag() const;
     const glm::vec2& GetPosition() const;
     const glm::vec2& GetLastPosition() const;
     const glm::vec2& GetSize() const;
@@ -133,6 +135,9 @@ private:
     bool is_dead = false;
     bool ifNeedSlip = false; //if char need slip when collide with enemy
     bool is_hurtOnStair = false;
+
+    // sound effect
+    std::shared_ptr<Util::SFX> m_soundEft;
 };
 
 #endif

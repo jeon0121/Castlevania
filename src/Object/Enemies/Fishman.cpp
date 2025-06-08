@@ -19,6 +19,7 @@ Fishman::Fishman(glm::vec2 position, std::string direction, App* app, std::vecto
         Flip();
     SetPlaying();
     SetLooping(true);
+    soundEft = std::make_shared<Util::SFX>(GA_RESOURCE_DIR "/Sound Effects/14.wav");
     countHurt = 2;
 }
 
@@ -75,6 +76,9 @@ bool Fishman::CheckReset() {
 void Fishman::Spawn(std::shared_ptr<Character> &character) {
     glm::vec2 pos = GetPosition();
     if (GetPosition().y == -250) {
+        soundEft->LoadMedia(GA_RESOURCE_DIR "/Sound Effects/14.wav");
+        soundEft->Play();
+        soundEft->SetVolume(30);
         if (character->GetPosition().x > pos.x)
             SetDirection("right");
         else
@@ -89,6 +93,9 @@ void Fishman::Bubble(glm::vec2 fishpos) {
             bubbles[i]->SetPosition({fishpos.x, -220});
             bubbles[i]->SetVisible(true);
         }
+        soundEft->LoadMedia(GA_RESOURCE_DIR "/Sound Effects/15.wav");
+        soundEft->Play();
+        soundEft->SetVolume(30);
     }
     bool check = false;
     for (int i = 0; i < 3; i++) {
@@ -143,9 +150,17 @@ void Fishman::CollideBlock(std::vector<std::shared_ptr<Block>> &blocks) {
         float blockBottom = blockPos.y - blockSize.y * 0.5f;
         float blockLeft = blockPos.x - blockSize.x * 0.5f;
         float blockRight = blockPos.x + blockSize.x * 0.5f;
+
+        float overlapTop = fishTop - blockBottom;
+        float overlapBottom = blockTop - fishBottom;
+        float overlapLeft = fishRight - blockLeft;
+        float overlapRight = blockRight - fishLeft;
+
         if ((fishRight > blockLeft && fishLeft < blockRight) &&  //overlap x
             (fishTop > blockBottom && fishBottom < blockTop)) {  //overlap y
-            SetPosition({pos.x, blockTop + size.y * 0.5f});
+            float minOverlap = std::min({abs(overlapTop), abs(overlapBottom), abs(overlapLeft), abs(overlapRight)});
+            if (minOverlap == overlapBottom)
+                SetPosition({pos.x, blockTop + size.y * 0.5f});
             check = true;
             isOnBlock = true;
         }else if (!check)

@@ -18,6 +18,7 @@ namespace Subweapon {
     protected:
         bool if_destroyed = false;
         bool if_collide = false;
+        std::shared_ptr<Util::SFX> usingSound;// sound when using subWeapon
     };
 }
 #endif

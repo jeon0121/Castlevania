@@ -88,9 +88,13 @@ void Stage0::Update(App* app){
 void Stage0::End(App* app){
     glm::vec2 pos = m_Character->GetPosition();
     m_Character-> SetPosition(glm::vec2(pos.x+1.5f, pos.y));
-
+    if (!is_endSound && m_Character->GetPosition().x >= 280) {
+        std::shared_ptr<Util::SFX> endSound = std::make_shared<Util::SFX>(GA_RESOURCE_DIR "/Sound Effects/25.wav");
+        endSound->SetVolume(60);
+        endSound->Play();
+        is_endSound = true;
+    }
     if (m_Character->GetPosition().x >= 500) {
-        app->m_Menu->SetMenuVisibility(false);
         app->RemoveAllChildren(m_All);
         app->m_AppState = App::AppState::START;
         app->m_GameState = App::GameState::STAGE1;

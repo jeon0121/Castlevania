@@ -2,7 +2,7 @@
 #include "State/Scene.hpp"
 
 namespace LootItem {
-   Rosary::Rosary(glm::vec2 position) : Loot(position, {GA_RESOURCE_DIR "/items/weapon/rosary.png"}, 0, LootType::Rosary) {}
+   Rosary::Rosary(glm::vec2 position) : Loot(position, {GA_RESOURCE_DIR "/Sound Effects/35.wav"}, {GA_RESOURCE_DIR "/items/weapon/rosary.png"}, 0, LootType::Rosary) {}
 
    void Rosary::Result(App* app, std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) {
       (void) character;

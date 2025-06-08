@@ -24,6 +24,7 @@ public:
     std::shared_ptr<ImageItems> background;
     std::vector<std::vector<std::shared_ptr<ImageItems>>> numberImage;
     std::vector<std::shared_ptr<ImageItems>> textImage;
+    std::vector<std::shared_ptr<ImageItems>> GGImage;
     std::vector<std::vector<std::shared_ptr<ImageItems>>> health;
 
     std::string formatTime(int time);
@@ -32,7 +33,7 @@ public:
 
     std::string formatScore(int score);
 
-    void addText(std::string text, const glm::vec2& position);
+    void addText(std::string text, const glm::vec2& position, int type=0);
 
     void addNumber(std::string text, const glm::vec2& position);
 

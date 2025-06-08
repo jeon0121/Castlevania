@@ -20,6 +20,22 @@ void Stage1::Start(App* app){
     m_Blink->SetVisible(false);
     m_All.push_back(m_Blink);
 
+    // block
+    std::vector<BlockData> blocks = {
+        { { 0,    -352 }, { 100,  0.7  } },
+        { { -545, -50  }, { 0.4,  7    } },
+        { { 2395, -122 }, { 1.61, 0.68 } },
+        { { 2888, -5   }, { 5.32, 0.68 } },
+        { { 3478, -122 }, { 3.22, 0.68 } },
+        { { 5484, -5   }, { 4.82, 0.68 } },
+        { { 5764, -50  }, { 0.4,  7    } }
+    };
+    for (auto& b : blocks) {
+        auto block = std::make_shared<Block>(b.pos, b.scale);
+        m_Blocks.push_back(block);
+        // m_All.push_back(block);
+    }
+
     //character
     if (!app->m_Character) {
         CharacterValue charactervalue;
@@ -27,9 +43,10 @@ void Stage1::Start(App* app){
         charactervalue.direction = "right";
         charactervalue.beIndex = 2;
         app->m_Character = std::make_shared<Character>(charactervalue);
-    }
-    else
+    }else {
         app->m_Character->SetPosition({-315, -265.35});
+        app->m_Character->CollideBoundary(m_Blocks);
+    }
     this->m_Character = app->m_Character;
     m_All.push_back(m_Character->m_Behavior);
 
@@ -94,22 +111,6 @@ void Stage1::Start(App* app){
         m_All.push_back(torch);
     }
 
-    // block
-    std::vector<BlockData> blocks = {
-        { { 0,    -352 }, { 100,  0.7  } },
-        { { -545, -50  }, { 0.4,  7    } },
-        { { 2395, -122 }, { 1.61, 0.68 } },
-        { { 2888, -5   }, { 5.32, 0.68 } },
-        { { 3478, -122 }, { 3.22, 0.68 } },
-        { { 5484, -5   }, { 4.82, 0.68 } },
-        { { 5764, -50  }, { 0.4,  7    } }
-    };
-    for (auto& b : blocks) {
-        auto block = std::make_shared<Block>(b.pos, b.scale);
-        m_Blocks.push_back(block);
-        // m_All.push_back(block);
-    }
-
     // stair
     std::vector<StairData> stairs = {
         { { 2035, -297 }, { 2296, -69 } },
@@ -139,6 +140,7 @@ void Stage1::Start(App* app){
     }
     
     app->AddAllChildren(m_All);
+    m_EnemiesManager->AddAllChild(app);
     m_stateState = StateState::UPDATE;
 }
 
@@ -150,6 +152,10 @@ void Stage1::Update(App* app){
     m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app);
     UpdateSubWeapon(app);
     UpdateScroll(mapWidth);
+    if (m_Character->GetDeadFlag()) {
+        app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/deadBGM.wav");
+        app->BGM->Play(1);
+    }
     if (m_Character->GetEndSceneFlag() || (m_Character->GetPosition().x >= 422 && m_Character->GetPosition().y > 80.75 && m_Character->GetPosition().y < 80.77)) {
         m_Character->m_Behavior->SetLooping(false);
         m_stateState = StateState::END;
@@ -163,60 +169,21 @@ void Stage1::End(App* app){
         m_EnemiesManager->RemoveAllChild(app);
         app->m_Menu->modifyWeapon(WeaponType::None);
         app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(5), 3);
+        if (app->m_Menu->m_value.playerLife == 0)
+            app->m_GameState = App::GameState::GG;
+        else {
+            app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(--(app->m_Menu->m_value.playerLife)), 4);
+            app->m_GameState = App::GameState::STAGE1;
+        }
         app->m_Character = nullptr;
         app->RemoveAllChildren(m_All);
         app->m_AppState = App::AppState::START;
-        app->m_GameState = App::GameState::STAGE1;
     }
     // end scene animation
     else {
-        if (m_Background->m_Transform.scale.x > 1.0f) {
-            m_Character->ChangeBehavior(2);
-            m_Background->SetDrawable(std::make_unique<Util::Image>(GA_RESOURCE_DIR"/background/stage-1/end.png"));
-            m_Background->m_Transform.scale = glm::vec2(0.528, 0.465);
-            m_Background->SetPosition({522.5, -36.2});
-            m_Background->SetZIndex(8);
-        }else if (m_Background->GetPosition().x > 0) {
-            m_Background->SetPosition({m_Background->GetPosition().x - 4.0f, m_Background->GetPosition().y});
-            m_Character->SetPosition({m_Character->GetPosition().x - 4.0f, m_Character->GetPosition().y });
-        }else if (m_Background->GetPosition().x < 0 && !door_2->IsLooping()) {
-            if (!door_1->IsPlaying() && !m_Character->m_Behavior->IsLooping()) {
-                door_1->SetVisible(true);
-                door_1->SetPlaying();
-            }
-            if (door_1->IfAnimationEnds() && !m_Character->m_Behavior->IsLooping()) {
-                m_Character->ChangeBehavior(0);
-                m_Character->m_Behavior->SetPlaying();
-                m_Character->m_Behavior->SetLooping(true);
-            }
-            if (m_Character->GetPosition().x < 200 && m_Character->m_Behavior->IsLooping())
-                m_Character->SetPosition({m_Character->GetPosition().x + 4.0f, m_Character->GetPosition().y });
-            else if (m_Character->GetPosition().x > 200) {
-                m_Character->ChangeBehavior(2);
-                door_1->SetVisible(false);
-                door_1->SetPaused();
-                if (!door_2->IsPlaying()) {
-                    door_2->SetVisible(true);
-                    door_2->SetPlaying();
-                }
-                if (door_2->IfAnimationEnds()) {
-                    door_2->SetLooping(true);
-                }
-            }
-        } else {
-            if (door_1->IsPlaying() && m_Background->GetPosition().x > -516) {
-                m_Background->SetPosition({m_Background->GetPosition().x - 4.0f, m_Background->GetPosition().y});
-                m_Character->SetPosition({m_Character->GetPosition().x - 4.0f, m_Character->GetPosition().y });
-            } else if (!door_1->IsPlaying() && !door_2->IsPlaying()) {
-                door_2->SetVisible(false);
-                door_1->SetPlaying();
-            } else if (m_Background->GetPosition().x < -516) {
-                app->m_Menu->SetMenuVisibility(false);
-                m_EnemiesManager->RemoveAllChild(app);
-                app->RemoveAllChildren(m_All);
-                app->m_AppState = App::AppState::START;
-                app->m_GameState = App::GameState::STAGE2A;
-            }
-        }
+        std::shared_ptr<Util::SFX> doorSound = std::make_shared<Util::SFX>(GA_RESOURCE_DIR "/Sound Effects/29.wav");
+        doorSound->SetVolume(50);
+        EndAnimation(app, GA_RESOURCE_DIR"/background/stage-1/end.png", glm::vec2(0.528, 0.465), door_1, door_2, doorSound);
+        app->m_GameState = App::GameState::STAGE2A;
     }
 }

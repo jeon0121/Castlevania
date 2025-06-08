@@ -15,6 +15,8 @@ Torch::Torch(glm::vec2 position, glm::vec2 scale, LootType itemType, int type)
         torchDeath.emplace_back(GA_RESOURCE_DIR"/items/fire/torch/torchDeath-" + std::to_string(i + 1) + ".png");
     }
     UpdatePosition();
+    destroySound = std::make_shared<Util::SFX>(GA_RESOURCE_DIR "/Sound Effects/20.wav");
+    destroySound->SetVolume(50);
 }
 
 void Torch::UpdatePosition() {
@@ -50,6 +52,7 @@ bool Torch::CollideDetection(std::shared_ptr<Character> &character) {
             if (overlapX && overlapY) {
                 SetPaused();
                 is_destroyed = true;
+                destroySound->Play();
             }
         }
     }
@@ -66,7 +69,10 @@ bool Torch::CollideDetection(std::shared_ptr<Character> &character) {
         if (overlapX && overlapY && character->GetSubWeaponType() != WeaponType::Stopwatch) {
             SetPaused();
             is_destroyed = true;
-            character->m_SubWeapon->SetDestroyed(true);
+            if (character->GetSubWeaponType() != WeaponType::HolyWater) {
+                destroySound->Play();
+                character->m_SubWeapon->SetDestroyed(true);
+            }
         }
     }
     return is_destroyed;

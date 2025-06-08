@@ -2,7 +2,7 @@
 #include "Utility/Time.hpp"
 
 namespace Subweapon {
-    Stopwatch::Stopwatch(glm::vec2 position, std::string type) : Loot(position, {GA_RESOURCE_DIR "/items/weapon/stopwatch.png"}, 0, LootType::Stopwatch), m_type(type) {}
+    Stopwatch::Stopwatch(glm::vec2 position, std::string type) : Loot(position, {GA_RESOURCE_DIR "/Sound Effects/24.wav"}, {GA_RESOURCE_DIR "/items/weapon/stopwatch.png"}, 0, LootType::Stopwatch), m_type(type) {}
 
     void Stopwatch::Result(App* app, std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) {
         menu->modifyWeapon(WeaponType::Stopwatch);

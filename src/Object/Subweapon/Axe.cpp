@@ -1,7 +1,7 @@
 #include "Object/Subweapon/Axe.hpp"
 
 namespace Subweapon {
-    Axe::Axe(glm::vec2 position, std::string type) : Loot(position, {GA_RESOURCE_DIR "/items/weapon/axe.png"}, 0, LootType::Axe), m_type(type) {
+    Axe::Axe(glm::vec2 position, std::string type) : Loot(position, {GA_RESOURCE_DIR "/Sound Effects/24.wav"}, {GA_RESOURCE_DIR "/items/weapon/axe.png"}, 0, LootType::Axe), m_type(type) {
         if (m_type == "subweapon") {
             y_vel = 15.0f;
         }

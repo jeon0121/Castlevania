@@ -127,6 +127,8 @@ void Stage3::Update(App* app){
         BlockData bData = { { -547, -50 }, { 0.4, 7 } };
         auto block = std::make_shared<Block>(bData.pos, bData.scale);
         m_Blocks.push_back(block);
+        app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/bossBGM.wav");
+        app->BGM->Play();
     }
     // boss
     else if (reachBoss) {

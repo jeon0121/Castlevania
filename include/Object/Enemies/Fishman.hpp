@@ -26,6 +26,7 @@ private:
     std::vector<float> bbl_vel = {0, 12.0f, 0};
     Uint64 startWalkTime = 0;
     std::string state = "Spawn";
+    std::shared_ptr<Util::SFX> soundEft;
 };
 
 #endif

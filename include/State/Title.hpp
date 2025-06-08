@@ -17,6 +17,7 @@ private:
     std::shared_ptr<AnimatedItems> m_BatScene_1;
     std::shared_ptr<AnimatedItems> m_BatScene_2;
     std::shared_ptr<ImageItems> m_Boat;
+    std::shared_ptr<Util::BGM> titleBGM;
 };
 #endif
 

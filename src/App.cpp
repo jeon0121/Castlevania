@@ -5,24 +5,19 @@
 #include "Util/Keycode.hpp"
 #include "Util/Logger.hpp"
 #include "State.hpp"
+#include "State/GG.hpp"
 
 void App::Start() {
     LOG_TRACE("Start");
     if (!m_Menu) {
-        MenuValue menuvalue;
-        m_Menu = std::make_shared<Menu>(menuvalue);
-        m_Menu->SetMenuVisibility(false);
-        m_Root.AddChild(m_Menu);
-        m_Root.AddChild(m_Menu->background);
-        for (auto &&num : m_Menu->numberImage){
-            for (auto &&letter : num) m_Root.AddChild(letter);
-        }
-        for (auto &&txt : m_Menu->textImage){
-            m_Root.AddChild(txt);
-        }
-        for (auto &&healthbar : m_Menu->health){
-            for (auto &&h : healthbar) m_Root.AddChild(h);
-        }
+        AddMenu();
+        BGM = std::make_shared<Util::BGM>(GA_RESOURCE_DIR "/BGM/stageBGM.wav");
+        BGM->SetVolume(50);
+    }
+    if (m_GameState == GameState::STAGE2A && m_Character && m_Character->GetEndSceneFlag()) {
+        m_Character = nullptr;
+        m_SceneA = nullptr;
+        m_SceneB = nullptr;
     }
     switch(m_GameState){
         case GameState::TITLE:
@@ -47,6 +42,13 @@ void App::Start() {
         case GameState::STAGE3:
             m_Scene = std::make_unique<Stage3>();
             break;
+        case GameState::GG:
+            m_Scene = std::make_unique<GG>();
+            break;
+    }
+    if(!m_Character && m_GameState != GameState::TITLE) {
+        BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/stageBGM.wav");
+        BGM->Play();
     }
     m_Scene->Start(this);
     m_Scene->m_stateState = Scene::StateState::UPDATE;
@@ -84,4 +86,36 @@ void App::RemoveAllChildren(std::vector<std::shared_ptr<Util::GameObject>> m_All
     for (auto i : m_All) {
         m_Root.RemoveChild(i);
     }
+}
+
+void App::AddMenu() {
+    MenuValue menuvalue;
+    m_Menu = std::make_shared<Menu>(menuvalue);
+    m_Menu->SetMenuVisibility(false);
+    m_Root.AddChild(m_Menu);
+    m_Root.AddChild(m_Menu->background);
+    for (auto &&num : m_Menu->numberImage){
+        for (auto &&letter : num) m_Root.AddChild(letter);
+    }
+    for (auto &&txt : m_Menu->textImage){
+        m_Root.AddChild(txt);
+    }
+    for (auto &&healthbar : m_Menu->health){
+        for (auto &&h : healthbar) m_Root.AddChild(h);
+    }
+}
+
+void App::RemoveMenu() {
+    m_Root.RemoveChild(m_Menu);
+    m_Root.RemoveChild(m_Menu->background);
+    for (auto &&num : m_Menu->numberImage){
+        for (auto &&letter : num) m_Root.RemoveChild(letter);
+    }
+    for (auto &&txt : m_Menu->textImage){
+        m_Root.RemoveChild(txt);
+    }
+    for (auto &&healthbar : m_Menu->health){
+        for (auto &&h : healthbar) m_Root.RemoveChild(h);
+    }
+    m_Menu = nullptr;
 }

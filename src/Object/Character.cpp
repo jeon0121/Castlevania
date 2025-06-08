@@ -43,7 +43,8 @@ Character::Character(const CharacterValue& value) :
         std::vector<std::vector<std::string>> wVector = {ascending, descending, ducking, standing};
         whipVector.push_back(wVector);
     }
-    
+    m_soundEft = std::make_shared<Util::SFX>(GA_RESOURCE_DIR "/Sound Effects/10.wav");
+    m_soundEft->SetVolume(50);
     m_Behavior = std::make_shared<AnimatedItems>(behaviorVector[value.beIndex], 100, glm::vec2(value.scale, value.scale));
     SetPosition(value.position);
     m_Behavior->SetZIndex(10);
@@ -73,6 +74,8 @@ void Character::SetUseWeaponFlag(bool ifuse) {
 }
 
 void Character::SetHurtFlag(bool ifhurt, bool ifNeedSlip) {
+    m_soundEft->LoadMedia(GA_RESOURCE_DIR "/Sound Effects/37.wav");
+    m_soundEft->Play();
     is_hurt = ifhurt;
     this->ifNeedSlip = ifNeedSlip;
 }
@@ -93,6 +96,10 @@ bool Character::GetEndSceneFlag() const {
     if (startDeadTime && Time::GetRunTimeMs(startDeadTime) > 2500.0f)
         return true;
     return false;
+}
+
+bool Character::GetDeadFlag() const {
+    return (is_dead && !startDeadTime);
 }
 
 const glm::vec2& Character::GetPosition() const {
@@ -131,6 +138,8 @@ void Character::Hurt() {
             Jump();
         startHurtTime = SDL_GetPerformanceCounter();
     } else {
+        if (is_onStair)
+            is_hurtOnStair = true;
         if (Time::GetRunTimeMs(startHurtTime) > 3600.0f) {
             startHurtTime = 0;
             m_Behavior->SetVisible(true);
@@ -370,12 +379,12 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const 
         }
         else if (!is_hurt) {
             // duck subweapon
-            if (((Util::Input::IsKeyPressed(UP) && Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyDown(A)) || (is_subweapon && is_duck)) && !is_jump && m_subweapon != WeaponType::None) {
+            if (((Util::Input::IsKeyPressed(UP) && Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyDown(A)) || (is_subweapon && is_duck)) && !is_jump && m_subweapon != WeaponType::None && m_ammo >= (m_subweapon == WeaponType::Stopwatch ? 5 : 1)) {
                 Duck("");
                 SubWeapon();
             }
             // subweapon
-            else if (((Util::Input::IsKeyPressed(UP) && Util::Input::IsKeyPressed(A) && !is_jump) || is_subweapon) && m_subweapon != WeaponType::None && !is_whip && !is_useweapon) {
+            else if (((Util::Input::IsKeyPressed(UP) && Util::Input::IsKeyPressed(A) && !is_jump) || is_subweapon) && m_subweapon != WeaponType::None && !is_whip && !is_useweapon && m_ammo >= (m_subweapon == WeaponType::Stopwatch ? 5 : 1)) {
                 SubWeapon();
             }
             // duck whip
@@ -462,8 +471,12 @@ void Character::HandleFallDuck(const std::string& direction) {
             startDuckTime = 0;
         }
     }else {
-        if (!startDuckTime)
+        if (!startDuckTime) {
+            m_soundEft->LoadMedia(GA_RESOURCE_DIR "/Sound Effects/13.wav");
+            m_soundEft->SetVolume(40);
+            m_soundEft->Play();
             startDuckTime = SDL_GetPerformanceCounter();
+        }
         if (prevLandPosition - landPosition > 150.0f)
             Duck(m_direction);
         const float limit = (prevLandPosition - landPosition > 150.0f) ? 450.0f : 150.0f;
@@ -617,6 +630,10 @@ void Character::SubWeapon() {
 
 void Character::Whip(){
     m_size.x = 64;
+    if (!is_whip) {
+        m_soundEft->LoadMedia(GA_RESOURCE_DIR "/Sound Effects/10.wav");
+        m_soundEft->Play();
+    }
     is_whip = true;
     if (is_jump)
         Fall();

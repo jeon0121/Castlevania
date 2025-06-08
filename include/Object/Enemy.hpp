@@ -7,6 +7,7 @@
 #include "State/Menu.hpp"
 #include "Object/Loot.hpp"
 #include "Object/ObjectData.hpp"
+#include <Util/SFX.hpp>
 
 class Enemy : public AnimatedItems {
     public:
@@ -59,6 +60,11 @@ class Enemy : public AnimatedItems {
         bool is_dead = false;
         bool is_hidden = false;
         bool hasEnteredWindow = false;
+        int countHurt = 0;
+        int score = 0;
+        LootType lootType = LootType::None;
+        std::shared_ptr<Util::SFX> deadSound;
+    private:
         float enemyTop;
         float enemyBottom;
         float enemyLeft;

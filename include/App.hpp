@@ -1,6 +1,7 @@
 #ifndef APP_HPP
 #define APP_HPP
 #include "Util/Renderer.hpp"
+#include "Util/BGM.hpp"
 #include "pch.hpp" // IWYU pragma: export
 #include "State/Menu.hpp"
 
@@ -21,6 +22,7 @@ public:
         STAGE2A,
         STAGE2B,
         STAGE3,
+        GG
     };
 
     AppState GetAppState() const { return m_AppState; }
@@ -37,6 +39,10 @@ public:
 
     void RemoveAllChildren(std::vector<std::shared_ptr<Util::GameObject>> m_All);
 
+    void AddMenu();
+
+    void RemoveMenu();
+
     Util::Renderer m_Root;
     AppState m_AppState = AppState::START;
     GameState m_GameState = GameState::STAGE3;
@@ -46,6 +52,7 @@ public:
     std::shared_ptr<Menu> m_Menu;
     std::shared_ptr<Character> m_Character;
     std::vector<int> stairNum = {0, 0};
+    std::shared_ptr<Util::BGM> BGM;
 };
 
 #endif

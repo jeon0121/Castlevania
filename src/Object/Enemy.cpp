@@ -9,6 +9,8 @@ Enemy::Enemy(glm::vec2 position, std::string direction, std::vector<std::string>
     for (int i = 0; i < 4; ++i) {
         deathImages.emplace_back(GA_RESOURCE_DIR"/items/fire/torch/torchDeath-" + std::to_string(i + 1) + ".png");
     }
+    deadSound = std::make_shared<Util::SFX>(GA_RESOURCE_DIR "/Sound Effects/20.wav");
+    deadSound->SetVolume(50);
 }
 
 void Enemy::SetDirection(std::string direction) {
@@ -87,6 +89,7 @@ bool Enemy::CollideDetection(std::shared_ptr<Character> &character, std::shared_
             if (overlapX && overlapY) {
                 SetPaused();
                 is_dead = true;
+                deadSound->Play();
                 menu->modifyNumber(menu->formatScore(menu->m_value.score + score), 0, (menu->m_value.score + score));
             }
         }
@@ -102,6 +105,8 @@ bool Enemy::CollideDetection(std::shared_ptr<Character> &character, std::shared_
         if (overlapX && overlapY && character->GetSubWeaponType() != WeaponType::Stopwatch) {
             SetPaused();
             is_dead = true;
+            if (character->GetSubWeaponType() != WeaponType::HolyWater)
+                deadSound->Play();
             character->m_SubWeapon->SetIsCollide(true);
         }
     } else {
