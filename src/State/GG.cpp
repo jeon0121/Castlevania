@@ -46,12 +46,12 @@ void GG::End(App* app){
     for (auto&& txt : app->m_Menu->GGImage)
         app->m_Root.RemoveChild(txt);
     choiceSound->SetVolume(0);
-    app->m_Menu = nullptr;
     app->m_SceneA = nullptr;
     app->m_SceneB = nullptr;
     app->m_Character = nullptr;
     app->stairNum = {0, 0};
     app->RemoveAllChildren(m_All);
+    app->RemoveMenu();
     app->m_AppState = App::AppState::START;
     if (choice == 1)
         app->m_GameState = App::GameState::STAGE0;

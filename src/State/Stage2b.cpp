@@ -146,9 +146,14 @@ void Stage2b::End(App *app) {
         m_EnemiesManager->RemoveAllChild(app);
         app->m_Menu->modifyWeapon(WeaponType::None);
         app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(5), 3);
+        if (app->m_Menu->m_value.playerLife == 0)
+            app->m_GameState = App::GameState::GG;
+        else {
+            app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(--(app->m_Menu->m_value.playerLife)), 4);
+            app->m_GameState = App::GameState::STAGE2A;
+        }
         app->RemoveAllChildren(m_All);
         app->m_Root.RemoveChild(m_Character->m_Behavior);
         app->m_AppState = App::AppState::START;
-        app->m_GameState = App::GameState::STAGE2A;
     }
 }

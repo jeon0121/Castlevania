@@ -95,7 +95,6 @@ void Stage0::End(App* app){
         is_endSound = true;
     }
     if (m_Character->GetPosition().x >= 500) {
-        app->m_Menu->SetMenuVisibility(false);
         app->RemoveAllChildren(m_All);
         app->m_AppState = App::AppState::START;
         app->m_GameState = App::GameState::STAGE1;

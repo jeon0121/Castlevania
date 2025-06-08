@@ -20,6 +20,22 @@ void Stage1::Start(App* app){
     m_Blink->SetVisible(false);
     m_All.push_back(m_Blink);
 
+    // block
+    std::vector<BlockData> blocks = {
+        { { 0,    -352 }, { 100,  0.7  } },
+        { { -545, -50  }, { 0.4,  7    } },
+        { { 2395, -122 }, { 1.61, 0.68 } },
+        { { 2888, -5   }, { 5.32, 0.68 } },
+        { { 3478, -122 }, { 3.22, 0.68 } },
+        { { 5484, -5   }, { 4.82, 0.68 } },
+        { { 5764, -50  }, { 0.4,  7    } }
+    };
+    for (auto& b : blocks) {
+        auto block = std::make_shared<Block>(b.pos, b.scale);
+        m_Blocks.push_back(block);
+        // m_All.push_back(block);
+    }
+
     //character
     if (!app->m_Character) {
         CharacterValue charactervalue;
@@ -27,9 +43,10 @@ void Stage1::Start(App* app){
         charactervalue.direction = "right";
         charactervalue.beIndex = 2;
         app->m_Character = std::make_shared<Character>(charactervalue);
-    }
-    else
+    }else {
         app->m_Character->SetPosition({-315, -265.35});
+        app->m_Character->CollideBoundary(m_Blocks);
+    }
     this->m_Character = app->m_Character;
     m_All.push_back(m_Character->m_Behavior);
 
@@ -94,22 +111,6 @@ void Stage1::Start(App* app){
         m_All.push_back(torch);
     }
 
-    // block
-    std::vector<BlockData> blocks = {
-        { { 0,    -352 }, { 100,  0.7  } },
-        { { -545, -50  }, { 0.4,  7    } },
-        { { 2395, -122 }, { 1.61, 0.68 } },
-        { { 2888, -5   }, { 5.32, 0.68 } },
-        { { 3478, -122 }, { 3.22, 0.68 } },
-        { { 5484, -5   }, { 4.82, 0.68 } },
-        { { 5764, -50  }, { 0.4,  7    } }
-    };
-    for (auto& b : blocks) {
-        auto block = std::make_shared<Block>(b.pos, b.scale);
-        m_Blocks.push_back(block);
-        // m_All.push_back(block);
-    }
-
     // stair
     std::vector<StairData> stairs = {
         { { 2035, -297 }, { 2296, -69 } },
@@ -168,10 +169,15 @@ void Stage1::End(App* app){
         m_EnemiesManager->RemoveAllChild(app);
         app->m_Menu->modifyWeapon(WeaponType::None);
         app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(5), 3);
+        if (app->m_Menu->m_value.playerLife == 0)
+            app->m_GameState = App::GameState::GG;
+        else {
+            app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(--(app->m_Menu->m_value.playerLife)), 4);
+            app->m_GameState = App::GameState::STAGE1;
+        }
         app->m_Character = nullptr;
         app->RemoveAllChildren(m_All);
         app->m_AppState = App::AppState::START;
-        app->m_GameState = App::GameState::STAGE1;
     }
     // end scene animation
     else {

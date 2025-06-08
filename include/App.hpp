@@ -39,9 +39,13 @@ public:
 
     void RemoveAllChildren(std::vector<std::shared_ptr<Util::GameObject>> m_All);
 
+    void AddMenu();
+
+    void RemoveMenu();
+
     Util::Renderer m_Root;
     AppState m_AppState = AppState::START;
-    GameState m_GameState = GameState::GG;
+    GameState m_GameState = GameState::STAGE2A;
     std::shared_ptr<Scene> m_Scene;
     std::shared_ptr<Scene> m_SceneA;
     std::shared_ptr<Scene> m_SceneB;

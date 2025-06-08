@@ -138,6 +138,8 @@ void Character::Hurt() {
             Jump();
         startHurtTime = SDL_GetPerformanceCounter();
     } else {
+        if (is_onStair)
+            is_hurtOnStair = true;
         if (Time::GetRunTimeMs(startHurtTime) > 3600.0f) {
             startHurtTime = 0;
             m_Behavior->SetVisible(true);

@@ -126,6 +126,8 @@ void Stage3::Update(App* app){
     }
     else if (m_Character->GetPosition().x > 20 && !reachBoss) {
         reachBoss = true;
+        app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/bossBGM.wav");
+        app->BGM->Play();
     }
     // boss
     else if (reachBoss) {
