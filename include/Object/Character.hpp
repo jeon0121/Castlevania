@@ -39,10 +39,12 @@ public:
     void SetSubWeaponType(WeaponType type);
     void SetUseWeaponFlag(bool ifuse);
     void SetHurtFlag(bool ifhurt, bool ifNeedSlip);
+    void SetInvisibleFlag(bool ifinvisible);
     void SetOffStairs();
     const WeaponType& GetSubWeaponType() const;
     const bool& GetUseWeaponFlag() const;
     bool GetHurtFlag();
+    bool GetInvisibleFlag();
     bool GetEndSceneFlag() const;
     bool GetDeadFlag() const;
     const glm::vec2& GetPosition() const;
@@ -78,6 +80,7 @@ public:
     void Idle();
     void Flip();
     void Hurt();
+    void Invisible();
     void Dead();
 
     void CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blocks);
@@ -114,6 +117,7 @@ private:
     Uint64 startHurtTime = 0;
     Uint64 startDuckTime = 0;
     Uint64 startDeadTime = 0;
+    Uint64 startInvisibleTime = 0;
 
     int currentBeIndex = 2;
     int currentFrame = -1;
@@ -132,6 +136,7 @@ private:
     bool is_levelUpWhip = false;
     bool change_land = false;
     bool is_hurt = false;
+    bool is_invisible = false;
     bool is_dead = false;
     bool ifNeedSlip = false; //if char need slip when collide with enemy
     bool is_hurtOnStair = false;

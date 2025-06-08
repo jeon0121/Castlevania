@@ -110,7 +110,7 @@ bool Enemy::CollideDetection(std::shared_ptr<Character> &character, std::shared_
             character->m_SubWeapon->SetIsCollide(true);
         }
     } else {
-        if (!character->GetLevelUpWhipFlag() && !character->GetHurtFlag() && !is_dead && !is_hidden) {
+        if (!character->GetLevelUpWhipFlag() && !character->GetHurtFlag() && !character->GetInvisibleFlag() && !is_dead && !is_hidden) {
             bool overlapX = (charLeft > enemyLeft && charLeft < enemyRight)   ||
                             (charRight > enemyLeft && charRight < enemyRight) ||
                             (charLeft < enemyLeft && charRight > enemyRight);

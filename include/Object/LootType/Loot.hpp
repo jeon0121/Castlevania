@@ -6,7 +6,7 @@
 #include "Object/LootType/Item/Crystal.hpp"
 #include "Object/LootType/Item/Heart.hpp"
 #include "Object/LootType/Item/Rosary.hpp"
-// #include "Object/LootType/Item/Pot.hpp"
+#include "Object/LootType/Item/Pot.hpp"
 #include "Object/LootType/Item/Badge.hpp"
 #include "Object/Subweapon/Axe.hpp"
 #include "Object/Subweapon/HolyWater.hpp"

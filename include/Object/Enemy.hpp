@@ -62,16 +62,12 @@ class Enemy : public AnimatedItems {
         bool hasEnteredWindow = false;
         int countHurt = 0;
         int score = 0;
-        LootType lootType = LootType::None;
-        std::shared_ptr<Util::SFX> deadSound;
-    private:
         float enemyTop;
         float enemyBottom;
         float enemyLeft;
         float enemyRight;
-        int countHurt = 0;
-        int score = 0;
         LootType lootType = LootType::None;
+        std::shared_ptr<Util::SFX> deadSound;
 };
 
 

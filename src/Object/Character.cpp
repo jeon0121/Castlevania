@@ -80,6 +80,10 @@ void Character::SetHurtFlag(bool ifhurt, bool ifNeedSlip) {
     this->ifNeedSlip = ifNeedSlip;
 }
 
+void Character::SetInvisibleFlag(bool ifinvisible) {
+    is_invisible = ifinvisible;
+}
+
 const WeaponType& Character::GetSubWeaponType() const {
     return m_subweapon;
 }
@@ -90,6 +94,10 @@ const bool& Character::GetUseWeaponFlag() const {
 
 bool Character::GetHurtFlag() {
     return (startHurtTime > 0);
+}
+
+bool Character::GetInvisibleFlag() {
+    return is_invisible;
 }
 
 bool Character::GetEndSceneFlag() const {
@@ -156,6 +164,22 @@ void Character::Hurt() {
         startDuckTime = SDL_GetPerformanceCounter();
     if (startDuckTime) {
         HandleFallDuck(m_direction);
+    }
+}
+
+void Character::Invisible() {
+    if (startInvisibleTime == 0) 
+        startInvisibleTime = SDL_GetPerformanceCounter();
+    else {
+        if (Time::GetRunTimeMs(startInvisibleTime) > 6000.0f) {
+            startInvisibleTime = 0;
+            is_invisible = false;
+            m_soundEft->LoadMedia(GA_RESOURCE_DIR "/Sound Effects/28.wav");
+            m_soundEft->Play();
+        } else {
+            int timeCount = static_cast<int>(Time::GetRunTimeMs(startInvisibleTime)) / 10;
+            m_Behavior->SetVisible(timeCount % 3 != 0);
+        }
     }
 }
 
@@ -337,7 +361,9 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const 
     if (is_dead)
         Dead();
     else if (!is_levelUpWhip) {
-        if (is_hurt || startHurtTime != 0)
+        if (is_invisible || startInvisibleTime != 0)
+            Invisible();
+        else if (is_hurt || startHurtTime != 0)
             Hurt();
         // Position::PrintCursorCoordinate();
 
