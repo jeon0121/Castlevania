@@ -188,3 +188,22 @@ void Menu::SetMenuVisibility(const bool visible) {
     }
     background->SetVisible(visible);
 }
+
+void Menu::TimeCount(bool endScene) {
+    if (!timeoutSound)
+        timeoutSound = std::make_shared<Util::SFX> (GA_RESOURCE_DIR "/Sound Effects/33.wav");
+    auto currentTime = Util::Time::GetElapsedTimeMs();
+    if (timer == 0)
+        timer = currentTime;
+    else if (currentTime - timer > 1000) {
+        timer = 0;
+        if (m_value.time > 0)
+            modifyNumber(formatTime(--(m_value.time)), 1);
+        if (m_value.time <= 30) {
+            timeoutSound->SetVolume(50);
+            timeoutSound->Play();
+        }
+    }
+    if (endScene)
+        timeoutSound->SetVolume(0);
+}
