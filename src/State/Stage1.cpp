@@ -147,14 +147,15 @@ void Stage1::Start(App* app){
 void Stage1::Update(App* app){
     if (blinkStartTime != 0)
         Blink();
-    m_Character->Keys(m_Blocks, m_Stairs);
+    m_Character->Keys(m_Blocks, m_Stairs, app->m_Menu->m_value.time);
     UpdateTorch(app);
     m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app);
     UpdateSubWeapon(app);
     UpdateScroll(mapWidth);
-    if (m_Character->GetDeadFlag()) {
+    if (m_Character->GetStartDeadFlag() || (app->m_Menu->m_value.time == 0 && !isTimeOut)) {
         app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/deadBGM.wav");
         app->BGM->Play(1);
+        isTimeOut = true;
     }
     if (m_Character->GetEndSceneFlag() || (m_Character->GetPosition().x >= 422 && m_Character->GetPosition().y > 80.75 && m_Character->GetPosition().y < 80.77)) {
         m_Character->m_Behavior->SetLooping(false);
@@ -165,19 +166,9 @@ void Stage1::Update(App* app){
 void Stage1::End(App* app){
     // dead and reset
     if (m_Character->GetEndSceneFlag()) {
-        app->m_Menu->SetMenuVisibility(false);
         m_EnemiesManager->RemoveAllChild(app);
-        app->m_Menu->modifyWeapon(WeaponType::None);
-        app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(5), 3);
-        if (app->m_Menu->m_value.playerLife == 0)
-            app->m_GameState = App::GameState::GG;
-        else {
-            app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(--(app->m_Menu->m_value.playerLife)), 4);
-            app->m_GameState = App::GameState::STAGE1;
-        }
+        SceneReset(app);
         app->m_Character = nullptr;
-        app->RemoveAllChildren(m_All);
-        app->m_AppState = App::AppState::START;
     }
     // end scene animation
     else {

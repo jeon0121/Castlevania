@@ -46,6 +46,7 @@ public:
     bool GetHurtFlag();
     bool GetInvisibleFlag();
     bool GetEndSceneFlag() const;
+    bool GetStartDeadFlag() const;
     bool GetDeadFlag() const;
     const glm::vec2& GetPosition() const;
     const glm::vec2& GetLastPosition() const;
@@ -66,7 +67,7 @@ public:
     void ChangeBehavior(int BehaviorIndex, bool if_whip = false);
 
     void UpdatePosition();
-    void Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const std::vector<std::shared_ptr<Stair>>& m_Stairs);
+    void Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const std::vector<std::shared_ptr<Stair>>& m_Stairs, int time);
 
     void HandleFallDuck(const std::string& direction);
     void Ascending(std::shared_ptr<Stair>& stair);

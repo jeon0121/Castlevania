@@ -115,7 +115,7 @@ void Stage3::Start(App* app){
 
 void Stage3::Update(App* app){
     // Position::PrintObjectCoordinate(m_Character, offsetX);
-    m_Character->Keys(m_Blocks, m_Stairs);
+    m_Character->Keys(m_Blocks, m_Stairs, app->m_Menu->m_value.time);
     UpdateTorch(app);
     UpdateSubWeapon(app);
     UpdateHitableBlock(app);
@@ -136,8 +136,22 @@ void Stage3::Update(App* app){
         m_Boss->MoveBehav(m_Character, screenHeight, screenWidth);
         m_Boss->CollideDetection(m_Character, app->m_Menu);
     }
+    if (m_Character->GetStartDeadFlag() || (app->m_Menu->m_value.time == 0 && !isTimeOut)) {
+        app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/deadBGM.wav");
+        app->BGM->Play(1);
+        isTimeOut = true;
+    }
+    if (m_Character->GetEndSceneFlag()) {
+        m_Character->m_Behavior->SetLooping(false);
+        m_stateState = StateState::END;
+    }
 }
 
 void Stage3::End(App* app){
-
+    // dead and reset
+    if (m_Character->GetEndSceneFlag()) {
+        // m_EnemiesManager->RemoveAllChild(app);
+        SceneReset(app);
+        app->m_Character = nullptr;
+    }
 }

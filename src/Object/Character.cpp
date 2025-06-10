@@ -106,8 +106,12 @@ bool Character::GetEndSceneFlag() const {
     return false;
 }
 
-bool Character::GetDeadFlag() const {
+bool Character::GetStartDeadFlag() const {
     return (is_dead && !startDeadTime);
+}
+
+bool Character::GetDeadFlag() const {
+    return is_dead;
 }
 
 const glm::vec2& Character::GetPosition() const {
@@ -184,6 +188,7 @@ void Character::Invisible() {
 }
 
 void Character::Dead() {
+    is_dead = true;
     ChangeBehavior(1);
     m_Behavior->SetInterval(300);
     m_Behavior->SetPlaying();
@@ -357,8 +362,8 @@ void Character::UpdatePosition() {
     SetPosition(m_pos);
 }
 
-void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const std::vector<std::shared_ptr<Stair>>& m_Stairs) {
-    if (is_dead)
+void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const std::vector<std::shared_ptr<Stair>>& m_Stairs, int time) {
+    if (is_dead || time == 0)
         Dead();
     else if (!is_levelUpWhip) {
         if (is_invisible || startInvisibleTime != 0)

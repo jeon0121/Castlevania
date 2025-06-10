@@ -66,7 +66,7 @@ void Stage0::Start(App* app){
 }
 
 void Stage0::Update(App* app){
-    m_Character->Keys(m_Blocks, m_Stairs);
+    m_Character->Keys(m_Blocks, m_Stairs, app->m_Menu->m_value.time);
     UpdateTorch(app);
     UpdateSubWeapon(app);
     UpdateScroll(mapWidth);
@@ -83,20 +83,36 @@ void Stage0::Update(App* app){
         m_End->SetVisible(true);
         m_stateState = StateState::END;
     }
+    if (app->m_Menu->m_value.time == 0 && !isTimeOut) {
+        app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/deadBGM.wav");
+        app->BGM->Play(1);
+        isTimeOut = true;
+    }
+    if (m_Character->GetEndSceneFlag()) {
+        m_Character->m_Behavior->SetLooping(false);
+        m_stateState = StateState::END;
+    }
 }
 
 void Stage0::End(App* app){
-    glm::vec2 pos = m_Character->GetPosition();
-    m_Character-> SetPosition(glm::vec2(pos.x+1.5f, pos.y));
-    if (!is_endSound && m_Character->GetPosition().x >= 280) {
-        std::shared_ptr<Util::SFX> endSound = std::make_shared<Util::SFX>(GA_RESOURCE_DIR "/Sound Effects/25.wav");
-        endSound->SetVolume(60);
-        endSound->Play();
-        is_endSound = true;
+    // dead and reset
+    if (m_Character->GetEndSceneFlag()) {
+        SceneReset(app);
+        app->m_Character = nullptr;
     }
-    if (m_Character->GetPosition().x >= 500) {
-        app->RemoveAllChildren(m_All);
-        app->m_AppState = App::AppState::START;
-        app->m_GameState = App::GameState::STAGE1;
+    else {
+        glm::vec2 pos = m_Character->GetPosition();
+        m_Character-> SetPosition(glm::vec2(pos.x+1.5f, pos.y));
+        if (!is_endSound && m_Character->GetPosition().x >= 280) {
+            std::shared_ptr<Util::SFX> endSound = std::make_shared<Util::SFX>(GA_RESOURCE_DIR "/Sound Effects/25.wav");
+            endSound->SetVolume(60);
+            endSound->Play();
+            is_endSound = true;
+        }
+        if (m_Character->GetPosition().x >= 500) {
+            app->RemoveAllChildren(m_All);
+            app->m_AppState = App::AppState::START;
+            app->m_GameState = App::GameState::STAGE1;
+        }
     }
 }

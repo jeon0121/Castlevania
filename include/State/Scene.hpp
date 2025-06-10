@@ -45,6 +45,8 @@ public:
 
     void EndAnimation(App* app, std::string imagePath, glm::vec2 scale, std::shared_ptr<AnimatedItems> door_1, std::shared_ptr<AnimatedItems> door_2, std::shared_ptr<Util::SFX> doorSound);
 
+    void SceneReset(App* app);
+
     StateState m_stateState = StateState::START;
     int screenWidth = 1024;
     int screenHeight = 768;
@@ -68,6 +70,7 @@ protected:
 
     bool whipDropped = false; // to ensure that dropped whip dont exceed 1
     bool reachBoss = false;
+    bool isTimeOut = false;
 };
 
 #endif
