@@ -84,6 +84,10 @@ void Character::SetInvisibleFlag(bool ifinvisible) {
     is_invisible = ifinvisible;
 }
 
+void Character::SetDeadFlag(bool ifdead) {
+    this->is_dead = ifdead;
+}
+
 const WeaponType& Character::GetSubWeaponType() const {
     return m_subweapon;
 }

@@ -131,8 +131,12 @@ void Fishman::Walk(std::shared_ptr<Character> &character) {
     }
 }
 
-bool Fishman::GetFireFlag() {
+bool Fishman::GetFireFlag() const {
     return isFire;
+}
+
+bool Fishman::GetBubbleFlag() const {
+    return isBubble;
 }
 
 void Fishman::CollideBlock(std::vector<std::shared_ptr<Block>> &blocks) {
@@ -159,10 +163,11 @@ void Fishman::CollideBlock(std::vector<std::shared_ptr<Block>> &blocks) {
         if ((fishRight > blockLeft && fishLeft < blockRight) &&  //overlap x
             (fishTop > blockBottom && fishBottom < blockTop)) {  //overlap y
             float minOverlap = std::min({abs(overlapTop), abs(overlapBottom), abs(overlapLeft), abs(overlapRight)});
-            if (minOverlap == overlapBottom)
+            if (minOverlap == overlapBottom) {
                 SetPosition({pos.x, blockTop + size.y * 0.5f});
-            check = true;
-            isOnBlock = true;
+                check = true;
+                isOnBlock = true;
+            }
         }else if (!check)
             isOnBlock = false;
     }

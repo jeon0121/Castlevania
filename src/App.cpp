@@ -16,7 +16,7 @@ void App::Start() {
     }
     if (m_GameState != GameState::TITLE && m_GameState != GameState::GG)
         m_Menu->TimeCount(true);
-    if (m_GameState == GameState::STAGE2A && m_Character && m_Character->GetEndSceneFlag()) {
+    if (m_GameState == GameState::STAGE2A && m_Character && m_Character->GetDeadFlag()) {
         m_Character = nullptr;
         m_SceneA = nullptr;
         m_SceneB = nullptr;

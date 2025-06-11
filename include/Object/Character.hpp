@@ -40,6 +40,7 @@ public:
     void SetUseWeaponFlag(bool ifuse);
     void SetHurtFlag(bool ifhurt, bool ifNeedSlip);
     void SetInvisibleFlag(bool ifinvisible);
+    void SetDeadFlag(bool ifdead);
     void SetOffStairs();
     const WeaponType& GetSubWeaponType() const;
     const bool& GetUseWeaponFlag() const;

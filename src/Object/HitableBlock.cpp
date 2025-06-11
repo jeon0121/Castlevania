@@ -61,7 +61,6 @@ bool HitableBlock::CollideDetection(std::shared_ptr<Character> &character) {
             bool overlapY = blockTop + 1.5f > charPos.y && blockBottom - 1.5f < charPos.y;
             if (overlapX && overlapY) {
                 startDestroyedTime = SDL_GetPerformanceCounter();
-                breakSound->Play();
                 return true;
             }
         }
@@ -83,6 +82,7 @@ void HitableBlock::RemoveBlock(App* app, std::vector<std::shared_ptr<Block>> &bl
     m_All.erase(std::remove(m_All.begin(), m_All.end(), block), m_All.end());
     blocks.erase(std::remove(blocks.begin(), blocks.end(), block), blocks.end());
     SetParticles(app, block);
+    breakSound->Play();
 }
 
 void HitableBlock::SetParticles(App* app, std::shared_ptr<Block> &block) {
