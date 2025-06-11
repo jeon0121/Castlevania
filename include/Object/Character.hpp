@@ -10,7 +10,7 @@
 #include "Util/Animation.hpp"
 #include <Util/SFX.hpp>
 #include "Object/AnimatedItems.hpp"
-#include "Object/Subweapon/IUseSubweapon.hpp"
+#include "Object/Subweapon/SubweaponBase.hpp"
 #include "Object/ImageItems.hpp"
 #include "Object/Block.hpp"
 #include "Object/Stair.hpp"
@@ -90,7 +90,7 @@ public:
 
     std::shared_ptr<AnimatedItems> m_Behavior;
 
-    std::shared_ptr<Subweapon::IUseSubweapon> m_SubWeapon;
+    std::shared_ptr<Subweapon::SubweaponBase> m_SubWeapon;
     
 private:
     std::vector<std::vector<std::string>> behaviorVector;

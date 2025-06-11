@@ -3,10 +3,10 @@
 
 #include "Object/Loot.hpp"
 #include "State/Menu.hpp"
-#include "IUseSubweapon.hpp"
+#include "SubweaponBase.hpp"
 
 namespace Subweapon {
-   class Dagger : public Loot, public IUseSubweapon {
+   class Dagger : public Loot, public SubweaponBase {
    public:
       Dagger(glm::vec2 position, std::string type);
 

@@ -1,14 +1,14 @@
-#ifndef IUSESUBWEAPON_HPP
-#define IUSESUBWEAPON_HPP
+#ifndef SUBWEAPONBASE_HPP
+#define SUBWEAPONBASE_HPP
 
 #include <string>
 #include "Object/Block.hpp"
 
 namespace Subweapon {
-    class IUseSubweapon { // Interface for using subweapon
+    class SubweaponBase {
     public:
         virtual void Use(const std::vector<std::shared_ptr<Block>>& m_Blocks) = 0;
-        virtual ~IUseSubweapon() {}
+        virtual ~SubweaponBase() {}
         virtual void SetDirection(std::string direction) = 0;
         virtual std::string GetDirection() = 0;
         void SetDestroyed(bool ifDestroy) { if_destroyed = ifDestroy; }

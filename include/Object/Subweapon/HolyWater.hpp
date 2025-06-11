@@ -3,10 +3,10 @@
 
 #include "Object/Loot.hpp"
 #include "State/Menu.hpp"
-#include "IUseSubweapon.hpp"
+#include "SubweaponBase.hpp"
 
 namespace Subweapon {
-   class HolyWater : public Loot, public IUseSubweapon {
+   class HolyWater : public Loot, public SubweaponBase {
    public:
       HolyWater(glm::vec2 position, std::string type);
 
