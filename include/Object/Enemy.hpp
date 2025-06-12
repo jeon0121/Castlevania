@@ -15,20 +15,13 @@ class Enemy : public AnimatedItems {
 
         virtual void MoveBehav() {}
 
-        virtual void MoveBehav(std::shared_ptr<Character> &character) {
-            (void) character;
-        }
+        virtual void MoveBehav(std::vector<std::shared_ptr<Block>> &blocks) { (void) blocks; }
 
-        virtual void MoveBehav(std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks) {
-            (void) character;
-            (void) blocks;
-        }
+        virtual void MoveBehav(std::shared_ptr<Character> &character) { (void) character; }
+
+        virtual void MoveBehav(std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks) { (void) character; (void) blocks; }
         
-        virtual void MoveBehav(std::shared_ptr<Character> &character, int screenHeight, int screenWidth) {
-            (void) character;
-            (void) screenHeight;
-            (void) screenWidth;
-        }
+        virtual void MoveBehav(std::shared_ptr<Character> &character, int screenHeight, int screenWidth) { (void) character; (void) screenHeight; (void) screenWidth; }
 
         virtual void SetReset() = 0;
 
@@ -44,7 +37,9 @@ class Enemy : public AnimatedItems {
 
         virtual bool CollideDetection(std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu);
 
-        virtual void InWindowDetection(int screenWidth);
+        virtual void InWindowDetection(int screenWidth, int offsetX);
+
+        void SetEnemyRange(glm::vec2 range);
 
         void SetHidden(bool hidden);
 
@@ -66,6 +61,7 @@ class Enemy : public AnimatedItems {
         float enemyBottom;
         float enemyLeft;
         float enemyRight;
+        glm::vec2 enemyRange = {-5000.0f, 5000.0f};
         LootType lootType = LootType::None;
         std::shared_ptr<Util::SFX> deadSound;
 };

@@ -29,7 +29,9 @@ class EnemiesManager {
 
         void PlayAllEnemy();
 
-        void ManageZombies(float offsetX, std::shared_ptr<Character> &character, int screenWidth);
+        void SetEnemyRange(glm::vec2 range);
+
+        void ManageZombies(float offsetX, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, int screenWidth);
 
         void ManageLeopard(float offsetX, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, int screenWidth);
 

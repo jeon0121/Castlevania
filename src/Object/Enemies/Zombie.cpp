@@ -13,9 +13,33 @@ Zombie::Zombie(glm::vec2 position, std::string direction): Enemy(position, direc
     countHurt = 2;
 }
 
-void Zombie::MoveBehav() {
+void Zombie::MoveBehav(std::vector<std::shared_ptr<Block>> &blocks) {
     glm::vec2 pos = GetPosition();
-    SetPosition({((direction == "right") ? pos.x+=3 : pos.x-=3), pos.y});
+    glm::vec2 size = GetScaledSize();
+    bool isOnGround = false;
+    for (auto& block : blocks) {
+        glm::vec2 blockPos = block->GetPosition();
+        glm::vec2 blockSize = block->GetScaledSize();
+        bool horizontallyAligned = pos.x > blockPos.x - blockSize.x * 0.5f
+                                && pos.x < blockPos.x + blockSize.x * 0.5f;
+        bool verticallyClose = std::abs((pos.y - size.y * 0.5) - (blockPos.y + blockSize.y * 0.5)) < 12.0f;
+        if (horizontallyAligned && verticallyClose) {
+            SetPosition({pos.x, blockPos.y + blockSize.y * 0.5f + size.y * 0.5f});
+            isOnGround = true;
+            break;
+        }
+    }
+    pos = GetPosition();
+    if (!isOnGround) {
+        y_vel -= 0.5f;
+        if (y_vel < -12.0f)
+            y_vel = -12.0f;
+        SetPosition({pos.x, pos.y+=y_vel});
+    }
+    else {
+        y_vel = 0;
+        SetPosition({((direction == "right") ? pos.x+=3 : pos.x-=3), pos.y});
+    }
 }
 
 void Zombie::SetReset() {
@@ -46,4 +70,8 @@ glm::vec2 ZombieHorde::GetSpawnRange() const {
 
 int ZombieHorde::GetNumZombie() const {
     return numZombie;
+}
+
+glm::vec2 ZombieHorde::GetPosition() const {
+    return pos;
 }

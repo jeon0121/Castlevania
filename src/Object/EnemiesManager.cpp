@@ -97,7 +97,7 @@ void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Char
         isEnemyPause = false;
     }
     for (auto &enemy : m_Enemies) {
-        enemy->InWindowDetection(screenWidth);
+        enemy->InWindowDetection(screenWidth, offsetX);
         if (enemy->CollideDetection(character, app->m_Menu)) {
             enemy->Death(app, m_Loots, m_PossibleLoots);
         }
@@ -115,7 +115,7 @@ void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Char
         }
     }
     if (!isEnemyPause) {
-        ManageZombies(offsetX, character, screenWidth);
+        ManageZombies(offsetX, character, blocks, screenWidth);
         ManageLeopard(offsetX, character, blocks, screenWidth);
         ManageBat(offsetX, character, screenWidth);
         ManageFishman(app, character, blocks, screenWidth);
@@ -133,13 +133,19 @@ void EnemiesManager::PlayAllEnemy() {
         enemy->SetPlaying();
 }
 
-void EnemiesManager::ManageZombies(float offsetX, std::shared_ptr<Character> &character, int screenWidth) {
+void EnemiesManager::SetEnemyRange(glm::vec2 range) {
+    for (auto &&enemy : m_Enemies) 
+        if (!enemy->IsDead())
+            enemy->SetEnemyRange(range);
+}
+
+void EnemiesManager::ManageZombies(float offsetX, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, int screenWidth) {
     constexpr float delay = 2000.0f;
     for (auto &zombieHorde : m_Zombies) {
         bool reset = true;
         for (auto &zombie : zombieHorde->zombies) {
             if (!zombie->CheckReset() && !zombie->IsDead()) {
-                zombie->MoveBehav();
+                zombie->MoveBehav(blocks);
                 reset = false;
             }
         }
@@ -147,21 +153,22 @@ void EnemiesManager::ManageZombies(float offsetX, std::shared_ptr<Character> &ch
             if (resetStartTime == 0)
                 resetStartTime = SDL_GetPerformanceCounter();
             if (Time::GetRunTimeMs(resetStartTime) > delay) {
+                glm::vec2 spawnPos = zombieHorde->GetPosition();
                 if (character->GetPosition().x > 10.0f) {
                     for (int i = 0; i < zombieHorde->GetNumZombie(); i++) {
                         float spawnX = (std::rand() % 20 + 120) * i;
-                        zombieHorde->zombies[i]->SetPosition({-screenWidth * 0.5 + spawnX, -265.35f});
+                        zombieHorde->zombies[i]->SetPosition({-spawnPos.x + spawnX, spawnPos.y});
                     }
                 } else if (character->GetPosition().x < -10.0f) {
                     for (int i = 0; i < zombieHorde->GetNumZombie(); i++) {
                         float spawnX = (std::rand() % 20 + 120) * i;
-                        zombieHorde->zombies[i]->SetPosition({screenWidth * 0.5 + spawnX, -265.35f});
+                        zombieHorde->zombies[i]->SetPosition({spawnPos.x + spawnX, spawnPos.y});
                     }
                 } else {
                     for (int i = 0; i < zombieHorde->GetNumZombie(); i++) {
                         int sign = (std::rand() % 2 == 0) ? 1 : -1;
                         float spawnX = (std::rand() % 20 + 120) * i;
-                        float baseX = screenWidth * 0.5 + spawnX;
+                        float baseX = spawnPos.x + spawnX;
                         zombieHorde->zombies[i]->SetPosition({sign * baseX, -265.35f});
                     }
                 }
@@ -190,6 +197,7 @@ void EnemiesManager::ManageLeopard(float offsetX, std::shared_ptr<Character> &ch
 }
 
 void EnemiesManager::ManageBat(float offsetX, std::shared_ptr<Character> &character, int screenWidth) {
+    (void) offsetX;
     constexpr float delay = 2000.0f;
     for (auto &bat : m_Bats) {
         bool reset = true;

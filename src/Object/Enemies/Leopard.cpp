@@ -99,7 +99,8 @@ glm::vec2 Leopard::GetInitialPos() {
     return initialPos;
 }
 
-void Leopard::InWindowDetection(int screenWidth) {
+void Leopard::InWindowDetection(int screenWidth, int offsetX) {
+    (void) offsetX;
     if (!is_dead) {
         glm::vec2 pos = GetPosition();
         bool outOfWindow = (pos.x < screenWidth * -0.5 || pos.x > screenWidth * 0.5) && state != "idle";

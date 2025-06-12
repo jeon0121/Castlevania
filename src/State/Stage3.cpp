@@ -34,10 +34,25 @@ void Stage3::Start(App* app){
     m_All.push_back(m_Character->m_Behavior);
 
     // EnemiesManager
-    // std::vector<PossibleLootData> possibleLoots = {
-    //     {LootType::HeartSmall, 0.5, -1}, // infinite drop
-    // };
-    // m_EnemiesManager = std::make_shared<EnemiesManager>(possibleLoots);
+    std::vector<PossibleLootData> possibleLoots = {
+        {LootType::HeartSmall, 0.5, -1},
+        {LootType::Dagger,     0.2,  1},
+        {LootType::Axe,        0.2,  1},
+        {LootType::None,       1.0, -1},
+    };
+    m_EnemiesManager = std::make_shared<EnemiesManager>(possibleLoots);
+
+    // zombies
+    std::vector<ZombieData> zombies = {
+        { { -500, 1215 }, 2, -265.35f },
+        { { -500, 10   }, 1, -36.24f  },
+        { { 600,  1000 }, 1, -36.24f  },
+    };
+    for (auto& z : zombies) {
+        m_EnemiesManager->AddZombie(z.range, z.numZombie, {screenWidth * 0.5, z.yPos}, "left", app);
+    }
+    
+    m_EnemiesManager->SetEnemyRange({-5000, 1500});
 
     // boss
     m_Boss = std::make_shared<PhantomBat>(glm::vec2(2020, 190));
@@ -110,18 +125,26 @@ void Stage3::Start(App* app){
     }
 
     app->AddAllChildren(m_All);
+    m_EnemiesManager->AddAllChild(app);
     m_stateState = StateState::UPDATE;
 }
 
 void Stage3::Update(App* app){
-    // Position::PrintObjectCoordinate(m_Character, offsetX);
+    Position::PrintObjectCoordinate(m_Character, offsetX);
+    if (blinkStartTime != 0)
+        Blink();
     m_Character->Keys(m_Blocks, m_Stairs);
     UpdateTorch(app);
+    m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app);
     UpdateSubWeapon(app);
     UpdateHitableBlock(app);
-    // once reach the boss, stop scrolling
-    if (m_Character->GetPosition().x <= 20 && !reachBoss)
+    if (m_Character->GetDeadFlag()) {
+        app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/deadBGM.wav");
+        app->BGM->Play(1);
+    }
+    if (m_Character->GetPosition().x <= 20 && !reachBoss) {
         UpdateScroll(mapWidth);
+    }
     else if (m_Character->GetPosition().x > 20 && !reachBoss) {
         reachBoss = true;
         BlockData bData = { { -547, -50 }, { 0.4, 7 } };

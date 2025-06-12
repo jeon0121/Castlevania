@@ -132,13 +132,18 @@ bool Enemy::CollideDetection(std::shared_ptr<Character> &character, std::shared_
     return is_dead;
 }
 
-void Enemy::InWindowDetection(int screenWidth) {
+void Enemy::InWindowDetection(int screenWidth, int offsetX) {
     if (!is_dead) {
         glm::vec2 pos = GetPosition();
         bool outOfWindow = (pos.x < screenWidth * -0.5 || pos.x > screenWidth * 0.5);
+        bool outOfRange = (pos.x < enemyRange.x - offsetX || pos.x > enemyRange.y - offsetX);
         if (is_hidden) {
             SetVisible(false);
             return;
+        }
+        if (outOfRange) {
+            is_hidden = true;
+            SetVisible(false);
         }
         if (outOfWindow) {
             if (hasEnteredWindow) {
@@ -152,6 +157,10 @@ void Enemy::InWindowDetection(int screenWidth) {
             SetVisible(true);
         }
     }
+}
+
+void Enemy::SetEnemyRange(glm::vec2 range) {
+    enemyRange = range;
 }
 
 void Enemy::SetHidden(bool hidden) {
