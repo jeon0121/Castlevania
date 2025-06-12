@@ -1,5 +1,6 @@
 #include "State/Stage0.hpp"
 #include "Util/Logger.hpp"
+#include "Utility/Time.hpp"
 
 void Stage0::Start(App* app){
     // menu
@@ -61,6 +62,12 @@ void Stage0::Start(App* app){
         m_Blocks.push_back(block);
     }
 
+    // block for hidden item
+    auto block = std::make_shared<Block>(glm::vec2(2067, -340.5), glm::vec2(1.025, 0.90), GA_RESOURCE_DIR"/background/block/block-4.png");
+    block->SetZIndex(8);
+    m_Blocks.push_back(block);
+    m_All.push_back(block);
+
     app->AddAllChildren(m_All);
     m_stateState = StateState::UPDATE;
 }
@@ -70,6 +77,7 @@ void Stage0::Update(App* app){
     UpdateTorch(app);
     UpdateSubWeapon(app);
     UpdateScroll(mapWidth);
+    HiddenItem(app);
 
     if (m_Character->GetPosition().x >= 200 && m_Character->GetPosition().x <= 320 && m_Character->GetPosition().y <= -220.35) {
         if (m_Character->GetDirection() == "left") {
@@ -113,6 +121,38 @@ void Stage0::End(App* app){
             app->RemoveAllChildren(m_All);
             app->m_AppState = App::AppState::START;
             app->m_GameState = App::GameState::STAGE1;
+        }
+    }
+}
+
+void Stage0::HiddenItem(App *app) {
+    if (m_Character->GetPosition().x >= 320 && m_Character->GetPosition().y <= -220.35) {
+        if (hiddenLootTime == 0) {
+            hiddenLootTime = SDL_GetPerformanceCounter();
+            specialBag = Loot::CreateLoot(LootType::SpecialBag, glm::vec2(2067 - offsetX, -300));
+            specialBag->SetZIndex(7);
+            specialBag->SetFallFlag(false);
+            std::shared_ptr<Util::SFX> specialBagAppear = std::make_shared<Util::SFX>(GA_RESOURCE_DIR "/Sound Effects/34.wav");
+            specialBagAppear->SetVolume(50);
+            specialBagAppear->Play();
+            app->m_Root.AddChild(specialBag);
+        }
+    }
+    if (specialBag) {
+        if ((hiddenLootTime != 0 && Time::GetRunTimeMs(hiddenLootTime) > 6000.0f) || specialBag->IfEnded()) {
+            app->m_Root.RemoveChild(specialBag);
+            specialBag = nullptr;
+            return;
+        }
+        if (hiddenLootTime != 0) {
+            if (specialBag->GetPosition().y < -258) {
+                specialBag->SetPosition({specialBag->GetPosition().x, specialBag->GetPosition().y + 0.5f});
+            }
+        }
+        if (!specialBag->IfCollected()) {
+            specialBag->IsCollected(m_Character);
+        }else if (specialBag->IfCollected() && !specialBag->IfEnded()){
+            specialBag->Result(app, m_Character, app->m_Menu);
         }
     }
 }
