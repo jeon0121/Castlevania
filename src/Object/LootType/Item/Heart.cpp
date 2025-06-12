@@ -40,7 +40,7 @@ void Heart::Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks) {
          float blockLeft = blockPos.x - blockSize.x * 0.5f;
          float blockRight = blockPos.x + blockSize.x * 0.5f;
          bool overlapX = itemRight > blockLeft && itemLeft < blockRight;
-         bool isLanding = itemBottom <= blockTop && itemTop > blockTop;
+         bool isLanding = itemBottom <= blockTop && itemPos.y > blockTop;
          if (overlapX && isLanding) {
             is_landed = true;
             SetPosition({itemPos.x, blockTop + itemSize.y * 0.2f});

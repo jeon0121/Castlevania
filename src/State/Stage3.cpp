@@ -177,4 +177,8 @@ void Stage3::End(App* app){
         SceneReset(app);
         app->m_Character = nullptr;
     }
+    // end scene animation
+    else {
+        app->m_GameState = App::GameState::GG;
+    }
 }

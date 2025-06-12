@@ -170,8 +170,11 @@ void Menu::addBadge(glm::vec2 position){
     textImage.push_back(characterImage);
 }
 
-void Menu::modifyBadge() {
-    textImage[8]->SetImage(GA_RESOURCE_DIR "/items/item/badge.png");
+void Menu::modifyBadge(bool badge) {
+    if (badge)
+        textImage[8]->SetImage(GA_RESOURCE_DIR "/items/item/badge.png");
+    else
+        textImage[8]->SetImage(GA_RESOURCE_DIR "/transparent.png");
 }
 
 void Menu::SetMenuVisibility(const bool visible) {

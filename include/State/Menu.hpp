@@ -49,7 +49,7 @@ public:
 
     void addBadge(glm::vec2 position);
     
-    void modifyBadge();
+    void modifyBadge(bool badge);
 
     void SetMenuVisibility(const bool visible);
 
