@@ -10,7 +10,7 @@
 #include "Util/Animation.hpp"
 #include <Util/SFX.hpp>
 #include "Object/AnimatedItems.hpp"
-#include "Object/Subweapon/IUseSubweapon.hpp"
+#include "Object/Subweapon/SubweaponBase.hpp"
 #include "Object/ImageItems.hpp"
 #include "Object/Block.hpp"
 #include "Object/Stair.hpp"
@@ -40,12 +40,14 @@ public:
     void SetUseWeaponFlag(bool ifuse);
     void SetHurtFlag(bool ifhurt, bool ifNeedSlip);
     void SetInvisibleFlag(bool ifinvisible);
+    void SetDeadFlag(bool ifdead);
     void SetOffStairs();
     const WeaponType& GetSubWeaponType() const;
     const bool& GetUseWeaponFlag() const;
     bool GetHurtFlag();
     bool GetInvisibleFlag();
     bool GetEndSceneFlag() const;
+    bool GetStartDeadFlag() const;
     bool GetDeadFlag() const;
     const glm::vec2& GetPosition() const;
     const glm::vec2& GetLastPosition() const;
@@ -66,7 +68,7 @@ public:
     void ChangeBehavior(int BehaviorIndex, bool if_whip = false);
 
     void UpdatePosition();
-    void Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const std::vector<std::shared_ptr<Stair>>& m_Stairs);
+    void Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const std::vector<std::shared_ptr<Stair>>& m_Stairs, int time);
 
     void HandleFallDuck(const std::string& direction);
     void Ascending(std::shared_ptr<Stair>& stair);
@@ -88,7 +90,7 @@ public:
 
     std::shared_ptr<AnimatedItems> m_Behavior;
 
-    std::shared_ptr<Subweapon::IUseSubweapon> m_SubWeapon;
+    std::shared_ptr<Subweapon::SubweaponBase> m_SubWeapon;
     
 private:
     std::vector<std::vector<std::string>> behaviorVector;

@@ -22,9 +22,12 @@ public:
     void Start(App* app) override;
     void Update(App* app) override;
     void End(App* app) override;
+    bool Bubble();
 
 private:
     int mapWidth = 2070;
+    std::vector<float> bbl_vel = {0, 12.0f, 0}; // bubble velocity
+    std::vector<std::shared_ptr<ImageItems>> bubblesVector;
 };
 #endif
 

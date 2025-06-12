@@ -229,7 +229,7 @@ void EnemiesManager::ManageBat(float offsetX, std::shared_ptr<Character> &charac
 }
 
 void EnemiesManager::ManageFishman(App *app, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, int screenWidth) {
-    constexpr float delay = 2000.0f;
+    constexpr float delay = 3000.0f;
     FireAttack(character, screenWidth, app->m_Menu);
     for (auto &fishman : m_Fishmans) {
         bool reset = true;
@@ -269,6 +269,8 @@ void EnemiesManager::ManageFishman(App *app, std::shared_ptr<Character> &charact
                 fishman->SetReset();
                 resetStartTime = 0;
             }
+            if (fishman->GetBubbleFlag())
+                fishman->Bubble(fishman->GetPosition());
         }
     }
 }

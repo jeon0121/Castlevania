@@ -3,10 +3,10 @@
 
 #include "Object/Loot.hpp"
 #include "State/Menu.hpp"
-#include "IUseSubweapon.hpp"
+#include "SubweaponBase.hpp"
 
 namespace Subweapon {
-   class Axe : public Loot, public IUseSubweapon {
+   class Axe : public Loot, public SubweaponBase {
    public:
       Axe(glm::vec2 position, std::string type);
 

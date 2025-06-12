@@ -3,10 +3,10 @@
 
 #include "Object/Loot.hpp"
 #include "State/Menu.hpp"
-#include "IUseSubweapon.hpp"
+#include "SubweaponBase.hpp"
 
 namespace Subweapon {
-   class Stopwatch : public Loot, public IUseSubweapon {
+   class Stopwatch : public Loot, public SubweaponBase {
    public:
       Stopwatch(glm::vec2 position, std::string type);
 

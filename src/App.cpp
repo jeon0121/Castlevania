@@ -14,7 +14,9 @@ void App::Start() {
         BGM = std::make_shared<Util::BGM>(GA_RESOURCE_DIR "/BGM/stageBGM.wav");
         BGM->SetVolume(50);
     }
-    if (m_GameState == GameState::STAGE2A && m_Character && m_Character->GetEndSceneFlag()) {
+    if (m_GameState != GameState::TITLE && m_GameState != GameState::GG)
+        m_Menu->TimeCount(true);
+    if (m_GameState == GameState::STAGE2A && m_Character && m_Character->GetDeadFlag()) {
         m_Character = nullptr;
         m_SceneA = nullptr;
         m_SceneB = nullptr;
@@ -56,7 +58,8 @@ void App::Start() {
 }
 
 void App::Update() {
-
+    if (m_GameState != GameState::TITLE && m_GameState != GameState::GG)
+        m_Menu->TimeCount();
     if(m_Scene->m_stateState == Scene::StateState::END)
         m_Scene->End(this);
     else

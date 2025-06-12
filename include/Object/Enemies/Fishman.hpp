@@ -12,7 +12,8 @@ public:
     void Bubble(glm::vec2 fishpos);
     void Walk(std::shared_ptr<Character> &character);
     void CollideBlock(std::vector<std::shared_ptr<Block>> &blocks);
-    bool GetFireFlag();
+    bool GetFireFlag() const ;
+    bool GetBubbleFlag() const ;
     bool CheckReset() override;
 private:
     std::vector<std::string> idleImages;

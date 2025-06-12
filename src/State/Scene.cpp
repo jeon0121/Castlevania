@@ -220,3 +220,18 @@ void Scene::EndAnimation(App* app, std::string imagePath, glm::vec2 scale, std::
         }
     }
 }
+
+void Scene::SceneReset(App* app) {
+    app->m_Menu->SetMenuVisibility(false);
+    if (app->m_Menu->m_value.playerLife == 0)
+        app->m_GameState = App::GameState::GG;
+    else {
+        app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(5), 3);
+        app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(--(app->m_Menu->m_value.playerLife)), 4);
+        app->m_Menu->m_value.time = (app->m_Menu->m_value.time / 100 + 1) * 100;
+        app->m_Menu->modifyNumber(app->m_Menu->formatTime(app->m_Menu->m_value.time), 1);
+        app->m_Menu->modifyWeapon(WeaponType::None);
+    }
+    app->RemoveAllChildren(m_All);
+    app->m_AppState = App::AppState::START;
+}

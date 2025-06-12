@@ -78,6 +78,15 @@ void Stage2b::Start(App *app) {
             {LootType::None,       1.0, -1},
          };
         m_EnemiesManager = std::make_shared<EnemiesManager>(possibleLoots);
+
+        // character bubbles
+        std::string bubbleImage = GA_RESOURCE_DIR"/enemies/fishman/bubble.png";
+        for (int i = 0; i < 3; i++) {
+            bubblesVector.push_back(std::make_shared<ImageItems>(bubbleImage, glm::vec2(0.8, 0.8)));
+            bubblesVector[i]->SetVisible(false);
+            bubblesVector[i]->SetZIndex(7.5);
+            m_All.push_back(bubblesVector[i]);
+        }
     }
 
     //character
@@ -116,7 +125,7 @@ void Stage2b::Start(App *app) {
 }
 
 void Stage2b::Update(App *app) {
-    m_Character->Keys(m_Blocks, m_Stairs);
+    m_Character->Keys(m_Blocks, m_Stairs, app->m_Menu->m_value.time);
     UpdateTorch(app);
     m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app);
     UpdateSubWeapon(app);
@@ -129,31 +138,56 @@ void Stage2b::Update(App *app) {
         app->RemoveAllChildren(m_All);
         app->m_Root.RemoveChild(m_Character->m_Behavior);
         m_EnemiesManager->RemoveAllChild(app);
-    }else if (m_Character->GetDeadFlag()) {
+    }else if (m_Character->GetStartDeadFlag() || ((app->m_Menu->m_value.time == 0 || m_Character->GetPosition().y < -240) && !isTimeOut)) {
         app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/deadBGM.wav");
         app->BGM->Play(1);
+        isTimeOut = true;
     }
     if (m_Character->GetEndSceneFlag()) {
         m_Character->m_Behavior->SetLooping(false);
         m_stateState = StateState::END;
+    }else if (m_Character->GetPosition().y < -240) {
+        m_Character->m_Behavior->SetVisible(false);
+        m_Character->SetDeadFlag(true);
+        if (!Bubble()) {
+            m_Character->m_Behavior->SetLooping(false);
+            m_stateState = StateState::END;
+        }
     }
 }
 
 void Stage2b::End(App *app) {
     // dead and reset
-    if (m_Character->GetEndSceneFlag()) {
-        app->m_Menu->SetMenuVisibility(false);
-        m_EnemiesManager->RemoveAllChild(app);
-        app->m_Menu->modifyWeapon(WeaponType::None);
-        app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(5), 3);
-        if (app->m_Menu->m_value.playerLife == 0)
-            app->m_GameState = App::GameState::GG;
-        else {
-            app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(--(app->m_Menu->m_value.playerLife)), 4);
-            app->m_GameState = App::GameState::STAGE2A;
+    m_EnemiesManager->RemoveAllChild(app);
+    SceneReset(app);
+    app->m_Root.RemoveChild(m_Character->m_Behavior);
+    app->m_GameState = App::GameState::STAGE2A;
+}
+
+bool Stage2b::Bubble() {
+    bool isBubble = true;
+    bool check = false;
+    if (bbl_vel[0] == 0) {
+        glm::vec2 pos = m_Character->GetPosition();
+        for (int i = 0; i < 3; i++) {
+            bubblesVector[i]->SetPosition({pos.x, -220});
+            bubblesVector[i]->SetVisible(true);
         }
-        app->RemoveAllChildren(m_All);
-        app->m_Root.RemoveChild(m_Character->m_Behavior);
-        app->m_AppState = App::AppState::START;
+        std::shared_ptr<Util::SFX> soundEft= std::make_shared<Util::SFX>(GA_RESOURCE_DIR "/Sound Effects/15.wav");
+        soundEft->Play();
+        soundEft->SetVolume(30);
     }
+    for (int i = 0; i < 3; i++) {
+        glm::vec2 pos = bubblesVector[i]->GetPosition();
+        float x = (i == 0) ? -1.8 :((i == 1) ? 1.0 : 1.8);
+        bbl_vel[i] = std::max(bbl_vel[i] - ((bbl_vel[i] >= 0) ? 1.2f : 1.8f), -5.0f);
+        bubblesVector[i]->SetPosition({pos.x + x, pos.y + bbl_vel[i]});
+        if (pos.y > -800)
+            check = true;
+    }
+    if (!check) {
+        bbl_vel = {0, 12.0f, 0};
+        isBubble = false;
+    }
+    return isBubble;
 }
