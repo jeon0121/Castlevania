@@ -66,6 +66,7 @@ protected:
     std::vector<std::shared_ptr<Stair>> m_Stairs;
     std::vector<std::shared_ptr<Torch>> m_Torches;
     std::shared_ptr<Loot> asLoot;
+    std::shared_ptr<Loot> specialBag;
     std::shared_ptr<EnemiesManager> m_EnemiesManager;
     std::shared_ptr<Enemy> m_Boss;
     glm::vec2 backgroundPos;

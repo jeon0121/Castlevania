@@ -61,7 +61,7 @@ class Enemy : public AnimatedItems {
         float enemyBottom;
         float enemyLeft;
         float enemyRight;
-        glm::vec2 enemyRange = {-5000.0f, 5000.0f};
+        glm::vec2 enemyRange = {-10000.0f, 10000.0f};
         LootType lootType = LootType::None;
         std::shared_ptr<Util::SFX> deadSound;
 };

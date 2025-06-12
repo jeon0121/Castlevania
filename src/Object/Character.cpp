@@ -422,6 +422,10 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const 
                 Duck("");
                 SubWeapon();
             }
+            // jump subweapon
+            else if (((Util::Input::IsKeyPressed(UP) && Util::Input::IsKeyPressed(A) && !change_land && !is_onStair) || (is_subweapon && is_jump)) && m_subweapon != WeaponType::None && !is_whip && !is_useweapon && m_ammo >= (m_subweapon == WeaponType::Stopwatch ? 5 : 1)) {
+                SubWeapon();
+            }
             // subweapon
             else if (((Util::Input::IsKeyPressed(UP) && Util::Input::IsKeyPressed(A) && !is_jump) || is_subweapon) && m_subweapon != WeaponType::None && !is_whip && !is_useweapon && m_ammo >= (m_subweapon == WeaponType::Stopwatch ? 5 : 1)) {
                 SubWeapon();
@@ -710,7 +714,7 @@ void Character::Fall(){
             is_dead = true;
         else
             ChangeBehavior(4);
-    else if (!is_whip)
+    else if (!is_whip && !is_subweapon)
         ChangeBehavior(height > 80.0f ? 3 : 2);
     is_jump = false;
     if (is_collide.y)

@@ -182,6 +182,8 @@ void Stage2b::End(App *app) {
     m_EnemiesManager->RemoveAllChild(app);
     SceneReset(app);
     app->m_Root.RemoveChild(m_Character->m_Behavior);
+    if (m_HitableBlocks[0]->loot)
+        app->m_Root.RemoveChild(m_HitableBlocks[0]->loot);
     if (!switchStage)
         app->m_GameState = App::GameState::STAGE2A;
 }
@@ -221,6 +223,9 @@ void Stage2b::HiddenItem(App *app) {
             m_HitableBlocks[0]->loot = Loot::CreateLoot(LootType::SpecialBag, glm::vec2(950 - offsetX, -64));
             m_HitableBlocks[0]->loot->SetZIndex(7);
             m_HitableBlocks[0]->loot->SetFallFlag(false);
+            std::shared_ptr<Util::SFX> specialBagAppear = std::make_shared<Util::SFX>(GA_RESOURCE_DIR "/Sound Effects/34.wav");
+            specialBagAppear->SetVolume(50);
+            specialBagAppear->Play();
             app->m_Root.AddChild(m_HitableBlocks[0]->loot);
         }
     }

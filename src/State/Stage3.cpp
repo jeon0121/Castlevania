@@ -174,7 +174,7 @@ void Stage3::Update(App* app){
 void Stage3::End(App* app){
     // dead and reset
     if (switchStage || m_Character->GetEndSceneFlag()) {
-        // m_EnemiesManager->RemoveAllChild(app);
+        m_EnemiesManager->RemoveAllChild(app);
         SceneReset(app);
         app->m_Character = nullptr;
     }

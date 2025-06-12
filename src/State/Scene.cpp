@@ -73,6 +73,8 @@ void Scene::UpdateScroll(int mapWidth, float offset) {
             m_Boss->SetPosition(m_Boss->GetPosition() - glm::vec2(dx, 0.0f));
         if (asLoot)
             asLoot->SetPosition(asLoot->GetPosition() - glm::vec2(dx, 0.0f));
+        if (specialBag)
+            specialBag->score->SetPosition(specialBag->score->GetPosition() - glm::vec2(dx, 0.0f));
     }
 }
 
@@ -230,8 +232,10 @@ void Scene::SceneReset(App* app) {
         app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(--(app->m_Menu->m_value.playerLife)), 4);
         app->m_Menu->m_value.time = (app->m_Menu->m_value.time / 100 + 1) * 100;
         app->m_Menu->modifyNumber(app->m_Menu->formatTime(app->m_Menu->m_value.time), 1);
-        app->m_Menu->modifyWeapon(WeaponType::None);
     }
+    if (specialBag)
+        app->m_Root.RemoveChild(specialBag);
+    app->m_Menu->modifyWeapon(WeaponType::None);
     app->RemoveAllChildren(m_All);
     app->m_AppState = App::AppState::START;
 }
