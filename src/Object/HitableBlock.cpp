@@ -124,3 +124,8 @@ void HitableBlock::ScatterParticles(App *app) {
         particles.clear();
     }
 }
+
+bool HitableBlock::IsDestroyed() const {
+    if (blockLootPair.empty()) return true;
+    return false;
+}

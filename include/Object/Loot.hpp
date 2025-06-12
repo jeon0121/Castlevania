@@ -52,6 +52,8 @@ public:
 
    virtual void Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks);
 
+   void SetFallFlag(bool fall);
+
    bool IsCollected(std::shared_ptr<Character> &character);
 
    bool IfCollected() const;
@@ -69,6 +71,7 @@ protected:
    float itemTop;
    float itemLeft;
    float itemRight;
+   bool fall = true;
    bool is_landed = false;
    bool is_collected = false;
    bool is_endResult = false;

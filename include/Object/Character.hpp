@@ -53,6 +53,7 @@ public:
     const glm::vec2& GetLastPosition() const;
     const glm::vec2& GetSize() const;
     std::string GetDirection() const;
+    bool IfDuck() const;
     bool IfWhip() const;
     int GetWhipLevel() const;
 

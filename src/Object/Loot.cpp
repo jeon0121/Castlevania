@@ -22,6 +22,7 @@ glm::vec2 Loot::UpdatePosition() {
 }
 
 void Loot::Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks){
+   if (!fall) return;
    glm::vec2 itemPos = UpdatePosition();
    glm::vec2 itemSize = glm::abs(GetScaledSize());
    SetPosition(itemPos + glm::vec2(x_vel, y_vel));
@@ -52,6 +53,10 @@ void Loot::Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks){
       else if (Time::GetRunTimeMs(startLandTime) > 2000.0f)
          is_endResult = true;
    }
+}
+
+void Loot::SetFallFlag(bool fall) {
+   this->fall = fall;
 }
 
 bool Loot::IsCollected(std::shared_ptr<Character>& character) {

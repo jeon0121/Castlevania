@@ -1,7 +1,12 @@
 #include "State/Stage2.hpp"
+#include "Utility/Position.hpp"
+#include "Utility/Time.hpp"
 
 void Stage2b::Start(App *app) {
     if (m_Blocks.empty()) {
+        // menu
+        app->m_Menu->SetMenuVisibility(true);
+
         // background
         m_Background = std::make_shared<ImageItems>(GA_RESOURCE_DIR"/background/stage-2/crypt-b.png");
         m_Background->m_Transform.scale = glm::vec2(1.025, 0.90);
@@ -46,7 +51,7 @@ void Stage2b::Start(App *app) {
         // hitable block
         std::vector<std::vector<HitableBlockData>> hitableBlocks = {
             { 
-                { { 1402, -64 }, LootType::None, GA_RESOURCE_DIR"/background/block/block-3.png" },
+                { { 1410.5, -64 }, LootType::None, GA_RESOURCE_DIR"/background/block/block-3.png" },
             },
         };
         for (auto& hb : hitableBlocks) {
@@ -59,6 +64,13 @@ void Stage2b::Start(App *app) {
             }
             m_HitableBlocks.push_back(hitableBlock);
         }
+
+        // block for hidden item
+        auto block = std::make_shared<Block>(glm::vec2(950, -64), glm::vec2(1.025, 0.90), GA_RESOURCE_DIR"/background/block/block-3.png");
+        block->SetZIndex(8);
+        m_Blocks.push_back(block);
+        m_All.push_back(block);
+
         //stair
         std::vector<StairData> stairs = {
             { { -325, 280  }, { -133, 107 } },
@@ -76,7 +88,7 @@ void Stage2b::Start(App *app) {
             {LootType::HeartBig,   0.2,  1},
             {LootType::Stopwatch,  0.2,  1},
             {LootType::None,       1.0, -1},
-         };
+        };
         m_EnemiesManager = std::make_shared<EnemiesManager>(possibleLoots);
 
         // character bubbles
@@ -90,6 +102,13 @@ void Stage2b::Start(App *app) {
     }
 
     //character
+    if (!app->m_Character) {
+        CharacterValue charactervalue;
+        charactervalue.position = glm::vec2(-324.2, 315.85);
+        charactervalue.direction = "right";
+        charactervalue.beIndex = 2;
+        app->m_Character = std::make_shared<Character>(charactervalue);
+    }
     if (this->m_Character == nullptr) {
         if (app->stairNum[0] == 1) {
             this->m_Character = app->m_Character;
@@ -125,12 +144,14 @@ void Stage2b::Start(App *app) {
 }
 
 void Stage2b::Update(App *app) {
+    Position::PrintObjectCoordinate(m_Character, offsetX);
     m_Character->Keys(m_Blocks, m_Stairs, app->m_Menu->m_value.time);
     UpdateTorch(app);
     m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app);
     UpdateSubWeapon(app);
     UpdateScroll(mapWidth);
     UpdateHitableBlock(app);
+    HiddenItem(app);
     if (m_Character->GetPosition().y > 300  && m_Character->GetDirection() == "left") {
         app->stairNum[1] = (m_Character->GetPosition().x < -100) ? 0 : 1;
         app->m_AppState = App::AppState::START;
@@ -191,4 +212,24 @@ bool Stage2b::Bubble() {
         isBubble = false;
     }
     return isBubble;
+}
+
+void Stage2b::HiddenItem(App *app) {
+    if (m_HitableBlocks[0]->IsDestroyed() && m_Character->GetPosition().y < -230 && m_Character->IfDuck()) {
+        if (hiddenLootTime == 0) {
+            hiddenLootTime = SDL_GetPerformanceCounter();
+            m_HitableBlocks[0]->loot = Loot::CreateLoot(LootType::SpecialBag, glm::vec2(950 - offsetX, -64));
+            m_HitableBlocks[0]->loot->SetZIndex(7);
+            m_HitableBlocks[0]->loot->SetFallFlag(false);
+            app->m_Root.AddChild(m_HitableBlocks[0]->loot);
+        }
+    }
+    if (hiddenLootTime != 0 && Time::GetRunTimeMs(hiddenLootTime) > 6000.0f && m_HitableBlocks[0]->loot) {
+        m_HitableBlocks[0]->loot->SetVisible(false);
+        m_HitableBlocks[0]->loot->SetPosition({0, -300});
+    } else if (hiddenLootTime != 0) {
+        if (m_HitableBlocks[0]->loot->GetPosition().y < -10) {
+            m_HitableBlocks[0]->loot->SetPosition({m_HitableBlocks[0]->loot->GetPosition().x, m_HitableBlocks[0]->loot->GetPosition().y + 0.5f});
+        }
+    }
 }

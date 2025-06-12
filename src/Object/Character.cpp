@@ -210,6 +210,10 @@ void Character::Dead() {
         startDeadTime = SDL_GetPerformanceCounter();
 }
 
+bool Character::IfDuck() const {
+    return is_duck;
+}
+
 bool Character::IfWhip() const {
     return is_whip;
 }

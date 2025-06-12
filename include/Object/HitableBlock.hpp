@@ -17,6 +17,7 @@ class HitableBlock : public ImageItems {
         void RemoveBlock(App* app, std::vector<std::shared_ptr<Block>> &blocks, std::vector<std::shared_ptr<Util::GameObject>> &m_All);
         void SetParticles(App* app, std::shared_ptr<Block> &block);
         void ScatterParticles(App* app);
+        bool IsDestroyed() const;
         std::vector<std::pair<std::shared_ptr<Block>, LootType>> blockLootPair;
         std::vector<std::shared_ptr<ImageItems>> particles;
         std::shared_ptr<Loot> loot = nullptr;

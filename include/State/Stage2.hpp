@@ -23,9 +23,10 @@ public:
     void Update(App* app) override;
     void End(App* app) override;
     bool Bubble();
-
+    void HiddenItem(App* app);
 private:
     int mapWidth = 2070;
+    Uint64 hiddenLootTime = 0;
     std::vector<float> bbl_vel = {0, 12.0f, 0}; // bubble velocity
     std::vector<std::shared_ptr<ImageItems>> bubblesVector;
 };
