@@ -98,7 +98,7 @@ void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Char
     }
     for (auto &enemy : m_Enemies) {
         enemy->InWindowDetection(screenWidth, offsetX);
-        if (enemy->CollideDetection(character, app->m_Menu)) {
+        if (enemy->CollideDetection(character, app->m_Menu, app->GetModeState())) {
             enemy->Death(app, m_Loots, m_PossibleLoots);
         }
     }
@@ -118,7 +118,7 @@ void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Char
         ManageZombies(offsetX, character, blocks, screenWidth);
         ManageLeopard(offsetX, character, blocks, screenWidth);
         ManageBat(offsetX, character, screenWidth);
-        ManageFishman(app, character, blocks, screenWidth);
+        ManageFishman(character, blocks, app->m_Menu, screenWidth, app->GetModeState());
     }
 }
 
@@ -228,9 +228,9 @@ void EnemiesManager::ManageBat(float offsetX, std::shared_ptr<Character> &charac
     }
 }
 
-void EnemiesManager::ManageFishman(App *app, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, int screenWidth) {
+void EnemiesManager::ManageFishman(std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, std::shared_ptr<Menu> &menu, int screenWidth, int modeState) {
     constexpr float delay = 3000.0f;
-    FireAttack(character, screenWidth, app->m_Menu);
+    FireAttack(character, screenWidth, menu, modeState);
     for (auto &fishman : m_Fishmans) {
         bool reset = true;
         if (!fishman->CheckReset() && !fishman->IsDead()) {
@@ -275,7 +275,7 @@ void EnemiesManager::ManageFishman(App *app, std::shared_ptr<Character> &charact
     }
 }
 
-void EnemiesManager::FireAttack(std::shared_ptr<Character> &character, int screenWidth, std::shared_ptr<Menu> &menu) {
+void EnemiesManager::FireAttack(std::shared_ptr<Character> &character, int screenWidth, std::shared_ptr<Menu> &menu, int modeState) {
     for (int i = 0; i < 2; i++) {
         if (isFire[i]) {
             glm::vec2 firePos = fires[i]->GetPosition();
@@ -304,9 +304,11 @@ void EnemiesManager::FireAttack(std::shared_ptr<Character> &character, int scree
                          (fireDirections[i] == "left" && character->GetPosition().x < fires[i]->GetPosition().x))) {
                         ifNeedSlip = true;
                     }
-                    character->SetHurtFlag(true, ifNeedSlip);
-                    character->SetHeart(character->GetHeart() - 2);
-                    menu->modifyHealth(character->GetHeart(), "player");
+                    if (modeState == 0) {
+                        character->SetHurtFlag(true, ifNeedSlip);
+                        character->SetHeart(character->GetHeart() - 2);
+                        menu->modifyHealth(character->GetHeart(), "player");
+                    }
                 }
             }
         }

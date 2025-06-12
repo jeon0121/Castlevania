@@ -37,9 +37,9 @@ class EnemiesManager {
 
         void ManageBat(float offsetX, std::shared_ptr<Character> &character, int screenWidth);
 
-        void ManageFishman(App *app, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, int screenWidth);
+        void ManageFishman(std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, std::shared_ptr<Menu> &menu, int screenWidth, int modeState);
 
-        void FireAttack(std::shared_ptr<Character> &character, int screenWidth, std::shared_ptr<Menu> &menu);
+        void FireAttack(std::shared_ptr<Character> &character, int screenWidth, std::shared_ptr<Menu> &menu, int modeState);
 
         void RemoveAllChild(App *app);
 

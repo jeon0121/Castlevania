@@ -152,12 +152,12 @@ void Stage1::Update(App* app){
     m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app);
     UpdateSubWeapon(app);
     UpdateScroll(mapWidth);
-    if (m_Character->GetStartDeadFlag() || (app->m_Menu->m_value.time == 0 && !isTimeOut)) {
+    if (m_Character->GetStartDeadFlag() || (app->GetTime() == 0 && !isTimeOut)) {
         app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/deadBGM.wav");
         app->BGM->Play(1);
         isTimeOut = true;
     }
-    if (m_Character->GetEndSceneFlag() || (m_Character->GetPosition().x >= 422 && m_Character->GetPosition().y > 80.75 && m_Character->GetPosition().y < 80.77)) {
+    if (app->SwitchStage() || m_Character->GetEndSceneFlag() || (m_Character->GetPosition().x >= 422 && m_Character->GetPosition().y > 80.75 && m_Character->GetPosition().y < 80.77)) {
         m_Character->m_Behavior->SetLooping(false);
         m_stateState = StateState::END;
     }
@@ -165,7 +165,7 @@ void Stage1::Update(App* app){
 
 void Stage1::End(App* app){
     // dead and reset
-    if (m_Character->GetEndSceneFlag()) {
+    if (switchStage || m_Character->GetEndSceneFlag()) {
         m_EnemiesManager->RemoveAllChild(app);
         SceneReset(app);
         app->m_Character = nullptr;

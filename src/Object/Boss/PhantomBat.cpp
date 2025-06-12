@@ -114,7 +114,7 @@ void PhantomBat::SetDivePosition(std::shared_ptr<Character> &character) {
     m_state = "dive";
 }
 
-bool PhantomBat::CollideDetection(std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) {
+bool PhantomBat::CollideDetection(std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu, int modeState) {
     int frameIndex = character->m_Behavior->GetCurrentFrameIndex();
     int whipLevel = character->GetWhipLevel();
     UpdatePosition();
@@ -176,9 +176,11 @@ bool PhantomBat::CollideDetection(std::shared_ptr<Character> &character, std::sh
                      (direction == "left" && character->GetPosition().x < GetPosition().x))) {
                     ifNeedSlip = true;
                 }
-                character->SetHurtFlag(true, ifNeedSlip);
-                character->SetHeart(character->GetHeart() - 2);
-                menu->modifyHealth(character->GetHeart(), "player");
+                if (modeState == 0) {
+                    character->SetHurtFlag(true, ifNeedSlip);
+                    character->SetHeart(character->GetHeart() - 2);
+                    menu->modifyHealth(character->GetHeart(), "player");
+                }
             }
         }
     }

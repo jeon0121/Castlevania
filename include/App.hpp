@@ -43,6 +43,15 @@ public:
 
     void RemoveMenu();
 
+    int  GetTime();
+
+    // for debug mode
+    void SwitchMode();
+
+    bool SwitchStage();
+
+    int  GetModeState();
+
     Util::Renderer m_Root;
     AppState m_AppState = AppState::START;
     GameState m_GameState = GameState::STAGE3;
@@ -53,6 +62,7 @@ public:
     std::shared_ptr<Character> m_Character;
     std::vector<int> stairNum = {0, 0};
     std::shared_ptr<Util::BGM> BGM;
+    int debugMode = 0;
 };
 
 #endif
