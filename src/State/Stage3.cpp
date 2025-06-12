@@ -130,7 +130,7 @@ void Stage3::Start(App* app){
 }
 
 void Stage3::Update(App* app){
-    Position::PrintObjectCoordinate(m_Character, offsetX);
+    // Position::PrintObjectCoordinate(m_Character, offsetX);
     if (blinkStartTime != 0)
         Blink();
     m_Character->Keys(m_Blocks, m_Stairs, app->m_Menu->m_value.time);
@@ -155,9 +155,10 @@ void Stage3::Update(App* app){
     }
     // boss
     else if (reachBoss) {
+        
         whipDropped = true;
-        m_Boss->MoveBehav(m_Character, screenHeight, screenWidth);
-        m_Boss->CollideDetection(m_Character, app->m_Menu, app->GetModeState());
+        if (!m_Boss->CollideDetection(m_Character, app->m_Menu, app->GetModeState()))
+            m_Boss->MoveBehav(m_Character, screenHeight, screenWidth);
     }
     if (m_Character->GetStartDeadFlag() || (app->GetTime() == 0 && !isTimeOut)) {
         app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/deadBGM.wav");

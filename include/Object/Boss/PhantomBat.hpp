@@ -28,12 +28,10 @@ private:
     glm::vec2 divePos;
     Uint64 idleTime = 0;
     Uint64 flyTime = 0;
-    Uint64 diveTime = 0;
     int health = 16;
     double yDistance = 0.0f;
     double tDive = 0.0f;
     bool hitWall = false;
-    bool is_hurt = false;
 };
 
 #endif

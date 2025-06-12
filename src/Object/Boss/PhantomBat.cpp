@@ -87,10 +87,12 @@ void PhantomBat::Dive(int screenWidth) {
         vel.x *= -1.0f;
     } else
         hitWall = false;
-    vel.y = -yDistance * sin(Time::GetRunTimeMs(diveTime) / tDive * M_PI);
+    static int diveTime;
+    diveTime += 10;
+    vel.y = -yDistance * sin(diveTime / tDive * M_PI);
     pos.x += vel.x;
     SetPosition({pos.x, pos.y + vel.y});
-    if ((Time::GetRunTimeMs(diveTime) > tDive) || (pos.y + vel.y > pos.y)) {
+    if ((diveTime > tDive) || (pos.y + vel.y > pos.y)) {
         m_state = "fly";
         diveTime = 0;
         flyTime = 0;
@@ -102,14 +104,13 @@ void PhantomBat::Dive(int screenWidth) {
 
 void PhantomBat::SetDivePosition(std::shared_ptr<Character> &character) {
     pos = GetPosition();
-    diveTime = SDL_GetPerformanceCounter();
     tDive = 1.5 + (rand() % 100) / 100.0;
     tDive *= 1000.0f;
     divePos = {character->GetPosition().x, 290.0f};
     glm::vec2 distance = divePos - pos;
     yDistance = std::abs(distance.y);
     vel.x = (distance.x * 2) / (tDive / 20.0f); 
-    vel.y = -yDistance * sin(Time::GetRunTimeMs(diveTime) / tDive * M_PI);
+    vel.y = 0;
     hitWall = false;
     m_state = "dive";
 }
@@ -124,8 +125,12 @@ bool PhantomBat::CollideDetection(std::shared_ptr<Character> &character, std::sh
     float charRight = charPos.x + charSize.x * 0.5f;
     float charTop = charPos.y + charSize.y * 0.5f;
     float charBottom = charPos.y - charSize.y * 0.5f;
-    if (!character->IfWhip() || character->m_SubWeapon != nullptr) 
-        is_hurt = false;
+    static bool is_subweaponHurt = false;
+    static bool is_whipHurt = false;
+    if (!character->IfWhip()) 
+        is_whipHurt = false;
+    if (!character->m_SubWeapon || !character->GetUseWeaponFlag())
+        is_subweaponHurt = false;
     if (character->IfWhip() && !is_dead) {
         bool isNormalWhip = (whipLevel != 3 && (frameIndex == 2 || frameIndex == 3));
         bool isLv3Whip = (whipLevel == 3 && frameIndex >= 8 && frameIndex <= 15);
@@ -139,9 +144,9 @@ bool PhantomBat::CollideDetection(std::shared_ptr<Character> &character, std::sh
                             (whipLeft < enemyLeft && whipRight > enemyRight);
             bool overlapY = enemyTop > charPos.y && enemyBottom < charPos.y;
 
-            if (overlapX && overlapY && !is_hurt) {
+            if (overlapX && overlapY && !is_whipHurt) {
                 SetPaused();
-                is_hurt = true;
+                is_whipHurt = true;
                 int hurtCount = (whipLevel == 3) ? 2 : 1;
                 health-=hurtCount;
                 menu->modifyHealth(health, "boss");
@@ -156,9 +161,9 @@ bool PhantomBat::CollideDetection(std::shared_ptr<Character> &character, std::sh
         bool overlapX = (weaponLeft > enemyLeft && weaponLeft < enemyRight) ||
                         (weaponRight > enemyLeft && weaponRight < enemyRight);
         bool overlapY = enemyTop > pos.y && enemyBottom < pos.y;
-        if (overlapX && overlapY && character->GetSubWeaponType() != WeaponType::Stopwatch && !is_hurt) {
+        if (overlapX && overlapY && character->GetSubWeaponType() != WeaponType::Stopwatch && !is_subweaponHurt) {
             SetPaused();
-            is_hurt = true;
+            is_subweaponHurt = true;
             health-=2;
             menu->modifyHealth(health, "boss");
         }
@@ -184,5 +189,5 @@ bool PhantomBat::CollideDetection(std::shared_ptr<Character> &character, std::sh
             }
         }
     }
-    return is_dead;
+    return is_subweaponHurt || is_whipHurt;
 }
