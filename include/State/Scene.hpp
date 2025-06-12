@@ -47,6 +47,11 @@ public:
 
     void SceneReset(App* app);
 
+    // for debug mode
+    bool GetSwitchStageFlag() const;
+
+    void SetSwitchStageFlag(bool ifSwitch);
+
     StateState m_stateState = StateState::START;
     int screenWidth = 1024;
     int screenHeight = 768;
@@ -71,6 +76,7 @@ protected:
     bool whipDropped = false; // to ensure that dropped whip dont exceed 1
     bool reachBoss = false;
     bool isTimeOut = false;
+    bool switchStage = false;
 };
 
 #endif

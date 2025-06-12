@@ -15,7 +15,7 @@ public:
     void Fly(std::shared_ptr<Character> &character, int screenHeight, int screenWidth);
     void Dive(int screenWidth);
     void SetDivePosition(std::shared_ptr<Character> &character);
-    bool CollideDetection(std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) override;
+    bool CollideDetection(std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu, int modeState) override;
 private:
     std::string m_state;
     std::vector<std::string> idleImages;

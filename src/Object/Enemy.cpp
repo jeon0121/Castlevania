@@ -62,7 +62,7 @@ void Enemy::UpdatePosition() {
     enemyRight = enemyPos.x + enemySize.x * 0.5f;
 }
 
-bool Enemy::CollideDetection(std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) {
+bool Enemy::CollideDetection(std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu, int modeState) {
     int frameIndex = character->m_Behavior->GetCurrentFrameIndex();
     int whipLevel = character->GetWhipLevel();
     UpdatePosition();
@@ -123,9 +123,11 @@ bool Enemy::CollideDetection(std::shared_ptr<Character> &character, std::shared_
                      (direction == "left" && character->GetPosition().x < GetPosition().x))) {
                     ifNeedSlip = true;
                 }
-                character->SetHurtFlag(true, ifNeedSlip);
-                character->SetHeart(character->GetHeart() - countHurt);
-                menu->modifyHealth(character->GetHeart(), "player");
+                if (modeState == 0) {
+                    character->SetHurtFlag(true, ifNeedSlip);
+                    character->SetHeart(character->GetHeart() - countHurt);
+                    menu->modifyHealth(character->GetHeart(), "player");
+                }
             }
         }
     }

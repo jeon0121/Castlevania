@@ -14,9 +14,9 @@ void App::Start() {
         BGM = std::make_shared<Util::BGM>(GA_RESOURCE_DIR "/BGM/stageBGM.wav");
         BGM->SetVolume(50);
     }
-    if (m_GameState != GameState::TITLE && m_GameState != GameState::GG)
+    if (m_GameState != GameState::TITLE && m_GameState != GameState::GG && debugMode == 0)
         m_Menu->TimeCount(true);
-    if (m_GameState == GameState::STAGE2A && m_Character && m_Character->GetDeadFlag()) {
+    if (m_GameState == GameState::STAGE2A && ((m_Character && m_Character->GetDeadFlag()) || (m_Scene && m_Scene->GetSwitchStageFlag()))) {
         m_Character = nullptr;
         m_SceneA = nullptr;
         m_SceneB = nullptr;
@@ -58,7 +58,8 @@ void App::Start() {
 }
 
 void App::Update() {
-    if (m_GameState != GameState::TITLE && m_GameState != GameState::GG)
+    SwitchMode();
+    if (m_GameState != GameState::TITLE && m_GameState != GameState::GG && debugMode == 0)
         m_Menu->TimeCount();
     if(m_Scene->m_stateState == Scene::StateState::END)
         m_Scene->End(this);
@@ -121,4 +122,36 @@ void App::RemoveMenu() {
         for (auto &&h : healthbar) m_Root.RemoveChild(h);
     }
     m_Menu = nullptr;
+}
+
+int App::GetTime() {
+    return m_Menu->m_value.time;
+}
+
+void App::SwitchMode() {
+    if (Util::Input::IsKeyUp(Util::Keycode::NUM_6))
+        debugMode = (debugMode + 1) % 2;
+}
+
+bool App::SwitchStage() {
+    GameState prevStage = m_GameState;
+    if (debugMode == 1) {
+        if (m_GameState != GameState::STAGE0 && Util::Input::IsKeyPressed(Util::Keycode::NUM_0))
+            m_GameState = GameState::STAGE0;
+        else if (m_GameState != GameState::STAGE1 && Util::Input::IsKeyPressed(Util::Keycode::NUM_1))
+            m_GameState = GameState::STAGE1;
+        else if (m_GameState != GameState::STAGE2A && Util::Input::IsKeyPressed(Util::Keycode::NUM_2))
+            m_GameState = GameState::STAGE2A;
+        else if (m_GameState != GameState::STAGE3 && Util::Input::IsKeyPressed(Util::Keycode::NUM_3))
+            m_GameState = GameState::STAGE3;
+    }
+    if (prevStage != m_GameState) {
+        m_Scene->SetSwitchStageFlag(true);
+        return true;
+    }
+    return false;
+}
+
+int App::GetModeState() {
+    return debugMode;
 }

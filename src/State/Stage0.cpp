@@ -83,12 +83,12 @@ void Stage0::Update(App* app){
         m_End->SetVisible(true);
         m_stateState = StateState::END;
     }
-    if (app->m_Menu->m_value.time == 0 && !isTimeOut) {
+    if (app->GetTime() == 0 && !isTimeOut) {
         app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/deadBGM.wav");
         app->BGM->Play(1);
         isTimeOut = true;
     }
-    if (m_Character->GetEndSceneFlag()) {
+    if (app->SwitchStage() || m_Character->GetEndSceneFlag()) {
         m_Character->m_Behavior->SetLooping(false);
         m_stateState = StateState::END;
     }
@@ -96,7 +96,7 @@ void Stage0::Update(App* app){
 
 void Stage0::End(App* app){
     // dead and reset
-    if (m_Character->GetEndSceneFlag()) {
+    if (switchStage || m_Character->GetEndSceneFlag()) {
         SceneReset(app);
         app->m_Character = nullptr;
     }
