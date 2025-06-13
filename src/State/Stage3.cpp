@@ -1,5 +1,6 @@
 #include "State/Stage3.hpp"
 #include "Utility/Position.hpp"
+#include "Utility/Time.hpp"
 
 void Stage3::Start(App* app){
     // menu
@@ -37,7 +38,7 @@ void Stage3::Start(App* app){
     std::vector<PossibleLootData> possibleLoots = {
         {LootType::HeartSmall, 0.5, -1},
         {LootType::Dagger,     0.2,  1},
-        {LootType::Axe,        0.2,  1},
+        {LootType::Rosary,     0.2,  1},
         {LootType::None,       1.0, -1},
     };
     m_EnemiesManager = std::make_shared<EnemiesManager>(possibleLoots);
@@ -158,17 +159,7 @@ void Stage3::Update(App* app){
     // boss
     else if (reachBoss) {
         whipDropped = true;
-        if (!m_Boss->CollideDetection(m_Character, app->m_Menu, app->GetModeState()))
-            m_Boss->MoveBehav(m_Character, screenHeight, screenWidth);
-        else {
-            auto boss = std::dynamic_pointer_cast<PhantomBat>(m_Boss);
-            if (boss->IsDead()) {
-                boss->hurtEffect->SetVisible(false);
-                boss->SetVisible(false);
-                // crystal appears
-            }
-            boss->Hurt();
-        }
+        BossFight(app);
     }
     if (m_Character->GetStartDeadFlag() || (app->GetTime() == 0 && !isTimeOut)) {
         app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/deadBGM.wav");
@@ -190,6 +181,34 @@ void Stage3::End(App* app){
     }
     // end scene animation
     else {
-        app->m_GameState = App::GameState::GG;
+        // app->m_GameState = App::GameState::GG;
+        std::cout << "Stage 3 End" << std::endl;
+    }
+}
+
+void Stage3::BossFight(App *app) {
+    if (!m_Boss->CollideDetection(m_Character, app->m_Menu, app->GetModeState()))
+        m_Boss->MoveBehav(m_Character, screenHeight, screenWidth);
+    else {
+        auto boss = std::dynamic_pointer_cast<PhantomBat>(m_Boss);
+        if (boss->IsDead()) {
+            boss->hurtEffect->SetVisible(false);
+            boss->SetVisible(false);
+            DropCrystal();
+        }
+        boss->Hurt();
+    }
+}
+void Stage3::DropCrystal() {
+    if (Time::GetRunTimeMs(crystalTime) > 4000.0f && m_crystal) {
+        m_crystal->Fall(m_Blocks);
+        if (m_crystal->IsCollected(m_Character))
+            m_stateState = StateState::END;
+    } else if (Time::GetRunTimeMs(crystalTime) > 2000.0f && m_crystal) {
+        int timeCount = static_cast<int>(Time::GetRunTimeMs(crystalTime));
+        m_crystal->SetVisible((timeCount / 50) % 2 == 0);
+    } else if (crystalTime == 0) {
+        crystalTime = SDL_GetPerformanceCounter();
+        m_crystal = Loot::CreateLoot(LootType::Crystal, glm::vec2(0, 0));
     }
 }

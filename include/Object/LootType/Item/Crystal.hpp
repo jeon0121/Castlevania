@@ -9,6 +9,8 @@ namespace LootItem {
    public:
       Crystal(glm::vec2 position);
 
+      void Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks) override;
+
       void Result(App* app, std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) override;
    };
 }

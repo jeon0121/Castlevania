@@ -9,9 +9,12 @@ public:
     void Start(App*) override;
     void Update(App*) override;
     void End(App*) override;
-
+    void BossFight(App* app);
+    void DropCrystal();
 private:
     int mapWidth = 3122;
+    std::shared_ptr<Loot> m_crystal;
+    Uint64 crystalTime = 0;
 };
 #endif
 
