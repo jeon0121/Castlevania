@@ -91,7 +91,7 @@ void Stage0::Update(App* app){
         m_End->SetVisible(true);
         m_stateState = StateState::END;
     }
-    if (app->GetTime() == 0 && !isTimeOut) {
+    if (app->m_Menu->GetTime() == 0 && !isTimeOut) {
         app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/deadBGM.wav");
         app->BGM->Play(1);
         isTimeOut = true;
@@ -116,7 +116,8 @@ void Stage0::End(App* app){
             endSound->SetVolume(60);
             endSound->Play();
             is_endSound = true;
-        }
+        }else if (specialBag)
+            app->m_Root.RemoveChild(specialBag);
         if (m_Character->GetPosition().x >= 500) {
             app->RemoveAllChildren(m_All);
             app->m_AppState = App::AppState::START;

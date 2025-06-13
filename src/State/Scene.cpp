@@ -230,8 +230,8 @@ void Scene::SceneReset(App* app) {
     else if (app->GetModeState() == 0){
         app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(5), 3);
         app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(--(app->m_Menu->m_value.playerLife)), 4);
-        app->m_Menu->m_value.time = (app->m_Menu->m_value.time / 100 + 1) * 100;
-        app->m_Menu->modifyNumber(app->m_Menu->formatTime(app->m_Menu->m_value.time), 1);
+        app->m_Menu->SetTime((app->m_Menu->GetTime() / 100 + 1) * 100);
+        app->m_Menu->modifyNumber(app->m_Menu->formatTime(app->m_Menu->GetTime()), 1);
     }
     if (specialBag)
         app->m_Root.RemoveChild(specialBag);

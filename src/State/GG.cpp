@@ -5,9 +5,12 @@ void GG::Start(App* app){
     app->m_Menu->SetMenuVisibility(true);
 
     // text
-    app->m_Menu->addText("Continue", {37, -137}, 1);
-    app->m_Menu->addText("End", {37, -227}, 1);
-    app->m_Menu->addText("Game-Over", {37, 16}, 1);
+    app->m_Menu->addText("continue", {37, -137}, 1);
+    app->m_Menu->addText("end", {37, -227}, 1);
+    if (app->GetVictoryFlag())
+        app->m_Menu->addText("victory", {37, 16}, 1);
+    else
+        app->m_Menu->addText("game-over", {37, 16}, 1);
     for (auto&& txt : app->m_Menu->GGImage)
         app->m_Root.AddChild(txt);
 
@@ -52,6 +55,7 @@ void GG::End(App* app){
     app->stairNum = {0, 0};
     app->RemoveAllChildren(m_All);
     app->RemoveMenu();
+    app->SetVictoryFlag(false);
     app->m_AppState = App::AppState::START;
     if (choice == 1)
         app->m_GameState = App::GameState::STAGE0;

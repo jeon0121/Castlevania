@@ -210,3 +210,15 @@ void Menu::TimeCount(bool endScene) {
     if (endScene)
         timeoutSound->SetVolume(0);
 }
+
+int Menu::GetTime() {
+    return m_value.time;
+}
+
+void Menu::SetTime(int time) {
+    m_value.time = time;
+}
+
+int Menu::GetScore() {
+    return m_value.score;
+}
