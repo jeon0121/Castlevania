@@ -122,7 +122,7 @@ void Stage0::End(App* app){
             is_endSound = true;
         }
         if (m_Character->GetPosition().x >= 500) {
-            app->RemoveAllChildren(m_All);
+            app->RemoveAllChildren(m_All, m_Loots);
             app->m_AppState = App::AppState::START;
             app->m_GameState = App::GameState::STAGE1;
         }

@@ -155,7 +155,7 @@ void Stage2a::Update(App *app) {
       Blink();
    m_Character->Keys(m_Blocks, m_Stairs, app->m_Menu->m_value.time);
    UpdateTorch(app);
-   m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app, m_All);
+   m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app, m_Loots);
    UpdateSubWeapon(app);
    UpdateScroll(mapWidth);
    UpdateHitableBlock(app);
@@ -166,7 +166,7 @@ void Stage2a::Update(App *app) {
       app->stairNum[0] = (m_Character->GetPosition().x < -100) ? 0 : 1;
       app->m_AppState = App::AppState::START;
       app->m_GameState = App::GameState::STAGE2B;
-      app->RemoveAllChildren(m_All);
+      app->RemoveAllChildren(m_All, m_Loots);
       app->m_Root.RemoveChild(m_Character->m_Behavior);
       m_EnemiesManager->RemoveAllChild(app);
    }

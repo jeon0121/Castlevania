@@ -61,6 +61,7 @@ protected:
     std::shared_ptr<AnimatedItems> m_Blink;
     std::shared_ptr<Character> m_Character;
     std::vector<std::shared_ptr<Util::GameObject>> m_All;
+    std::vector<std::shared_ptr<Util::GameObject>> m_Loots;
     std::vector<std::shared_ptr<Block>> m_Blocks;
     std::vector<std::shared_ptr<HitableBlock>> m_HitableBlocks;
     std::vector<std::shared_ptr<Stair>> m_Stairs;

@@ -56,7 +56,7 @@ void GG::End(App* app){
     app->m_SceneB = nullptr;
     app->m_Character = nullptr;
     app->stairNum = {0, 0};
-    app->RemoveAllChildren(m_All);
+    app->RemoveAllChildren(m_All, m_Loots);
     app->RemoveMenu();
     app->SetVictoryFlag(false);
     app->m_AppState = App::AppState::START;
