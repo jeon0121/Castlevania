@@ -159,7 +159,7 @@ void Stage2b::Update(App *app) {
         app->RemoveAllChildren(m_All);
         app->m_Root.RemoveChild(m_Character->m_Behavior);
         m_EnemiesManager->RemoveAllChild(app);
-    }else if (m_Character->GetStartDeadFlag() || ((app->GetTime() == 0 || m_Character->GetPosition().y < -240) && !isTimeOut)) {
+    }else if (m_Character->GetStartDeadFlag() || ((app->m_Menu->GetTime() == 0 || m_Character->GetPosition().y < -240) && !isTimeOut)) {
         app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/deadBGM.wav");
         app->BGM->Play(1);
         isTimeOut = true;

@@ -90,7 +90,7 @@ bool Enemy::CollideDetection(std::shared_ptr<Character> &character, std::shared_
                 SetPaused();
                 is_dead = true;
                 deadSound->Play();
-                menu->modifyNumber(menu->formatScore(menu->m_value.score + score), 0, (menu->m_value.score + score));
+                menu->modifyNumber(menu->formatScore(menu->GetScore() + score), 0, (menu->GetScore() + score));
             }
         }
     } else if (character->m_SubWeapon != nullptr && character->GetUseWeaponFlag() && !is_dead) {

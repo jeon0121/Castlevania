@@ -54,6 +54,12 @@ public:
     void SetMenuVisibility(const bool visible);
 
     void TimeCount(bool endScene = false);
+
+    int  GetTime();
+
+    void SetTime(int time);
+
+    int  GetScore();
 private:
     Util::ms_t timer = 0;
     std::shared_ptr<Util::SFX> timeoutSound;

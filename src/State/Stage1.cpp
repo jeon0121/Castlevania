@@ -152,7 +152,7 @@ void Stage1::Update(App* app){
     m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app);
     UpdateSubWeapon(app);
     UpdateScroll(mapWidth);
-    if (m_Character->GetStartDeadFlag() || (app->GetTime() == 0 && !isTimeOut)) {
+    if (m_Character->GetStartDeadFlag() || (app->m_Menu->GetTime() == 0 && !isTimeOut)) {
         app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/deadBGM.wav");
         app->BGM->Play(1);
         isTimeOut = true;

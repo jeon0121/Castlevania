@@ -59,7 +59,7 @@ void App::Start() {
 
 void App::Update() {
     SwitchMode();
-    if (m_GameState != GameState::TITLE && m_GameState != GameState::GG && debugMode == 0)
+    if (m_GameState != GameState::TITLE && m_GameState != GameState::GG && debugMode == 0 && !isVictory)
         m_Menu->TimeCount();
     if(m_Scene->m_stateState == Scene::StateState::END)
         m_Scene->End(this);
@@ -124,8 +124,12 @@ void App::RemoveMenu() {
     m_Menu = nullptr;
 }
 
-int App::GetTime() {
-    return m_Menu->m_value.time;
+int  App::GetVictoryFlag() {
+    return isVictory;
+}
+
+void App::SetVictoryFlag(bool isVictory) {
+    this->isVictory = isVictory;
 }
 
 void App::SwitchMode() {

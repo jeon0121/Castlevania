@@ -127,6 +127,9 @@ void Stage3::Start(App* app){
         // m_All.insert(m_All.end(), stair.begin(), stair.end());
     }
 
+    countScore = std::make_shared<Util::SFX>(GA_RESOURCE_DIR "/Sound Effects/05.wav");
+    countScore->SetVolume(50);
+
     app->AddAllChildren(m_All);
     m_EnemiesManager->AddAllChild(app);
     m_stateState = StateState::UPDATE;
@@ -161,7 +164,7 @@ void Stage3::Update(App* app){
         whipDropped = true;
         BossFight(app);
     }
-    if (m_Character->GetStartDeadFlag() || (app->GetTime() == 0 && !isTimeOut)) {
+    if (m_Character->GetStartDeadFlag() || (app->m_Menu->GetTime() == 0 && !isTimeOut)) {
         app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/deadBGM.wav");
         app->BGM->Play(1);
         isTimeOut = true;
@@ -177,11 +180,12 @@ void Stage3::End(App* app){
     if (switchStage || m_Character->GetEndSceneFlag()) {
         m_EnemiesManager->RemoveAllChild(app);
         SceneReset(app);
+        app->m_Menu->modifyBadge(false);
         app->m_Character = nullptr;
     }
     // end scene animation
     else {
-        // app->m_GameState = App::GameState::GG;
+        EndAnimation(app);
         std::cout << "Stage 3 End" << std::endl;
     }
 }
@@ -210,11 +214,45 @@ void Stage3::DropCrystal(App *app) {
         m_crystal->SetVisible(true);
         m_crystal->Fall(m_Blocks);
         if (m_crystal->IsCollected(m_Character)) {
+            crystalTime = SDL_GetPerformanceCounter();
             m_Character->ChangeBehavior(2);
+            app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/victoryBGM.wav");
+            app->BGM->SetVolume(50);
+            app->BGM->Play(1);
+            app->SetVictoryFlag(true);
             m_stateState = StateState::END;
         }
     } else if (Time::GetRunTimeMs(crystalTime) > 2000.0f && m_crystal) {
         int timeCount = static_cast<int>(Time::GetRunTimeMs(crystalTime));
         m_crystal->SetVisible((timeCount / 50) % 2 == 0);
+    }
+}
+
+void Stage3::EndAnimation(App *app) {
+    if (Time::GetRunTimeMs(crystalTime) < 5000.0f)
+        return;
+    if (m_Character->GetAmmo() == 0 && endScoreTime == 0)
+        endScoreTime = SDL_GetPerformanceCounter();
+    if (app->m_Menu->GetTime() > 0) {
+        app->m_Menu->modifyNumber(app->m_Menu->formatTime(app->m_Menu->GetTime() - 1), 1);
+        app->m_Menu->SetTime(app->m_Menu->GetTime() - 1);
+        app->m_Menu->modifyNumber(app->m_Menu->formatScore(app->m_Menu->GetScore() + 10), 0, (app->m_Menu->GetScore() + 10));
+        countScore->Play();
+    }else if (m_Character->GetAmmo() > 0) {
+        if (countHeartTime == 0)
+            countHeartTime = SDL_GetPerformanceCounter();
+        else if (Time::GetRunTimeMs(countHeartTime) > 250.0f) {
+            app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(m_Character->GetAmmo()-1), 3);
+            m_Character->SetAmmo(m_Character->GetAmmo()-1);
+            app->m_Menu->modifyNumber(app->m_Menu->formatScore(app->m_Menu->GetScore() + 100), 0, (app->m_Menu->GetScore() + 100));
+            countScore->Play();
+            countHeartTime = 0;
+        }
+    }else if (Time::GetRunTimeMs(endScoreTime) > 3000.0f) {
+        m_EnemiesManager->RemoveAllChild(app);
+        app->RemoveAllChildren(m_All);
+        app->m_Character = nullptr;
+        app->m_AppState = App::AppState::START;
+        app->m_GameState = App::GameState::GG;
     }
 }

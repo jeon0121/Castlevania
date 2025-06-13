@@ -35,7 +35,7 @@ void Bag::Result(App* app, std::shared_ptr<Character> &character, std::shared_pt
     if (!score) {
         (void) character;
         glm::vec2 pos = GetPosition();
-        menu->modifyNumber(menu->formatScore(menu->m_value.score + addScore), 0, (menu->m_value.score + addScore));
+        menu->modifyNumber(menu->formatScore(menu->GetScore() + addScore), 0, (menu->GetScore() + addScore));
         std::vector<std::string> scoreImage = {GA_RESOURCE_DIR"/items/number/" + std::to_string(addScore) + ".png"};
         score = std::make_shared<AnimatedItems>(scoreImage, 0);
         score->SetPosition({pos.x + 25, pos.y + 20});
