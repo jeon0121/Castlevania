@@ -182,8 +182,6 @@ void Stage2b::End(App *app) {
     m_EnemiesManager->RemoveAllChild(app);
     SceneReset(app);
     app->m_Root.RemoveChild(m_Character->m_Behavior);
-    if (m_HitableBlocks[0]->loot)
-        app->m_Root.RemoveChild(m_HitableBlocks[0]->loot);
     if (!switchStage)
         app->m_GameState = App::GameState::STAGE2A;
 }
@@ -227,6 +225,7 @@ void Stage2b::HiddenItem(App *app) {
             specialBagAppear->SetVolume(50);
             specialBagAppear->Play();
             app->m_Root.AddChild(m_HitableBlocks[0]->loot);
+            m_All.push_back(m_HitableBlocks[0]->loot);
         }
     }
     if (hiddenLootTime != 0 && Time::GetRunTimeMs(hiddenLootTime) > 6000.0f && m_HitableBlocks[0]->loot) {

@@ -26,7 +26,10 @@ void GG::Start(App* app){
     m_All.push_back(m_Background);
 
     // sound
-    app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/gameoverBGM.wav");
+    if (app->GetVictoryFlag())
+        app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/victoryBGM.wav");
+    else
+        app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/gameoverBGM.wav");
     app->BGM->SetVolume(50);
     app->BGM->Play(1);
     choiceSound = std::make_shared<Util::SFX>(GA_RESOURCE_DIR "/Sound Effects/05.wav");

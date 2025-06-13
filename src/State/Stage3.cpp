@@ -210,10 +210,12 @@ void Stage3::DropCrystal(App *app) {
         m_crystal = Loot::CreateLoot(LootType::Crystal, glm::vec2(0, 0));
         m_crystal->SetVisible(false);
         app->m_Root.AddChild(m_crystal);
+        m_All.push_back(m_crystal);
     } else if (Time::GetRunTimeMs(crystalTime) > 2500.0f && m_crystal) {
         m_crystal->SetVisible(true);
         m_crystal->Fall(m_Blocks);
         if (m_crystal->IsCollected(m_Character)) {
+            m_crystal->Result(app, m_Character, app->m_Menu);
             crystalTime = SDL_GetPerformanceCounter();
             m_Character->ChangeBehavior(2);
             app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/victoryBGM.wav");

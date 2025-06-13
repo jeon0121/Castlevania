@@ -78,7 +78,7 @@ bool Torch::CollideDetection(std::shared_ptr<Character> &character) {
     return is_destroyed;
 }
 
-void Torch::Destroy(App* app, std::shared_ptr<Character> character, bool &whipDropped) {
+void Torch::Destroy(App* app, std::shared_ptr<Character> character, bool &whipDropped, std::vector<std::shared_ptr<Util::GameObject>> &m_All) {
     if (IfAnimationStart())
         SetAnimationFrames(torchDeath, 120);
     SetPlaying();
@@ -91,5 +91,6 @@ void Torch::Destroy(App* app, std::shared_ptr<Character> character, bool &whipDr
         }
         loot = Loot::CreateLoot(itemType, GetPosition());
         app->m_Root.AddChild(loot);
+        m_All.push_back(loot);
     }
 }

@@ -16,7 +16,7 @@ public:
 
    bool CollideDetection(std::shared_ptr<Character> &character);
 
-   void Destroy(App* app, std::shared_ptr<Character> character, bool &whipDropped);
+   void Destroy(App* app, std::shared_ptr<Character> character, bool &whipDropped, std::vector<std::shared_ptr<Util::GameObject>> &m_All);
 
    std::shared_ptr<Loot> loot = nullptr;
 

@@ -99,7 +99,7 @@ void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Char
     for (auto &enemy : m_Enemies) {
         enemy->InWindowDetection(screenWidth, offsetX);
         if (enemy->CollideDetection(character, app->m_Menu, app->GetModeState())) {
-            enemy->Death(app, m_Loots, m_PossibleLoots);
+            enemy->Death(app, m_Loots, m_PossibleLoots, rendererVec);
         }
     }
     for (auto &&loot : m_Loots) {

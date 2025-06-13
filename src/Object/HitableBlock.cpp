@@ -76,16 +76,17 @@ void HitableBlock::RemoveBlock(App* app, std::vector<std::shared_ptr<Block>> &bl
         loot = Loot::CreateLoot(itemType, block->GetPosition());
         loot->SetPosition(block->GetPosition());
         app->m_Root.AddChild(loot);
+        m_All.push_back(loot);
     }
     blockLootPair.erase(blockLootPair.begin());
     app->m_Root.RemoveChild(block);
     m_All.erase(std::remove(m_All.begin(), m_All.end(), block), m_All.end());
     blocks.erase(std::remove(blocks.begin(), blocks.end(), block), blocks.end());
-    SetParticles(app, block);
+    SetParticles(app, block, m_All);
     breakSound->Play();
 }
 
-void HitableBlock::SetParticles(App* app, std::shared_ptr<Block> &block) {
+void HitableBlock::SetParticles(App* app, std::shared_ptr<Block> &block , std::vector<std::shared_ptr<Util::GameObject>> &m_All) {
     particles.clear();
     y_vel = 6.0f;
     auto blockPos = block->GetPosition();
@@ -104,6 +105,7 @@ void HitableBlock::SetParticles(App* app, std::shared_ptr<Block> &block) {
         particle->SetZIndex(7);
         particles.push_back(particle);
         app->m_Root.AddChild(particle);
+        m_All.push_back(particle);
     }
 }
 

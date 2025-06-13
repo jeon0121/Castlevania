@@ -18,7 +18,7 @@ void Scene::UpdateTorch(App* app) {
             m_Torches.erase(std::remove(m_Torches.begin(), m_Torches.end(), torch), m_Torches.end());
         }
         if (torch && torch->CollideDetection(m_Character) && !torch->loot)
-            torch->Destroy(app, m_Character, whipDropped);
+            torch->Destroy(app, m_Character, whipDropped, m_All);
     }
 }
 
@@ -131,6 +131,7 @@ void Scene::SetSubweapon(App* app) {
         asLoot = std::dynamic_pointer_cast<Loot>(m_Character->m_SubWeapon);
         asLoot->m_Transform.scale = (dir == "right") ? glm::vec2(-1, 1) : glm::vec2(1, 1);
         app->m_Root.AddChild(asLoot);
+        m_All.push_back(asLoot);
     }
 }
 
@@ -233,8 +234,6 @@ void Scene::SceneReset(App* app) {
         app->m_Menu->SetTime((app->m_Menu->GetTime() / 100 + 1) * 100);
         app->m_Menu->modifyNumber(app->m_Menu->formatTime(app->m_Menu->GetTime()), 1);
     }
-    if (specialBag)
-        app->m_Root.RemoveChild(specialBag);
     app->m_Menu->modifyWeapon(WeaponType::None);
     app->RemoveAllChildren(m_All);
     app->m_AppState = App::AppState::START;

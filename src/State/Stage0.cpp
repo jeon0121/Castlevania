@@ -116,8 +116,7 @@ void Stage0::End(App* app){
             endSound->SetVolume(60);
             endSound->Play();
             is_endSound = true;
-        }else if (specialBag)
-            app->m_Root.RemoveChild(specialBag);
+        }
         if (m_Character->GetPosition().x >= 500) {
             app->RemoveAllChildren(m_All);
             app->m_AppState = App::AppState::START;
@@ -137,6 +136,7 @@ void Stage0::HiddenItem(App *app) {
             specialBagAppear->SetVolume(50);
             specialBagAppear->Play();
             app->m_Root.AddChild(specialBag);
+            m_All.push_back(specialBag);
         }
     }
     if (specialBag) {
