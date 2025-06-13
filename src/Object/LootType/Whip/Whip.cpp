@@ -10,6 +10,7 @@ void LootItem::Whip::Result(App* app, std::shared_ptr<Character> &character, std
          levelUpImage.emplace_back(GA_RESOURCE_DIR "/main character/color/color-" + std::to_string(i + 1) + ".png");
       }
       character->m_Behavior->SetPaused();
+      character->m_Behavior->SetVisible(true);
       character->LevelUpWhip();
       character->m_Behavior->SetAnimationFrames(levelUpImage, 30);
       character->m_Behavior->SetPlaying();

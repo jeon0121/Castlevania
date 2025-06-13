@@ -194,21 +194,27 @@ void Stage3::BossFight(App *app) {
         if (boss->IsDead()) {
             boss->hurtEffect->SetVisible(false);
             boss->SetVisible(false);
-            DropCrystal();
+            DropCrystal(app);
         }
-        boss->Hurt();
+        else
+            boss->Hurt();
     }
 }
-void Stage3::DropCrystal() {
-    if (Time::GetRunTimeMs(crystalTime) > 4000.0f && m_crystal) {
+void Stage3::DropCrystal(App *app) {
+    if (crystalTime == 0) {
+        crystalTime = SDL_GetPerformanceCounter();
+        m_crystal = Loot::CreateLoot(LootType::Crystal, glm::vec2(0, 0));
+        m_crystal->SetVisible(false);
+        app->m_Root.AddChild(m_crystal);
+    } else if (Time::GetRunTimeMs(crystalTime) > 2500.0f && m_crystal) {
+        m_crystal->SetVisible(true);
         m_crystal->Fall(m_Blocks);
-        if (m_crystal->IsCollected(m_Character))
+        if (m_crystal->IsCollected(m_Character)) {
+            m_Character->ChangeBehavior(2);
             m_stateState = StateState::END;
+        }
     } else if (Time::GetRunTimeMs(crystalTime) > 2000.0f && m_crystal) {
         int timeCount = static_cast<int>(Time::GetRunTimeMs(crystalTime));
         m_crystal->SetVisible((timeCount / 50) % 2 == 0);
-    } else if (crystalTime == 0) {
-        crystalTime = SDL_GetPerformanceCounter();
-        m_crystal = Loot::CreateLoot(LootType::Crystal, glm::vec2(0, 0));
     }
 }

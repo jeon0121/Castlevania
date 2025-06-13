@@ -32,8 +32,10 @@ void Crystal::Fall(const std::vector<std::shared_ptr<Block>>& m_Blocks){
             }
         }
     }
+   if (is_landed) {
+      y_vel = 0.0f;
+   }
 }
-
 
 void Crystal::Result(App* app, std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu) {
     (void) app;
