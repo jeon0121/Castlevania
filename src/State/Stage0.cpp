@@ -4,6 +4,7 @@
 
 void Stage0::Start(App* app){
     // menu
+    app->m_Menu->SetStageNum(1);
     app->m_Menu->SetMenuVisibility(true);
 
     // background

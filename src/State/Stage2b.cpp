@@ -5,6 +5,7 @@
 void Stage2b::Start(App *app) {
     if (m_Blocks.empty()) {
         // menu
+        app->m_Menu->SetStageNum(2);
         app->m_Menu->SetMenuVisibility(true);
 
         // background
@@ -147,7 +148,7 @@ void Stage2b::Update(App *app) {
     Position::PrintObjectCoordinate(m_Character, offsetX);
     m_Character->Keys(m_Blocks, m_Stairs, app->m_Menu->m_value.time);
     UpdateTorch(app);
-    m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app);
+    m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app, m_All);
     UpdateSubWeapon(app);
     UpdateScroll(mapWidth);
     UpdateHitableBlock(app);

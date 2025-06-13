@@ -23,7 +23,7 @@ class EnemiesManager {
 
         void AddFishman(glm::vec2 positions, std::string direction, App *app);
 
-        void Update(float offsetX, int screenWidth, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, App* app);
+        void Update(float offsetX, int screenWidth, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, App* app, std::vector<std::shared_ptr<Util::GameObject>> &m_All);
 
         void PauseAllEnemy();
 

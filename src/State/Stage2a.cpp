@@ -2,10 +2,11 @@
 #include "Utility/Position.hpp"
 
 void Stage2a::Start(App *app) {
-   if (m_Blocks.empty()) {
-      // menu
-      app->m_Menu->SetMenuVisibility(true);
+   // menu
+   app->m_Menu->SetStageNum(2);
+   app->m_Menu->SetMenuVisibility(true);
 
+   if (m_Blocks.empty()) {
       // background
       m_Background = std::make_shared<ImageItems>(GA_RESOURCE_DIR"/background/stage-2/crypt-a.png");
       m_Background->m_Transform.scale = glm::vec2(1.025, 0.90);
@@ -153,7 +154,7 @@ void Stage2a::Update(App *app) {
       Blink();
    m_Character->Keys(m_Blocks, m_Stairs, app->m_Menu->m_value.time);
    UpdateTorch(app);
-   m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app);
+   m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app, m_All);
    UpdateSubWeapon(app);
    UpdateScroll(mapWidth);
    UpdateHitableBlock(app);

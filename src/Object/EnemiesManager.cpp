@@ -79,7 +79,7 @@ void EnemiesManager::AddFishman(glm::vec2 positions, std::string direction, App 
     rendererVec.push_back(fishman);
 }
 
-void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, App* app) {
+void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Character> &character, std::vector<std::shared_ptr<Block>> &blocks, App* app, std::vector<std::shared_ptr<Util::GameObject>> &m_All) {
     if (character->GetLevelUpWhipFlag() ||
        (character->GetSubWeaponType() == WeaponType::Stopwatch && character->GetUseWeaponFlag())) {
         if (!character->GetLevelUpWhipFlag() && !isEnemyPause) {
@@ -99,7 +99,7 @@ void EnemiesManager::Update(float offsetX, int screenWidth, std::shared_ptr<Char
     for (auto &enemy : m_Enemies) {
         enemy->InWindowDetection(screenWidth, offsetX);
         if (enemy->CollideDetection(character, app->m_Menu, app->GetModeState())) {
-            enemy->Death(app, m_Loots, m_PossibleLoots, rendererVec);
+            enemy->Death(app, m_Loots, m_PossibleLoots, m_All);
         }
     }
     for (auto &&loot : m_Loots) {

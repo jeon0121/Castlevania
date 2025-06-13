@@ -217,8 +217,14 @@ int Menu::GetTime() {
 
 void Menu::SetTime(int time) {
     m_value.time = time;
+    modifyNumber(formatTime(m_value.time), 1);
 }
 
 int Menu::GetScore() {
     return m_value.score;
+}
+
+void Menu::SetStageNum(int stage) {
+    m_value.currentStage = stage;
+    modifyNumber(formatTwoDigits(m_value.currentStage), 2);
 }

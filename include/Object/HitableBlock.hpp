@@ -9,13 +9,13 @@
 class HitableBlock : public ImageItems {
     public:
         HitableBlock(LootType itemType);
-        void AddBlock(std::shared_ptr<Block> &block, LootType loot, std::vector<std::shared_ptr<Util::GameObject>> &m_All);
+        void AddBlock(std::shared_ptr<Block> &block, LootType loot, std::vector<std::shared_ptr<GameObject>> &m_All);
         void UpdatePosition();
         const glm::vec2& GetPosition() const override;
         void SetPosition(const glm::vec2 &position) override;
         bool CollideDetection(std::shared_ptr<Character> &character);
-        void RemoveBlock(App* app, std::vector<std::shared_ptr<Block>> &blocks, std::vector<std::shared_ptr<Util::GameObject>> &m_All);
-        void SetParticles(App* app, std::shared_ptr<Block> &block, std::vector<std::shared_ptr<Util::GameObject>> &m_All);
+        void RemoveBlock(App* app, std::vector<std::shared_ptr<Block>> &blocks, std::vector<std::shared_ptr<GameObject>> &m_All);
+        void SetParticles(App* app, std::shared_ptr<Block> &block, std::vector<std::shared_ptr<GameObject>> &m_All);
         void ScatterParticles(App* app);
         bool IsDestroyed() const;
         std::vector<std::pair<std::shared_ptr<Block>, LootType>> blockLootPair;

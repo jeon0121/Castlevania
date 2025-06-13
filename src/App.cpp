@@ -151,6 +151,11 @@ bool App::SwitchStage() {
     }
     if (prevStage != m_GameState) {
         m_Scene->SetSwitchStageFlag(true);
+        if (prevStage ==  GameState::STAGE2A || prevStage ==  GameState::STAGE2B) {
+            m_Character = nullptr;
+            m_SceneA = nullptr;
+            m_SceneB = nullptr;
+        }
         return true;
     }
     return false;

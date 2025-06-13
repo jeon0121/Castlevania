@@ -23,7 +23,7 @@ std::string Enemy::GetDirection() {
     return this->direction;
 }
 
-void Enemy::Death(App* app, std::vector<std::shared_ptr<Loot>> &m_Loots, std::vector<PossibleLootData> &m_PossibleLoots, std::vector<std::shared_ptr<GameObject>> &rendererVec) {
+void Enemy::Death(App* app, std::vector<std::shared_ptr<Loot>> &m_Loots, std::vector<PossibleLootData> &m_PossibleLoots, std::vector<std::shared_ptr<GameObject>> &m_All) {
     if (IfAnimationStart())
         SetAnimationFrames(deathImages, 120);
     SetPlaying();
@@ -43,7 +43,7 @@ void Enemy::Death(App* app, std::vector<std::shared_ptr<Loot>> &m_Loots, std::ve
         if (loot) {
             m_Loots.push_back(loot);
             app->m_Root.AddChild(loot);
-            rendererVec.push_back(loot);
+            m_All.push_back(loot);
         }
         lootType = LootType::None;
     }

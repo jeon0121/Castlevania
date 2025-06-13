@@ -60,6 +60,8 @@ public:
     void SetTime(int time);
 
     int  GetScore();
+
+    void SetStageNum(int stage);
 private:
     Util::ms_t timer = 0;
     std::shared_ptr<Util::SFX> timeoutSound;

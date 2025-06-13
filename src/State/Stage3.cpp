@@ -4,6 +4,7 @@
 
 void Stage3::Start(App* app){
     // menu
+    app->m_Menu->SetStageNum(3);
     app->m_Menu->SetMenuVisibility(true);
 
     // background
@@ -141,7 +142,7 @@ void Stage3::Update(App* app){
         Blink();
     m_Character->Keys(m_Blocks, m_Stairs, app->m_Menu->m_value.time);
     UpdateTorch(app);
-    m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app);
+    m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app, m_All);
     UpdateSubWeapon(app);
     UpdateHitableBlock(app);
     if (m_Character->GetDeadFlag()) {
@@ -236,7 +237,6 @@ void Stage3::EndAnimation(App *app) {
     if (m_Character->GetAmmo() == 0 && endScoreTime == 0)
         endScoreTime = SDL_GetPerformanceCounter();
     if (app->m_Menu->GetTime() > 0) {
-        app->m_Menu->modifyNumber(app->m_Menu->formatTime(app->m_Menu->GetTime() - 1), 1);
         app->m_Menu->SetTime(app->m_Menu->GetTime() - 1);
         app->m_Menu->modifyNumber(app->m_Menu->formatScore(app->m_Menu->GetScore() + 10), 0, (app->m_Menu->GetScore() + 10));
         countScore->Play();
