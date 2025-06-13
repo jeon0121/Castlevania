@@ -7,5 +7,6 @@
 #include "State/Stage2.hpp"
 #include "State/Stage3.hpp"
 #include "State/Scene.hpp"
+#include "State/GG.hpp"
 
 #endif

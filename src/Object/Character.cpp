@@ -170,7 +170,7 @@ void Character::Hurt() {
     // if ((m_pos.y - m_size.y * 0.5f) <= landPosition  && GetHeart() > 0 && !is_hurtOnStair && !startDuckTime && !is_jump && is_hurt)
     if (is_collide.y && GetHeart() > 0 && !is_hurtOnStair)
         startDuckTime = SDL_GetPerformanceCounter();
-    if (startDuckTime) {
+    if (startDuckTime && is_hurt) {
         HandleFallDuck(m_direction);
     }
 }
@@ -386,8 +386,6 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const 
         constexpr Util::Keycode DOWN   = Util::Keycode::S;
         constexpr Util::Keycode LEFT   = Util::Keycode::A;
         constexpr Util::Keycode RIGHT  = Util::Keycode::D;
-        constexpr Util::Keycode START  = Util::Keycode::RETURN;
-        constexpr Util::Keycode SELECT = Util::Keycode::RSHIFT;
 
         m_Behavior->SetPlaying();
         m_Behavior->SetLooping(true);
@@ -409,11 +407,11 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const 
             Whip();
         }
         // ascending
-        else if ((Util::Input::IsKeyPressed(UP) && ((stair != nullptr && stair->GetDirection() == "down") || is_onStair)) || is_ascending) {
+        else if ((Util::Input::IsKeyPressed(UP) && ((stair != nullptr && stair->GetDirection() == "down") || is_onStair) && !is_jump) || is_ascending) {
             Ascending(stair);
         }
         // descending
-        else if ((Util::Input::IsKeyPressed(DOWN) && ((stair != nullptr && stair->GetDirection() == "up") || is_onStair)) || is_descending) {
+        else if ((Util::Input::IsKeyPressed(DOWN) && ((stair != nullptr && stair->GetDirection() == "up") || is_onStair) && !is_jump) || is_descending) {
             Descending(stair);
         }
         else if (!is_hurt) {
@@ -513,7 +511,7 @@ void Character::HandleFallDuck(const std::string& direction) {
             is_hurt = false;
             startDuckTime = 0;
         }
-    }else {
+    } else {
         if (!startDuckTime) {
             m_soundEft->LoadMedia(GA_RESOURCE_DIR "/Sound Effects/13.wav");
             m_soundEft->SetVolume(40);
@@ -741,7 +739,7 @@ void Character::Move(std::string direction){
 void Character::Idle() {
     if ((change_land && prevLandPosition > landPosition) || startDuckTime) {
         m_pos.y -= OffsetValues("duck") * 0.5;
-        if (prevLandPosition - landPosition > 150.0f)
+        if (prevLandPosition - landPosition > 150.0f && !is_hurt)
             Duck(m_direction);
         if (!startDuckTime)
             startDuckTime = SDL_GetPerformanceCounter();
@@ -789,6 +787,7 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
             (charTop > blockBottom && charBottom < blockTop)) {  //overlap y
             //determine collision base on the smallest
             float minOverlap = std::min({abs(overlapTop), abs(overlapBottom), abs(overlapLeft), abs(overlapRight)});
+            if (minOverlap > 20.0f) continue;
             //below (char hit head)
             if (minOverlap == overlapTop && !is_jump) {
                 SetPosition({m_pos.x, blockBottom - m_size.y * 0.5f});

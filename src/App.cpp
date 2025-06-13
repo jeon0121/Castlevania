@@ -5,7 +5,6 @@
 #include "Util/Keycode.hpp"
 #include "Util/Logger.hpp"
 #include "State.hpp"
-#include "State/GG.hpp"
 
 void App::Start() {
     LOG_TRACE("Start");
