@@ -834,7 +834,7 @@ std::shared_ptr<Stair> Character::CollideStair(const std::vector<std::shared_ptr
         float stairRight = stairPos.x + stairSize.x * 0.5f;
 
         if ((charRight > stairLeft && charLeft < stairRight) &&  //overlap x
-            (charTop > stairBottom && charBottom < stairTop)) {  //overlap y
+            (m_pos.y > stairBottom && charBottom < stairTop)) {  //overlap y
             return stair;
         }
     }
