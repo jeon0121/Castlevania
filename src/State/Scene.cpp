@@ -55,12 +55,8 @@ void Scene::UpdateScroll(int mapWidth, float offset) {
             torch->SetPosition(torch->GetPosition() - glm::vec2(dx, 0.0f));
             if (torch->loot) {
                 torch->loot->SetPosition(torch->loot->GetPosition() - glm::vec2(dx, 0.0f));
-                if (torch->loot->score) {
+                if (torch->loot->score)
                     torch->loot->score->SetPosition(torch->loot->score->GetPosition() - glm::vec2(dx, 0.0f));
-                    auto it = std::find(m_All.begin(), m_All.end(), torch->loot->score);
-                    if (it == m_All.end())
-                        m_All.push_back(torch->loot->score);
-                }
             }
         }
         if (m_EnemiesManager) {
