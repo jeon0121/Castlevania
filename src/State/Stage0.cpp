@@ -105,11 +105,12 @@ void Stage0::Update(App* app){
 }
 
 void Stage0::End(App* app){
+    if (specialBag)
+        app->m_Root.RemoveChild(specialBag->score);
     // dead and reset
     if (switchStage || m_Character->GetEndSceneFlag()) {
         SceneReset(app);
         app->m_Character = nullptr;
-        app->m_Root.RemoveChild(specialBag->score);
     }
     else {
         glm::vec2 pos = m_Character->GetPosition();
