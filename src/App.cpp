@@ -85,8 +85,11 @@ void App::AddAllChildren(std::vector<std::shared_ptr<Util::GameObject>> m_All) {
     }
 }
 
-void App::RemoveAllChildren(std::vector<std::shared_ptr<Util::GameObject>> m_All) {
+void App::RemoveAllChildren(std::vector<std::shared_ptr<Util::GameObject>> m_All, std::vector<std::shared_ptr<Util::GameObject>> m_Loots) {
     for (auto i : m_All) {
+        m_Root.RemoveChild(i);
+    }
+    for (auto i : m_Loots) {
         m_Root.RemoveChild(i);
     }
 }

@@ -18,7 +18,7 @@ void Scene::UpdateTorch(App* app) {
             m_Torches.erase(std::remove(m_Torches.begin(), m_Torches.end(), torch), m_Torches.end());
         }
         if (torch && torch->CollideDetection(m_Character) && !torch->loot)
-            torch->Destroy(app, m_Character, whipDropped, m_All);
+            torch->Destroy(app, m_Character, whipDropped, m_Loots);
     }
 }
 
@@ -218,7 +218,7 @@ void Scene::EndAnimation(App* app, std::string imagePath, glm::vec2 scale, std::
         } else if (m_Background->GetPosition().x < -516) {
             app->m_Menu->SetMenuVisibility(false);
             m_EnemiesManager->RemoveAllChild(app);
-            app->RemoveAllChildren(m_All);
+            app->RemoveAllChildren(m_All, m_Loots);
             app->m_AppState = App::AppState::START;
         }
     }
@@ -235,7 +235,7 @@ void Scene::SceneReset(App* app) {
         app->m_Menu->modifyNumber(app->m_Menu->formatTime(app->m_Menu->GetTime()), 1);
     }
     app->m_Menu->modifyWeapon(WeaponType::None);
-    app->RemoveAllChildren(m_All);
+    app->RemoveAllChildren(m_All, m_Loots);
     app->m_AppState = App::AppState::START;
 }
 

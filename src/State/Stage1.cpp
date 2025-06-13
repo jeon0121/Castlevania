@@ -151,7 +151,7 @@ void Stage1::Update(App* app){
         Blink();
     m_Character->Keys(m_Blocks, m_Stairs, app->m_Menu->m_value.time);
     UpdateTorch(app);
-    m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app, m_All);
+    m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app, m_Loots);
     UpdateSubWeapon(app);
     UpdateScroll(mapWidth);
     if (m_Character->GetStartDeadFlag() || (app->m_Menu->GetTime() == 0 && !isTimeOut)) {
