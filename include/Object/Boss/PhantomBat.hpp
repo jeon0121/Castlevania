@@ -16,13 +16,13 @@ public:
     void Dive(int screenWidth);
     void SetDivePosition(std::shared_ptr<Character> &character);
     bool CollideDetection(std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu, int modeState) override;
-    void Hurt(App* app);
+    void Hurt();
+    std::shared_ptr<ImageItems> hurtEffect;
 private:
     std::string m_state;
     std::vector<std::string> idleImages;
     std::vector<std::string> flyImages;
     std::vector<std::string> deathImages;
-    std::shared_ptr<AnimatedItems> hurtEffect;
 
     glm::vec2 vel;
     glm::vec2 pos; // current position
@@ -30,6 +30,7 @@ private:
     glm::vec2 divePos;
     Uint64 idleTime = 0;
     Uint64 flyTime = 0;
+    Uint64 hurtTime = 0;
     int health = 16;
     double yDistance = 0.0f;
     double tDive = 0.0f;

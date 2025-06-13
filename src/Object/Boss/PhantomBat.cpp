@@ -8,11 +8,10 @@ PhantomBat::PhantomBat(const glm::vec2& position) : Enemy(position, "", {}, 300,
     for (int i = 0; i < 6; i++)
         deathImages.emplace_back(GA_RESOURCE_DIR"/enemies/boss/death-" + std::to_string(i + 1) + ".png");
     SetAnimationFrames(idleImages, 0);
-    auto hurtImages = std::vector<std::string>{GA_RESOURCE_DIR"/enemies/boss/hurt.png", GA_RESOURCE_DIR"/enemies/boss/hurt.png"};
-    hurtEffect = std::make_shared<AnimatedItems>(hurtImages, 700, glm::vec2(1.0f, 1.0f));
+    auto hurtImages = std::vector<std::string>{};
+    hurtEffect = std::make_shared<ImageItems>(GA_RESOURCE_DIR"/enemies/boss/hurt.png");
     hurtEffect->SetZIndex(10);
-    hurtEffect->SetPaused();
-    hurtEffect->SetLooping(false);
+    hurtEffect->SetVisible(false);
     m_Transform.scale = glm::vec2(1.0f, 1.0f);
     m_state = "idle";
 }
@@ -76,7 +75,7 @@ void PhantomBat::Fly(std::shared_ptr<Character> &character, int screenHeight, in
         if (Time::GetRunTimeMs(idleTime) > 1000.0f) {
             idleTime = 0;
             flyTime = 0;
-            if (pos.y < charPos.y + 300 && idleTime == 0) {
+            if (pos.y < charPos.y + 300 && idleTime == 0 && -screenWidth * 0.5f + 50.0f < pos.x && pos.x < screenWidth * 0.5f - 50.0f) {
                 m_state = "setdive";
                 idleTime = 0;
             }
@@ -122,6 +121,8 @@ void PhantomBat::SetDivePosition(std::shared_ptr<Character> &character) {
 bool PhantomBat::CollideDetection(std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu, int modeState) {
     int frameIndex = character->m_Behavior->GetCurrentFrameIndex();
     int whipLevel = character->GetWhipLevel();
+    hurtEffect->SetVisible(false);
+    hurtTime = 0;
     UpdatePosition();
     glm::vec2 charPos = character->GetPosition();
     glm::vec2 charSize = character->GetSize();
@@ -131,6 +132,16 @@ bool PhantomBat::CollideDetection(std::shared_ptr<Character> &character, std::sh
     float charBottom = charPos.y - charSize.y * 0.5f;
     static bool is_subweaponHurt = false;
     static bool is_whipHurt = false;
+    if (health <= 0) {
+        SetPlaying();
+        m_state = "idle";
+        vel = {0.0f, 0.0f};
+        if (IfAnimationEnds())
+            is_dead = true;
+        if (is_dead)
+            return true;
+        return false;
+    }
     if (!is_dead) {
         if (!character->IfWhip()) 
             is_whipHurt = false;
@@ -150,12 +161,14 @@ bool PhantomBat::CollideDetection(std::shared_ptr<Character> &character, std::sh
                 bool overlapY = enemyTop > charPos.y && enemyBottom < charPos.y;
 
                 if (overlapX && overlapY && !is_whipHurt) {
-                    SetPaused();
                     is_whipHurt = true;
                     is_hurt = true;
+                    hurtEffect->SetPosition(GetPosition() + glm::vec2((rand() % 30 - 15), (rand() % 30 - 15)));
                     int hurtCount = (whipLevel == 3) ? 2 : 1;
                     health-=hurtCount;
                     menu->modifyHealth(health, "boss");
+                    if (health <= 0)
+                        SetAnimationFrames(deathImages, 100);
                 }
             }
         } else if (character->m_SubWeapon != nullptr && character->GetUseWeaponFlag() && !is_dead) {
@@ -168,11 +181,13 @@ bool PhantomBat::CollideDetection(std::shared_ptr<Character> &character, std::sh
                             (weaponRight > enemyLeft && weaponRight < enemyRight);
             bool overlapY = enemyTop > pos.y && enemyBottom < pos.y;
             if (overlapX && overlapY && character->GetSubWeaponType() != WeaponType::Stopwatch && !is_subweaponHurt) {
-                SetPaused();
                 is_subweaponHurt = true;
                 is_hurt = true;
+                hurtEffect->SetPosition(GetPosition() + glm::vec2((rand() % 30 - 15), (rand() % 30 - 15)));
                 health-=2;
                 menu->modifyHealth(health, "boss");
+                if (health <= 0)
+                    SetAnimationFrames(deathImages, 100);
             }
         } else {
             if (!character->GetLevelUpWhipFlag() && !character->GetHurtFlag() && !is_dead && !is_hidden) {
@@ -196,27 +211,17 @@ bool PhantomBat::CollideDetection(std::shared_ptr<Character> &character, std::sh
                 }
             }
         }
-    } else if (health <= 0) {
-        SetAnimationFrames(deathImages, 100);
-        SetLooping(true);
-        SetPlaying();
-        vel = {0.0f, 0.0f};
-        if (IfAnimationEnds()) 
-            is_dead = true;
-        return true;
     }
-    
     return is_subweaponHurt || is_whipHurt;
 }
 
-void PhantomBat::Hurt(App* app) {
-    if (hurtEffect->IfAnimationStart() && is_hurt) {
-        app->m_Root.AddChild(hurtEffect);
-        hurtEffect->SetPosition(GetPosition());
-        hurtEffect->SetPlaying();
-    } else if (hurtEffect->IfAnimationEnds()) {
-        app->m_Root.RemoveChild(hurtEffect);
-        hurtEffect->SetPaused();
+void PhantomBat::Hurt() {
+    if (hurtTime == 0 && is_hurt) {
+        hurtTime = SDL_GetPerformanceCounter();
+        hurtEffect->SetVisible(true);
+    } else if (Time::GetRunTimeMs(hurtTime) > 500.0f && is_hurt) {
         is_hurt = false;
+        hurtTime = 0;
+        hurtEffect->SetVisible(false);
     }
 }

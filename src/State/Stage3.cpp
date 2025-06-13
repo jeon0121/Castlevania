@@ -57,7 +57,9 @@ void Stage3::Start(App* app){
     // boss
     m_Boss = std::make_shared<PhantomBat>(glm::vec2(2020, 190));
     m_Boss->SetZIndex(7);
-    m_All.push_back(m_Boss);
+    auto boss = std::dynamic_pointer_cast<PhantomBat>(m_Boss);
+    m_All.push_back(boss->hurtEffect);
+    m_All.push_back(boss);
 
     //torch
     std::vector<TorchData> torchs = {
@@ -161,9 +163,11 @@ void Stage3::Update(App* app){
         else {
             auto boss = std::dynamic_pointer_cast<PhantomBat>(m_Boss);
             if (boss->IsDead()) {
+                boss->hurtEffect->SetVisible(false);
+                boss->SetVisible(false);
                 // crystal appears
             }
-            boss->Hurt(app);
+            boss->Hurt();
         }
     }
     if (m_Character->GetStartDeadFlag() || (app->GetTime() == 0 && !isTimeOut)) {
