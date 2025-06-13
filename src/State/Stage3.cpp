@@ -143,7 +143,7 @@ void Stage3::Update(App* app){
         Blink();
     m_Character->Keys(m_Blocks, m_Stairs, app->m_Menu->m_value.time);
     UpdateTorch(app);
-    m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app, m_All);
+    m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app, m_Loots);
     UpdateSubWeapon(app);
     UpdateHitableBlock(app);
     if (m_Character->GetDeadFlag()) {
@@ -253,7 +253,7 @@ void Stage3::EndAnimation(App *app) {
         }
     }else if (Time::GetRunTimeMs(endScoreTime) > 3000.0f) {
         m_EnemiesManager->RemoveAllChild(app);
-        app->RemoveAllChildren(m_All);
+        app->RemoveAllChildren(m_All, m_Loots);
         app->m_Character = nullptr;
         app->m_AppState = App::AppState::START;
         app->m_GameState = App::GameState::GG;

@@ -149,7 +149,7 @@ void Stage2b::Update(App *app) {
     Position::PrintObjectCoordinate(m_Character, offsetX);
     m_Character->Keys(m_Blocks, m_Stairs, app->m_Menu->m_value.time);
     UpdateTorch(app);
-    m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app, m_All);
+    m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app, m_Loots);
     UpdateSubWeapon(app);
     UpdateScroll(mapWidth);
     UpdateHitableBlock(app);
@@ -158,7 +158,7 @@ void Stage2b::Update(App *app) {
         app->stairNum[1] = (m_Character->GetPosition().x < -100) ? 0 : 1;
         app->m_AppState = App::AppState::START;
         app->m_GameState = App::GameState::STAGE2A;
-        app->RemoveAllChildren(m_All);
+        app->RemoveAllChildren(m_All, m_Loots);
         app->m_Root.RemoveChild(m_Character->m_Behavior);
         m_EnemiesManager->RemoveAllChild(app);
     }else if (m_Character->GetStartDeadFlag() || ((app->m_Menu->GetTime() == 0 || m_Character->GetPosition().y < -240) && !isTimeOut)) {

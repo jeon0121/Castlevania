@@ -37,7 +37,7 @@ public:
 
     void AddAllChildren(std::vector<std::shared_ptr<Util::GameObject>> m_All);
 
-    void RemoveAllChildren(std::vector<std::shared_ptr<Util::GameObject>> m_All);
+    void RemoveAllChildren(std::vector<std::shared_ptr<Util::GameObject>> m_All, std::vector<std::shared_ptr<Util::GameObject>> m_Loots);
 
     void AddMenu();
 

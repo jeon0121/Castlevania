@@ -116,7 +116,7 @@ void Title::End(App* app){
     // //End Title
     if (m_BatScene_1->IfPlayingTime(8)) {
         app->m_Menu->SetMenuVisibility(false);
-        app->RemoveAllChildren(m_All);
+        app->RemoveAllChildren(m_All, m_Loots);
         app->m_AppState = App::AppState::START;
         app->m_GameState = App::GameState::STAGE0;
     }
