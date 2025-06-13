@@ -5,10 +5,14 @@ PhantomBat::PhantomBat(const glm::vec2& position) : Enemy(position, "", {}, 300,
     idleImages.emplace_back(GA_RESOURCE_DIR"/enemies/boss/boss-1.png");
     flyImages.emplace_back(GA_RESOURCE_DIR"/enemies/boss/boss-2.png");
     flyImages.emplace_back(GA_RESOURCE_DIR"/enemies/boss/boss-3.png");
-    deathImages.emplace_back(GA_RESOURCE_DIR"/enemies/boss/death-1.png");
-    deathImages.emplace_back(GA_RESOURCE_DIR"/enemies/boss/death-2.png");
-    deathImages.emplace_back(GA_RESOURCE_DIR"/enemies/boss/death-3.png");
+    for (int i = 0; i < 6; i++)
+        deathImages.emplace_back(GA_RESOURCE_DIR"/enemies/boss/death-" + std::to_string(i + 1) + ".png");
     SetAnimationFrames(idleImages, 0);
+    auto hurtImages = std::vector<std::string>{GA_RESOURCE_DIR"/enemies/boss/hurt.png", GA_RESOURCE_DIR"/enemies/boss/hurt.png"};
+    hurtEffect = std::make_shared<AnimatedItems>(hurtImages, 700, glm::vec2(1.0f, 1.0f));
+    hurtEffect->SetZIndex(10);
+    hurtEffect->SetPaused();
+    hurtEffect->SetLooping(false);
     m_Transform.scale = glm::vec2(1.0f, 1.0f);
     m_state = "idle";
 }
@@ -88,7 +92,7 @@ void PhantomBat::Dive(int screenWidth) {
     } else
         hitWall = false;
     static int diveTime;
-    diveTime += 10;
+    diveTime += 15;
     vel.y = -yDistance * sin(diveTime / tDive * M_PI);
     pos.x += vel.x;
     SetPosition({pos.x, pos.y + vel.y});
@@ -127,67 +131,92 @@ bool PhantomBat::CollideDetection(std::shared_ptr<Character> &character, std::sh
     float charBottom = charPos.y - charSize.y * 0.5f;
     static bool is_subweaponHurt = false;
     static bool is_whipHurt = false;
-    if (!character->IfWhip()) 
-        is_whipHurt = false;
-    if (!character->m_SubWeapon || !character->GetUseWeaponFlag())
-        is_subweaponHurt = false;
-    if (character->IfWhip() && !is_dead) {
-        bool isNormalWhip = (whipLevel != 3 && (frameIndex == 2 || frameIndex == 3));
-        bool isLv3Whip = (whipLevel == 3 && frameIndex >= 8 && frameIndex <= 15);
-        if (isNormalWhip || isLv3Whip) {
-            float whipWidth = (whipLevel == 3) ? abs(character->OffsetValues("whipWidth_lv3")) : abs(character->OffsetValues("whipWidth"));
-            float whipLeft = (character->GetDirection() == "left") ? charLeft - whipWidth : charRight;
-            float whipRight = (character->GetDirection() == "left") ? charLeft : charRight + whipWidth;
+    if (!is_dead) {
+        if (!character->IfWhip()) 
+            is_whipHurt = false;
+        if (!character->m_SubWeapon || !character->GetUseWeaponFlag())
+            is_subweaponHurt = false;
+        if (character->IfWhip() && !is_dead) {
+            bool isNormalWhip = (whipLevel != 3 && (frameIndex == 2 || frameIndex == 3));
+            bool isLv3Whip = (whipLevel == 3 && frameIndex >= 8 && frameIndex <= 15);
+            if (isNormalWhip || isLv3Whip) {
+                float whipWidth = (whipLevel == 3) ? abs(character->OffsetValues("whipWidth_lv3")) : abs(character->OffsetValues("whipWidth"));
+                float whipLeft = (character->GetDirection() == "left") ? charLeft - whipWidth : charRight;
+                float whipRight = (character->GetDirection() == "left") ? charLeft : charRight + whipWidth;
 
-            bool overlapX = (whipLeft > enemyLeft && whipLeft < enemyRight) ||
-                            (whipRight > enemyLeft && whipRight < enemyRight) ||
-                            (whipLeft < enemyLeft && whipRight > enemyRight);
-            bool overlapY = enemyTop > charPos.y && enemyBottom < charPos.y;
+                bool overlapX = (whipLeft > enemyLeft && whipLeft < enemyRight) ||
+                                (whipRight > enemyLeft && whipRight < enemyRight) ||
+                                (whipLeft < enemyLeft && whipRight > enemyRight);
+                bool overlapY = enemyTop > charPos.y && enemyBottom < charPos.y;
 
-            if (overlapX && overlapY && !is_whipHurt) {
+                if (overlapX && overlapY && !is_whipHurt) {
+                    SetPaused();
+                    is_whipHurt = true;
+                    is_hurt = true;
+                    int hurtCount = (whipLevel == 3) ? 2 : 1;
+                    health-=hurtCount;
+                    menu->modifyHealth(health, "boss");
+                }
+            }
+        } else if (character->m_SubWeapon != nullptr && character->GetUseWeaponFlag() && !is_dead) {
+            std::shared_ptr<Loot> asLoot = std::dynamic_pointer_cast<Loot>(character->m_SubWeapon);
+            glm::vec2 pos = asLoot->GetPosition();
+            glm::vec2 size = glm::abs(asLoot->GetScaledSize());
+            float weaponLeft = pos.x - size.x * 0.5f;
+            float weaponRight = pos.x + size.x * 0.5f;
+            bool overlapX = (weaponLeft > enemyLeft && weaponLeft < enemyRight) ||
+                            (weaponRight > enemyLeft && weaponRight < enemyRight);
+            bool overlapY = enemyTop > pos.y && enemyBottom < pos.y;
+            if (overlapX && overlapY && character->GetSubWeaponType() != WeaponType::Stopwatch && !is_subweaponHurt) {
                 SetPaused();
-                is_whipHurt = true;
-                int hurtCount = (whipLevel == 3) ? 2 : 1;
-                health-=hurtCount;
+                is_subweaponHurt = true;
+                is_hurt = true;
+                health-=2;
                 menu->modifyHealth(health, "boss");
             }
-        }
-    } else if (character->m_SubWeapon != nullptr && character->GetUseWeaponFlag() && !is_dead) {
-        std::shared_ptr<Loot> asLoot = std::dynamic_pointer_cast<Loot>(character->m_SubWeapon);
-        glm::vec2 pos = asLoot->GetPosition();
-        glm::vec2 size = glm::abs(asLoot->GetScaledSize());
-        float weaponLeft = pos.x - size.x * 0.5f;
-        float weaponRight = pos.x + size.x * 0.5f;
-        bool overlapX = (weaponLeft > enemyLeft && weaponLeft < enemyRight) ||
-                        (weaponRight > enemyLeft && weaponRight < enemyRight);
-        bool overlapY = enemyTop > pos.y && enemyBottom < pos.y;
-        if (overlapX && overlapY && character->GetSubWeaponType() != WeaponType::Stopwatch && !is_subweaponHurt) {
-            SetPaused();
-            is_subweaponHurt = true;
-            health-=2;
-            menu->modifyHealth(health, "boss");
-        }
-    } else {
-        if (!character->GetLevelUpWhipFlag() && !character->GetHurtFlag() && !is_dead && !is_hidden) {
-            bool overlapX = (charLeft > enemyLeft && charLeft < enemyRight)   ||
-                            (charRight > enemyLeft && charRight < enemyRight) ||
-                            (charLeft < enemyLeft && charRight > enemyRight);
-            bool overlapY = (enemyTop > charPos.y && enemyBottom < charPos.y) ||
-                            (charTop > enemyBottom && charBottom < enemyTop);
-            if (overlapX && overlapY) {
-                bool ifNeedSlip = false;
-                if (direction == character->GetDirection() &&
-                    ((direction == "right" && character->GetPosition().x > GetPosition().x) ||
-                     (direction == "left" && character->GetPosition().x < GetPosition().x))) {
-                    ifNeedSlip = true;
-                }
-                if (modeState == 0) {
-                    character->SetHurtFlag(true, ifNeedSlip);
-                    character->SetHeart(character->GetHeart() - 2);
-                    menu->modifyHealth(character->GetHeart(), "player");
+        } else {
+            if (!character->GetLevelUpWhipFlag() && !character->GetHurtFlag() && !is_dead && !is_hidden) {
+                bool overlapX = (charLeft > enemyLeft && charLeft < enemyRight)   ||
+                                (charRight > enemyLeft && charRight < enemyRight) ||
+                                (charLeft < enemyLeft && charRight > enemyRight);
+                bool overlapY = (enemyTop > charPos.y && enemyBottom < charPos.y) ||
+                                (charTop > enemyBottom && charBottom < enemyTop);
+                if (overlapX && overlapY) {
+                    bool ifNeedSlip = false;
+                    if (direction == character->GetDirection() &&
+                        ((direction == "right" && character->GetPosition().x > GetPosition().x) ||
+                        (direction == "left" && character->GetPosition().x < GetPosition().x))) {
+                        ifNeedSlip = true;
+                    }
+                    if (modeState == 0) {
+                        character->SetHurtFlag(true, ifNeedSlip);
+                        character->SetHeart(character->GetHeart() - 2);
+                        menu->modifyHealth(character->GetHeart(), "player");
+                    }
                 }
             }
         }
+    } else if (health <= 0) {
+        SetAnimationFrames(deathImages, 100);
+        SetLooping(true);
+        SetPlaying();
+        vel = {0.0f, 0.0f};
+        if (IfAnimationEnds()) 
+            is_dead = true;
+        return true;
     }
+    
     return is_subweaponHurt || is_whipHurt;
+}
+
+void PhantomBat::Hurt(App* app) {
+    if (hurtEffect->IfAnimationStart() && is_hurt) {
+        app->m_Root.AddChild(hurtEffect);
+        hurtEffect->SetPosition(GetPosition());
+        hurtEffect->SetPlaying();
+    } else if (hurtEffect->IfAnimationEnds()) {
+        app->m_Root.RemoveChild(hurtEffect);
+        hurtEffect->SetPaused();
+        is_hurt = false;
+    }
 }

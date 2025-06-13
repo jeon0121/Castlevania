@@ -155,10 +155,16 @@ void Stage3::Update(App* app){
     }
     // boss
     else if (reachBoss) {
-        
         whipDropped = true;
         if (!m_Boss->CollideDetection(m_Character, app->m_Menu, app->GetModeState()))
             m_Boss->MoveBehav(m_Character, screenHeight, screenWidth);
+        else {
+            auto boss = std::dynamic_pointer_cast<PhantomBat>(m_Boss);
+            if (boss->IsDead()) {
+                // crystal appears
+            }
+            boss->Hurt(app);
+        }
     }
     if (m_Character->GetStartDeadFlag() || (app->GetTime() == 0 && !isTimeOut)) {
         app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/deadBGM.wav");
