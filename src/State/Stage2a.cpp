@@ -141,6 +141,7 @@ void Stage2a::Start(App *app) {
       m_Character->Ascending(stair);
       app->m_Root.AddChild(m_Character->m_Behavior);
    }
+   app->m_Menu->modifyHealth(app->m_Character->GetHeart(), "player");
    app->AddAllChildren(m_All);
    m_stateState = StateState::UPDATE;
 }

@@ -226,7 +226,7 @@ void Scene::EndAnimation(App* app, std::string imagePath, glm::vec2 scale, std::
 
 void Scene::SceneReset(App* app) {
     app->m_Menu->SetMenuVisibility(false);
-    if (app->m_Menu->m_value.playerLife == 0)
+    if (app->m_Menu->m_value.playerLife == 0 && app->GetModeState() == 0)
         app->m_GameState = App::GameState::GG;
     else if (app->GetModeState() == 0){
         app->m_Menu->modifyNumber(app->m_Menu->formatTwoDigits(5), 3);

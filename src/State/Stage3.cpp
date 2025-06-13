@@ -32,6 +32,7 @@ void Stage3::Start(App* app){
     }
     else
         app->m_Character->SetPosition({-315, 80.76});
+    app->m_Menu->modifyHealth(app->m_Character->GetHeart(), "player");
     this->m_Character = app->m_Character;
     m_All.push_back(m_Character->m_Behavior);
 

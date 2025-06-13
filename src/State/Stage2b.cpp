@@ -123,6 +123,7 @@ void Stage2b::Start(App *app) {
         else if (app->stairNum[1] == 1 && app->stairNum[0] == 1)
             UpdateScroll(mapWidth, m_Torches[5]->GetPosition().x + 135);
     }
+    app->m_Menu->modifyHealth(app->m_Character->GetHeart(), "player");
     this->m_Character = app->m_Character;
     m_Character->SetPosition({((m_Character->GetPosition().x < 0) ? -324.2 : -60.5), 315.85});//-285.7 -4.1
     m_Character->SetOffStairs();
