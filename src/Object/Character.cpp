@@ -787,7 +787,8 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
             (charTop > blockBottom && charBottom < blockTop)) {  //overlap y
             //determine collision base on the smallest
             float minOverlap = std::min({abs(overlapTop), abs(overlapBottom), abs(overlapLeft), abs(overlapRight)});
-            if (minOverlap > 20.0f) continue;
+            if (minOverlap > 20.0f && !is_onStair)
+                continue;
             //below (char hit head)
             if (minOverlap == overlapTop && !is_jump) {
                 SetPosition({m_pos.x, blockBottom - m_size.y * 0.5f});
