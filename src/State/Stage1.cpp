@@ -48,6 +48,7 @@ void Stage1::Start(App* app){
         app->m_Character->SetPosition({-315, -265.35});
         app->m_Character->CollideBoundary(m_Blocks);
     }
+    app->m_Menu->modifyHealth(app->m_Character->GetHeart(), "player");
     this->m_Character = app->m_Character;
     m_All.push_back(m_Character->m_Behavior);
 

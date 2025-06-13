@@ -35,6 +35,7 @@ void Stage0::Start(App* app){
         app->m_Character->Flip();
         app->m_Character->SetZIndex(2);
     }
+    app->m_Menu->modifyHealth(app->m_Character->GetHeart(), "player");
     this->m_Character = app->m_Character;
     m_All.push_back(m_Character->m_Behavior);
 
