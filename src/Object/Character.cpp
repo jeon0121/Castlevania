@@ -143,6 +143,8 @@ void Character::Hurt() {
         is_hurtOnStair = false;
     if (startHurtTime == 0) {
         if (is_onStair) {
+            if (GetHeart() <= 0)
+                is_dead = true;
             is_hurt = false;
             is_hurtOnStair = true;
         }
@@ -414,7 +416,7 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const 
         else if ((Util::Input::IsKeyPressed(DOWN) && ((stair != nullptr && stair->GetDirection() == "up") || is_onStair) && !is_jump) || is_descending) {
             Descending(stair);
         }
-        else if (!is_hurt) {
+        else if (!is_hurt && !is_dead) {
             // duck subweapon
             if (((Util::Input::IsKeyPressed(UP) && Util::Input::IsKeyPressed(DOWN) && Util::Input::IsKeyDown(A)) || (is_subweapon && is_duck)) && !is_jump && m_subweapon != WeaponType::None && m_ammo >= (m_subweapon == WeaponType::Stopwatch ? 5 : 1)) {
                 Duck("");
@@ -500,7 +502,7 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const 
 }
 
 void Character::HandleFallDuck(const std::string& direction) {
-    if (!startDuckTime && !(change_land && prevLandPosition > landPosition)) {
+    if (!startDuckTime && !(change_land && prevLandPosition - landPosition > 150.0f)) {
         Move(direction);
         return;
     }

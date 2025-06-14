@@ -146,9 +146,10 @@ void Stage3::Update(App* app){
     m_EnemiesManager->Update(offsetX, screenWidth, m_Character, m_Blocks, app, m_Loots);
     UpdateSubWeapon(app);
     UpdateHitableBlock(app);
-    if (m_Character->GetDeadFlag()) {
+    if (m_Character->GetStartDeadFlag() || (app->m_Menu->GetTime() == 0 && !isTimeOut)) {
         app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/deadBGM.wav");
         app->BGM->Play(1);
+        isTimeOut = true;
     }
     if (m_Character->GetPosition().x <= 20 && !reachBoss) {
         UpdateScroll(mapWidth);
@@ -165,11 +166,6 @@ void Stage3::Update(App* app){
     else if (reachBoss) {
         whipDropped = true;
         BossFight(app);
-    }
-    if (m_Character->GetStartDeadFlag() || (app->m_Menu->GetTime() == 0 && !isTimeOut)) {
-        app->BGM->LoadMedia(GA_RESOURCE_DIR "/BGM/deadBGM.wav");
-        app->BGM->Play(1);
-        isTimeOut = true;
     }
     if (app->SwitchStage() || m_Character->GetEndSceneFlag()) {
         m_Character->m_Behavior->SetLooping(false);
