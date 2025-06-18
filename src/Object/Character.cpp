@@ -152,7 +152,7 @@ void Character::Hurt() {
             m_direction = (m_direction == "right") ? "left" : "right";
             Flip();
         }
-        if (!is_onStair) 
+        if (!is_onStair && ((is_jump && height <= 35.0f) || !is_jump))
             Jump();
         startHurtTime = SDL_GetPerformanceCounter();
     } else {
@@ -409,11 +409,11 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const 
             Whip();
         }
         // ascending
-        else if ((Util::Input::IsKeyPressed(UP) && ((stair != nullptr && stair->GetDirection() == "down") || is_onStair) && !is_jump) || is_ascending) {
+        else if ((Util::Input::IsKeyPressed(UP) && ((stair != nullptr && stair->GetDirection() == "down") || is_onStair) && !is_jump && !is_duck) || is_ascending) {
             Ascending(stair);
         }
         // descending
-        else if ((Util::Input::IsKeyPressed(DOWN) && ((stair != nullptr && stair->GetDirection() == "up") || is_onStair) && !is_jump) || is_descending) {
+        else if ((Util::Input::IsKeyPressed(DOWN) && ((stair != nullptr && stair->GetDirection() == "up") || is_onStair) && !is_jump && !is_duck) || is_descending) {
             Descending(stair);
         }
         else if (!is_hurt && !is_dead) {
@@ -789,8 +789,8 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
             (charTop > blockBottom && charBottom < blockTop)) {  //overlap y
             //determine collision base on the smallest
             float minOverlap = std::min({abs(overlapTop), abs(overlapBottom), abs(overlapLeft), abs(overlapRight)});
-            if (minOverlap > 30.0f && !is_onStair)
-                continue;
+            // if (minOverlap > 30.0f && !is_onStair)
+            //     continue;
             //below (char hit head)
             if (minOverlap == overlapTop && !is_jump) {
                 SetPosition({m_pos.x, blockBottom - m_size.y * 0.5f});
