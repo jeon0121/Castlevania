@@ -49,6 +49,14 @@
 - `J`+`W`：使用副武器
 ---
 - <img src="images/keyboard-1.png" alt="Title" width="500"/>
+---
+
+Menu 操作：
+- `Enter`：開始遊戲
+- `RShift`：選擇選單 (如 `Continue`、`End`)
+---
+- <img src="images/keyboard-3.png" alt="Menu" width="500"/>
+---
 
 ### 3. 道具
 
