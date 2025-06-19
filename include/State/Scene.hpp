@@ -82,12 +82,3 @@ protected:
 };
 
 #endif
-
-//Scene.hpp - start update end
-//title - \ - stage2 - stage3
-//start ptr 
-// start game - AnimatedItems
-// background - image
-
-// ptr- memory 
-// ~ptr 

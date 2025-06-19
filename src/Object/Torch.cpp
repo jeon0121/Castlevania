@@ -94,3 +94,7 @@ void Torch::Destroy(App* app, std::shared_ptr<Character> character, bool &whipDr
         m_All.push_back(loot);
     }
 }
+
+LootType Torch::GetLootType() const {
+    return itemType;
+}

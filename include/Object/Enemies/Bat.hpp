@@ -8,6 +8,7 @@ class Bat : public Enemy {
 public:
    Bat(glm::vec2 position, std::string direction);
    void MoveBehav() override;
+   bool CollideDetection(std::shared_ptr<Character> &character, std::shared_ptr<Menu> &menu, int modeState) override;
    void SetReset() override;
 private:
    std::vector<std::string> batImages;

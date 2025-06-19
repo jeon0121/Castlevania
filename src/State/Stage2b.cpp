@@ -24,7 +24,11 @@ void Stage2b::Start(App *app) {
             { { 656,  163  }, {1, 0.9}, LootType::Stopwatch,  1},
             { { 915,  163  }, {1, 0.9}, LootType::HeartSmall, 1},
             { { 1177, 163  }, {1, 0.9}, LootType::HeartSmall, 1},
-            { { 1505, 163  }, {1, 0.9}, LootType::HeartBig,   1}
+            { { 1505, 163  }, {1, 0.9}, LootType::HeartBig,   1},
+
+            // for stair
+            { { -393, -100 }, {1, 0.9}, LootType::None,       1},
+            { { 915,  -100 }, {1, 0.9}, LootType::None,       1}
         };
         for (auto& t : torchs) {
             auto torch = std::make_shared<Torch>(t.pos, t.scale, t.loot, t.type);
@@ -110,18 +114,25 @@ void Stage2b::Start(App *app) {
         charactervalue.beIndex = 2;
         app->m_Character = std::make_shared<Character>(charactervalue);
     }
+    std::vector<std::shared_ptr<Torch>> pTorches;
+    for (auto& t : m_Torches) {
+        if (t->GetLootType() == LootType::None) {
+            t->SetVisible(false);
+            pTorches.push_back(t);
+        }
+    }
     if (this->m_Character == nullptr) {
         if (app->stairNum[0] == 1) {
             this->m_Character = app->m_Character;
             UpdateScroll(mapWidth, 1050);
         }
-    }else {
+    } else {
         if (app->stairNum[1] == 0 && app->stairNum[0] == 1)
             UpdateScroll(mapWidth, 1050);
         else if (app->stairNum[1] == 1 && app->stairNum[0] == 0)
-            UpdateScroll(mapWidth, m_Torches[0]->GetPosition().x + 393);
+            UpdateScroll(mapWidth, pTorches[0]->GetPosition().x + 393);
         else if (app->stairNum[1] == 1 && app->stairNum[0] == 1)
-            UpdateScroll(mapWidth, m_Torches[5]->GetPosition().x + 135);
+            UpdateScroll(mapWidth, pTorches[1]->GetPosition().x + 135);
     }
     app->m_Menu->modifyHealth(app->m_Character->GetHeart(), "player");
     this->m_Character = app->m_Character;

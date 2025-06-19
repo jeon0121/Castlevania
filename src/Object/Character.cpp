@@ -169,7 +169,6 @@ void Character::Hurt() {
             m_Behavior->SetVisible(timeCount % 4 != 0);
         }
     }
-    // if ((m_pos.y - m_size.y * 0.5f) <= landPosition  && GetHeart() > 0 && !is_hurtOnStair && !startDuckTime && !is_jump && is_hurt)
     if (is_collide.y && GetHeart() > 0 && !is_hurtOnStair)
         startDuckTime = SDL_GetPerformanceCounter();
     if (startDuckTime && is_hurt) {
@@ -380,7 +379,6 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const 
             Invisible();
         else if (is_hurt || startHurtTime != 0)
             Hurt();
-        // Position::PrintCursorCoordinate();
 
         constexpr Util::Keycode A      = Util::Keycode::J;
         constexpr Util::Keycode B      = Util::Keycode::K;
@@ -488,11 +486,6 @@ void Character::Keys(const std::vector<std::shared_ptr<Block>>& m_Blocks, const 
                     Idle();
                 }
             }
-            // std::cout << m_pos.x << ", "
-            //           << m_pos.y << ", "
-            //           << m_size.x << ", "
-            //           << m_size.y << ", "
-            //           << std::endl;
         }
     }
     if (!is_levelUpWhip)
@@ -789,8 +782,6 @@ void Character::CollideBoundary(const std::vector<std::shared_ptr<Block>>& m_Blo
             (charTop > blockBottom && charBottom < blockTop)) {  //overlap y
             //determine collision base on the smallest
             float minOverlap = std::min({abs(overlapTop), abs(overlapBottom), abs(overlapLeft), abs(overlapRight)});
-            // if (minOverlap > 30.0f && !is_onStair)
-            //     continue;
             //below (char hit head)
             if (minOverlap == overlapTop && !is_jump) {
                 SetPosition({m_pos.x, blockBottom - m_size.y * 0.5f});
